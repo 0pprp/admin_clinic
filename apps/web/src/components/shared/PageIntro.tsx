@@ -1,21 +1,29 @@
-import { BrandAccentLabel } from "@/components/brand/BrandAccentLabel";
-
+/** مقدمة الصفحات الداخلية — مطابق لأسلوب Figma Clinic (eyebrow برتقالي + عنوان عريض + وصف مكتوم) */
 export function PageIntro({
   eyebrow,
   title,
-  description
+  description,
+  embedded = false,
+  className = ""
 }: {
   eyebrow?: string;
   title: string;
   description?: string;
+  /** true عند التضمين داخل clinic-shell موجود مسبقاً */
+  embedded?: boolean;
+  className?: string;
 }) {
-  return (
-    <section className="border-b border-border bg-surface">
-      <div className="clinic-shell py-12 sm:py-16">
-        {eyebrow ? <BrandAccentLabel className="text-sm font-bold sm:text-base">{eyebrow}</BrandAccentLabel> : null}
-        <h1 className="mt-3 max-w-3xl text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl">{title}</h1>
-        {description ? <p className="mt-4 max-w-2xl text-base leading-8 text-muted">{description}</p> : null}
-      </div>
-    </section>
+  const body = (
+    <header className={`max-w-3xl ${className}`.trim()}>
+      {eyebrow ? <p className="text-sm font-bold text-accent">{eyebrow}</p> : null}
+      <h1 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">{title}</h1>
+      {description ? <p className="mt-3 text-sm leading-8 text-muted sm:text-base">{description}</p> : null}
+    </header>
   );
+
+  if (embedded) {
+    return body;
+  }
+
+  return <div className="clinic-shell pt-10 sm:pt-14">{body}</div>;
 }

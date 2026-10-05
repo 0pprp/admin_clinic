@@ -1,4 +1,3 @@
-import { Container } from "@/components/shared/Container";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { FaqAccordion } from "@/components/shared/FaqAccordion";
 import { PageIntro } from "@/components/shared/PageIntro";
@@ -12,23 +11,26 @@ export const metadata = createPageMetadata({
   path: "/faq"
 });
 
+/** P14 · الأسئلة الشائعة */
 export default async function FaqPage() {
   const items = (await fetchPublic<FaqItem[]>("/api/public/faq")) ?? [];
 
   return (
-    <>
+    <div className="clinic-shell py-10 sm:py-14">
       <PageIntro
+        embedded
         eyebrow="الأسئلة الشائعة"
         title="إجابات مختصرة قبل أن تبدأ."
         description="تظهر هنا الأسئلة النشطة فقط."
       />
-      <Container className="py-16 sm:py-20">
+
+      <div className="mt-10 max-w-3xl">
         {items.length === 0 ? (
           <EmptyState title="لا توجد أسئلة معتمدة بعد" description="عند اعتماد الأسئلة الشائعة ستظهر في هذه الصفحة." />
         ) : (
           <FaqAccordion items={items} />
         )}
-      </Container>
-    </>
+      </div>
+    </div>
   );
 }

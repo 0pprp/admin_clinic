@@ -1,16 +1,20 @@
+import { PageIntro } from "@/components/shared/PageIntro";
+
+/** غلاف صفحات مساحة المتعلم — eyebrow برتقالي + عنوان عريض وفق Figma Clinic */
 export function DashboardShell({
+  eyebrow = "مساحة المتعلم",
   title,
   description,
   children
 }: {
+  eyebrow?: string;
   title: string;
   description?: string;
   children: React.ReactNode;
 }) {
   return (
     <div>
-      <h1 className="text-3xl font-semibold">{title}</h1>
-      {description ? <p className="mt-3 max-w-2xl text-sm leading-8 text-muted">{description}</p> : null}
+      <PageIntro embedded eyebrow={eyebrow} title={title} description={description} />
       <div className="mt-8">{children}</div>
     </div>
   );

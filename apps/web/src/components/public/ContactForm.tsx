@@ -4,9 +4,7 @@ import { FormEvent, useState } from "react";
 import { ApiRequestError, apiFetch, parseJson } from "@/lib/api/client";
 import type { CreateContactResponse } from "@/lib/admin/types";
 import { Button } from "@/components/ui/clinic";
-import { clinicInputClassName } from "@/components/ui/clinic/Field";
-
-const fieldClass = `mt-2 ${clinicInputClassName}`;
+import { ClinicField, ClinicInput, ClinicTextarea } from "@/components/ui/clinic/Field";
 
 export function ContactForm() {
   const [name, setName] = useState("");
@@ -46,43 +44,41 @@ export function ContactForm() {
 
   if (success) {
     return (
-      <section>
-        <p className="text-lg font-semibold">تم استلام رسالتك بنجاح.</p>
-        <p className="mt-3 max-w-xl text-sm leading-8 text-muted">سيتواصل معك الفريق عند الحاجة عبر البيانات التي أرسلتها.</p>
-      </section>
+      <div className="text-center">
+        <p className="text-lg font-extrabold text-foreground">تم استلام رسالتك بنجاح.</p>
+        <p className="mt-3 text-sm leading-8 text-muted">سيتواصل معك الفريق عند الحاجة عبر البيانات التي أرسلتها.</p>
+      </div>
     );
   }
 
   return (
-    <form onSubmit={onSubmit} className="relative max-w-2xl space-y-5" noValidate>
+    <form onSubmit={onSubmit} className="relative space-y-1" noValidate>
       <div className="absolute h-0 w-0 overflow-hidden opacity-0" aria-hidden="true">
         <label>
           الموقع
           <input tabIndex={-1} autoComplete="off" value={website} onChange={(event) => setWebsite(event.target.value)} />
         </label>
       </div>
-      <label className="block text-sm">
-        الاسم
-        <input className={fieldClass} value={name} onChange={(event) => setName(event.target.value)} required />
-      </label>
-      <label className="block text-sm">
-        الهاتف
-        <input className={fieldClass} inputMode="tel" value={phone} onChange={(event) => setPhone(event.target.value)} />
-      </label>
-      <label className="block text-sm">
-        البريد الإلكتروني
-        <input className={fieldClass} type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
-      </label>
-      <label className="block text-sm">
-        الموضوع
-        <input className={fieldClass} value={subject} onChange={(event) => setSubject(event.target.value)} required />
-      </label>
-      <label className="block text-sm">
-        الرسالة
-        <textarea className={fieldClass} rows={5} value={message} onChange={(event) => setMessage(event.target.value)} required />
-      </label>
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
-      <Button type="submit" variant="accent" size="lg" disabled={pending}>
+
+      <ClinicField label="الاسم">
+        <ClinicInput value={name} onChange={(event) => setName(event.target.value)} required />
+      </ClinicField>
+      <ClinicField label="الهاتف">
+        <ClinicInput inputMode="tel" value={phone} onChange={(event) => setPhone(event.target.value)} />
+      </ClinicField>
+      <ClinicField label="البريد الإلكتروني">
+        <ClinicInput type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
+      </ClinicField>
+      <ClinicField label="الموضوع">
+        <ClinicInput value={subject} onChange={(event) => setSubject(event.target.value)} required />
+      </ClinicField>
+      <ClinicField label="الرسالة">
+        <ClinicTextarea rows={5} value={message} onChange={(event) => setMessage(event.target.value)} required />
+      </ClinicField>
+
+      {error ? <p className="mb-4 text-sm text-red-700">{error}</p> : null}
+
+      <Button type="submit" variant="accent" size="lg" className="mt-2 w-full" disabled={pending}>
         {pending ? "جاري الإرسال..." : "إرسال الرسالة"}
       </Button>
     </form>

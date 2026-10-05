@@ -9,7 +9,7 @@ import type { UserSummary } from "@/lib/api/types";
 import { courseAccessLabel, formatIqd } from "@/lib/format";
 import type { PurchaseCreated } from "@/lib/purchases";
 import { Button } from "@/components/ui/clinic";
-import { clinicInputClassName } from "@/components/ui/clinic/Field";
+import { ClinicField, ClinicTextarea } from "@/components/ui/clinic/Field";
 
 export function EnrollRequestForm({
   courseId,
@@ -77,80 +77,93 @@ export function EnrollRequestForm({
   const profileIncomplete = !user.fullName || !user.phoneNumber || !user.whatsAppNumber || !user.email || !user.governorate;
 
   return (
-    <form onSubmit={onSubmit} className="max-w-3xl space-y-8">
-      <section className="clinic-card p-6 sm:p-8">
-        <h2 className="text-xl font-semibold">ملخص الدورة</h2>
+    <form
+      onSubmit={onSubmit}
+      className="clinic-card space-y-6 rounded-[1.25rem] p-6 sm:p-8"
+    >
+      <section>
+        <h2 className="text-lg font-extrabold">ملخص الدورة</h2>
         <dl className="mt-4 grid gap-4 text-sm sm:grid-cols-2">
           <div>
             <dt className="text-muted">الدورة</dt>
-            <dd className="mt-1 font-medium">{courseTitle}</dd>
+            <dd className="mt-1 font-semibold">{courseTitle}</dd>
           </div>
           <div>
             <dt className="text-muted">السعر</dt>
-            <dd className="mt-1 font-medium">{formatIqd(priceIQD)}</dd>
+            <dd className="mt-1 text-lg font-extrabold text-accent">{formatIqd(priceIQD)}</dd>
           </div>
-          <div>
+          <div className="sm:col-span-2">
             <dt className="text-muted">الوصول</dt>
-            <dd className="mt-1">{courseAccessLabel(accessType, accessDurationDays)}</dd>
+            <dd className="mt-1 font-medium">{courseAccessLabel(accessType, accessDurationDays)}</dd>
           </div>
         </dl>
       </section>
-      <section className="clinic-card p-6 sm:p-8">
+
+      <section className="border-t border-border pt-6">
         <div className="flex items-center justify-between gap-4">
-          <h2 className="text-xl font-semibold">بيانات التواصل</h2>
-          <Link href="/dashboard" className="text-sm text-accent hover:underline">
-            تعديل بيانات الحساب
+          <h2 className="text-lg font-extrabold">بيانات التواصل</h2>
+          <Link href="/dashboard" className="text-sm font-semibold text-accent hover:underline">
+            تعديل الحساب
           </Link>
         </div>
         <dl className="mt-4 grid gap-4 text-sm sm:grid-cols-2">
           <div>
             <dt className="text-muted">الاسم</dt>
-            <dd className="mt-1">{user.fullName}</dd>
+            <dd className="mt-1 font-medium">{user.fullName}</dd>
           </div>
           <div>
             <dt className="text-muted">الهاتف</dt>
-            <dd className="mt-1">{user.phoneNumber}</dd>
+            <dd className="mt-1 font-medium">{user.phoneNumber}</dd>
           </div>
           <div>
             <dt className="text-muted">واتساب</dt>
-            <dd className="mt-1">{user.whatsAppNumber}</dd>
+            <dd className="mt-1 font-medium">{user.whatsAppNumber}</dd>
           </div>
           <div>
             <dt className="text-muted">البريد</dt>
-            <dd className="mt-1 break-all">{user.email}</dd>
+            <dd className="mt-1 break-all font-medium">{user.email}</dd>
           </div>
           <div>
             <dt className="text-muted">المحافظة</dt>
-            <dd className="mt-1">{user.governorate}</dd>
+            <dd className="mt-1 font-medium">{user.governorate}</dd>
           </div>
         </dl>
         {profileIncomplete ? (
           <p className="mt-4 text-sm text-red-700">يرجى إكمال بيانات حسابك قبل إرسال طلب الاشتراك.</p>
         ) : null}
       </section>
-      <section className="clinic-card p-6 sm:p-8">
-        <label className="block text-sm font-medium">
-          ملاحظة اختيارية
-          <textarea
-            className={`mt-2 ${clinicInputClassName} min-h-28 resize-y`}
+
+      <section className="border-t border-border pt-6">
+        <ClinicField label="ملاحظة اختيارية">
+          <ClinicTextarea
             rows={4}
             value={notes}
             onChange={(event) => setNotes(event.target.value)}
             maxLength={2000}
+            placeholder="أي تفاصيل تريد إضافتها للطلب..."
           />
-        </label>
+        </ClinicField>
       </section>
-      <label className="flex items-start gap-3 text-sm leading-7">
+
+      <label className="flex items-start gap-3 text-sm leading-7 text-muted">
         <input
-          className="mt-1"
+          className="mt-1 size-4 accent-[var(--accent)]"
           type="checkbox"
           checked={accepted}
           onChange={(event) => setAccepted(event.target.checked)}
         />
         أفهم أن إرسال الطلب لا يعني تفعيل الدورة، وسيتواصل معي الفريق لتأكيد الدفع.
       </label>
+
       {error ? <p className="text-sm text-red-700">{error}</p> : null}
-      <Button type="submit" variant="accent" size="lg" disabled={pending || !accepted || profileIncomplete}>
+
+      <Button
+        type="submit"
+        variant="accent"
+        size="lg"
+        className="w-full"
+        disabled={pending || !accepted || profileIncomplete}
+      >
         {pending ? "جاري إرسال الطلب..." : "إرسال طلب الاشتراك"}
       </Button>
     </form>

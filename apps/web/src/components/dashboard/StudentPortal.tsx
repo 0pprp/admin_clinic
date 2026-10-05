@@ -18,6 +18,7 @@ const navItems = [
   { href: "/dashboard/profile", label: "ملفي الشخصي", exact: false }
 ] as const;
 
+/** S01 · مساحة المتعلم — شريط علوي + شريط جانبي بلمسات برتقالية */
 export function StudentPortal({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -49,19 +50,25 @@ export function StudentPortal({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-full bg-background text-foreground">
       <header className="border-b border-border bg-surface">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3.5">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3.5 sm:px-6">
           <div className="min-w-0">
             <BrandWordmark compact href="/dashboard" />
-            <p className="mt-1.5 text-xs font-semibold text-accent">مساحة المتعلم</p>
+            <p className="mt-1.5 text-xs font-bold text-accent">مساحة المتعلم</p>
           </div>
           <div className="flex items-center gap-2 text-sm sm:gap-3">
-            <p className="hidden text-muted sm:block">{shortDisplayName(user.fullName)}</p>
+            <p className="hidden truncate text-muted sm:block">{shortDisplayName(user.fullName)}</p>
             {isStaff(user.roles) ? (
-              <Link href="/admin" className="rounded-xl border border-accent px-3 py-1.5 font-semibold text-accent">
+              <Link
+                href="/admin"
+                className="rounded-xl border border-accent px-3 py-1.5 font-semibold text-accent transition hover:bg-accent/5"
+              >
                 لوحة الإدارة
               </Link>
             ) : null}
-            <Link href="/" className="rounded-xl border border-border px-3 py-1.5">
+            <Link
+              href="/"
+              className="rounded-xl border border-border px-3 py-1.5 font-medium transition hover:border-accent hover:text-accent"
+            >
               الموقع
             </Link>
             <button
@@ -76,12 +83,14 @@ export function StudentPortal({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </header>
-      <div className="mx-auto grid max-w-6xl lg:grid-cols-[15rem_minmax(0,1fr)]">
+
+      <div className="mx-auto grid max-w-6xl lg:grid-cols-[15.5rem_minmax(0,1fr)]">
         <aside
           id={menuId}
-          className={`${open ? "block" : "hidden"} border-b border-border bg-surface px-4 py-5 lg:block lg:border-b-0 lg:border-l lg:px-5 lg:py-8`}
+          className={`${open ? "block" : "hidden"} border-b border-border bg-surface px-4 py-5 lg:block lg:min-h-[calc(100vh-4.75rem)] lg:border-b-0 lg:border-l lg:px-5 lg:py-8`}
         >
           <nav aria-label="تنقل لوحة الطالب" className="flex flex-col gap-1 text-sm">
+            <p className="mb-2 px-3 text-[12px] font-bold text-accent">القائمة</p>
             {navItems.map((item) => {
               const current = item.exact
                 ? pathname === item.href
@@ -91,8 +100,10 @@ export function StudentPortal({ children }: { children: React.ReactNode }) {
                   key={item.href}
                   href={item.href}
                   aria-current={current ? "page" : undefined}
-                  className={`rounded-xl px-3 py-2 transition ${
-                    current ? "bg-surface-warm font-semibold text-foreground" : "text-muted hover:bg-surface-warm/70 hover:text-foreground"
+                  className={`rounded-xl px-3 py-2.5 transition ${
+                    current
+                      ? "bg-accent/10 font-semibold text-accent"
+                      : "text-muted hover:bg-surface-warm hover:text-foreground"
                   }`}
                   onClick={() => setOpen(false)}
                 >
@@ -101,7 +112,11 @@ export function StudentPortal({ children }: { children: React.ReactNode }) {
               );
             })}
             {isStaff(user.roles) ? (
-              <Link href="/admin" className="mt-4 rounded-xl px-3 py-2 text-muted hover:text-foreground" onClick={() => setOpen(false)}>
+              <Link
+                href="/admin"
+                className="mt-4 rounded-xl px-3 py-2.5 text-muted transition hover:bg-surface-warm hover:text-foreground"
+                onClick={() => setOpen(false)}
+              >
                 لوحة الإدارة
               </Link>
             ) : null}

@@ -3,10 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
-import { BrandAccentLabel } from "@/components/brand/BrandAccentLabel";
 import { CourseCurriculum } from "@/components/courses/CourseCurriculum";
 import { CourseEnrollCta } from "@/components/courses/CourseEnrollCta";
-import { Container } from "@/components/shared/Container";
 import { fetchPublic } from "@/lib/api/public";
 import type { CourseDetail } from "@/lib/api/public-types";
 import { brand } from "@/lib/content/brand";
@@ -30,6 +28,7 @@ export async function generateMetadata({ params }: PageProps<"/courses/[slug]">)
   });
 }
 
+/** P03 · تفاصيل الكورس — تخطيط منقسم: محتوى/منهج + لوحة سعر واشتراك لاصقة */
 export default async function CourseDetailPage({
   params,
   searchParams
@@ -67,114 +66,89 @@ export default async function CourseDetailPage({
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Container className="pt-6 sm:pt-8">
-        <div className="overflow-hidden rounded-[1.5rem] bg-surface-dark px-6 py-10 text-primary-foreground sm:px-10 sm:py-12 lg:px-12">
-          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-            <div>
-              <nav className="text-xs text-primary-foreground/60" aria-label="مسار التنقل">
-                <Link href="/" className="hover:text-accent-soft">
-                  الرئيسية
-                </Link>
-                <span aria-hidden="true"> / </span>
-                <Link href="/courses" className="hover:text-accent-soft">
-                  الكورسات
-                </Link>
-                <span aria-hidden="true"> / </span>
-                <span className="text-primary-foreground">{course.title}</span>
-              </nav>
-              <BrandAccentLabel className="mt-6 text-sm font-bold tracking-wide sm:text-base">
-                {courseLevelLabel(course.level)}
-              </BrandAccentLabel>
-              <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
-                {course.title}
-              </h1>
-              <p className="mt-5 max-w-2xl text-sm leading-8 text-primary-foreground/70 sm:text-base">
-                {course.shortDescription}
-              </p>
-              <dl className="mt-8 grid gap-4 text-sm sm:grid-cols-2">
-                <div>
-                  <dt className="text-primary-foreground/50">السعر</dt>
-                  <dd className="mt-1 text-lg font-semibold">{formatIqd(course.priceIQD)}</dd>
-                </div>
-                <div>
-                  <dt className="text-primary-foreground/50">المدة</dt>
-                  <dd className="mt-1">{formatDuration(course.totalDurationSeconds)}</dd>
-                </div>
-                <div>
-                  <dt className="text-primary-foreground/50">الدروس</dt>
-                  <dd className="mt-1">{course.lessonCount} درساً</dd>
-                </div>
-                <div>
-                  <dt className="text-primary-foreground/50">الوصول</dt>
-                  <dd className="mt-1">{courseAccessLabel(course.accessType, course.accessDurationDays)}</dd>
-                </div>
-              </dl>
-              <div className="mt-8">
-                <CourseEnrollCta slug={course.slug} hasSession={hasSession} />
-              </div>
-            </div>
-            <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-[#151c24] ring-1 ring-white/10">
+      <div className="clinic-shell py-10 sm:py-14">
+        <nav className="text-xs text-muted" aria-label="مسار التنقل">
+          <Link href="/" className="hover:text-accent">
+            الرئيسية
+          </Link>
+          <span aria-hidden="true"> / </span>
+          <Link href="/courses" className="hover:text-accent">
+            الكورسات
+          </Link>
+          <span aria-hidden="true"> / </span>
+          <span className="text-foreground">{course.title}</span>
+        </nav>
+
+        <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-10">
+          {/* المحتوى على اليمين في RTL، اللوحة على اليسار */}
+          <div className="min-w-0 space-y-8">
+            <div className="relative aspect-[16/9] overflow-hidden rounded-[1.25rem] bg-surface-dark sm:aspect-[2/1]">
               {course.thumbnailUrl ? (
                 <Image
                   src={course.thumbnailUrl}
                   alt={`غلاف دورة ${course.title}`}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 45vw"
+                  sizes="(max-width: 1024px) 100vw, 60vw"
                   unoptimized={!course.thumbnailUrl.startsWith("/")}
+                  priority
                 />
               ) : (
-                <div className="flex h-full items-end p-6">
-                  <BrandAccentLabel as="span" className="text-sm font-bold tracking-wide">
-                    كورس
-                  </BrandAccentLabel>
+                <div className="flex h-full items-end p-6 text-primary-foreground sm:p-8">
+                  <p className="text-sm font-bold text-accent">كورس</p>
                 </div>
               )}
             </div>
+
+            <header>
+              <p className="text-sm font-bold text-accent">{courseLevelLabel(course.level)}</p>
+              <h1 className="mt-3 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">{course.title}</h1>
+              <p className="mt-4 max-w-2xl text-sm leading-8 text-muted sm:text-base">{course.shortDescription}</p>
+            </header>
+
+            <section className="clinic-card px-5 py-6 sm:px-7 sm:py-8">
+              <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">عن الدورة</h2>
+              <div className="mt-4 whitespace-pre-line text-sm leading-8 text-muted sm:text-base">{course.description}</div>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">المنهج</h2>
+              <div className="mt-5">
+                <CourseCurriculum slug={course.slug} sections={course.sections} />
+              </div>
+            </section>
           </div>
+
+          <aside className="lg:sticky lg:top-24">
+            <div className="clinic-card p-5 sm:p-6">
+              <p className="text-sm font-bold text-muted">سعر الاشتراك</p>
+              <p className="mt-2 text-3xl font-extrabold tracking-tight text-foreground">{formatIqd(course.priceIQD)}</p>
+
+              <dl className="mt-6 space-y-3 border-t border-border pt-5 text-sm">
+                <div className="flex items-center justify-between gap-3">
+                  <dt className="text-muted">المدة</dt>
+                  <dd className="font-semibold">{formatDuration(course.totalDurationSeconds)}</dd>
+                </div>
+                <div className="flex items-center justify-between gap-3">
+                  <dt className="text-muted">الدروس</dt>
+                  <dd className="font-semibold">{course.lessonCount} درساً</dd>
+                </div>
+                <div className="flex items-center justify-between gap-3">
+                  <dt className="text-muted">الوصول</dt>
+                  <dd className="font-semibold text-end">{courseAccessLabel(course.accessType, course.accessDurationDays)}</dd>
+                </div>
+              </dl>
+
+              <div className="mt-6">
+                <CourseEnrollCta slug={course.slug} hasSession={hasSession} />
+              </div>
+              <p className="mt-4 text-xs leading-6 text-muted">
+                الاشتراك عبر طلب يدوي. بعد الإرسال يتواصل معك الفريق لتأكيد التحويل ثم التفعيل.
+              </p>
+            </div>
+          </aside>
         </div>
-      </Container>
-      <Container className="space-y-12 py-12 sm:space-y-16 sm:py-16">
-        <section className="clinic-card px-6 py-8 sm:px-8">
-          <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">عن الدورة</h2>
-          <div className="mt-5 max-w-3xl whitespace-pre-line text-base leading-8 text-muted">{course.description}</div>
-        </section>
-        <section>
-          <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">المنهج</h2>
-          <div className="mt-8">
-            <CourseCurriculum slug={course.slug} sections={course.sections} />
-          </div>
-        </section>
-        <section className="grid gap-5 lg:grid-cols-2 lg:gap-6">
-          <div className="clinic-card p-6 sm:p-8">
-            <h2 className="text-2xl font-semibold">ماذا ستخرج به؟</h2>
-            <p className="mt-4 text-sm leading-8 text-muted">
-              TODO: تُضاف هنا مخرجات التعلّم المعتمدة لهذه الدورة، دون اختراع وعود غير موثقة.
-            </p>
-          </div>
-          <div className="clinic-card p-6 sm:p-8">
-            <h2 className="text-2xl font-semibold">لمن هذه الدورة؟</h2>
-            <p className="mt-4 text-sm leading-8 text-muted">
-              TODO: يُكتب هنا توصيف الجمهور المستهدف بعد اعتماد المحتوى الحقيقي.
-            </p>
-          </div>
-        </section>
-        <section className="clinic-card px-6 py-8 sm:px-8">
-          <h2 className="text-2xl font-semibold">مقدّم البرنامج</h2>
-          <p className="mt-4 max-w-2xl text-sm leading-8 text-muted">
-            تقدّم العيادة الإدارية هذه الدورة ضمن كورساتها. التفاصيل الكاملة عن المنهج متاحة في صفحة «عن العيادة».
-          </p>
-        </section>
-        <section className="clinic-card overflow-hidden bg-surface-dark px-6 py-12 text-primary-foreground sm:px-10">
-          <h2 className="text-3xl font-semibold">ابدأ عندما تكون جاهزاً.</h2>
-          <p className="mt-4 max-w-xl text-sm leading-7 text-primary-foreground/70">
-            الاشتراك يتم عبر طلب يدوي. بعد إرسال الطلب يتواصل معك الفريق لتأكيد التحويل ثم التفعيل.
-          </p>
-          <div className="mt-8">
-            <CourseEnrollCta slug={course.slug} hasSession={hasSession} />
-          </div>
-        </section>
-      </Container>
+      </div>
     </>
   );
 }

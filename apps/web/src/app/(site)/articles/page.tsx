@@ -1,5 +1,4 @@
 import { ArticleCard } from "@/components/articles/ArticleCard";
-import { Container } from "@/components/shared/Container";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { PageIntro } from "@/components/shared/PageIntro";
 import { Pagination } from "@/components/shared/Pagination";
@@ -13,6 +12,7 @@ export const metadata = createPageMetadata({
   path: "/articles"
 });
 
+/** P12 · شبكة المقالات */
 export default async function ArticlesPage({ searchParams }: PageProps<"/articles">) {
   const params = await searchParams;
   const page = Math.max(1, Number(params.page ?? "1") || 1);
@@ -20,26 +20,29 @@ export default async function ArticlesPage({ searchParams }: PageProps<"/article
   const items = data?.items ?? [];
 
   return (
-    <>
+    <div className="clinic-shell py-10 sm:py-14">
       <PageIntro
+        embedded
         eyebrow="المقالات"
         title="قراءة لترتيب التفكير."
         description="تظهر المقالات المنشورة فقط، بعد حلول موعد نشرها."
       />
-      <Container className="py-16">
-        {items.length === 0 ? (
+
+      {items.length === 0 ? (
+        <div className="mt-10">
           <EmptyState title="لا توجد مقالات منشورة بعد" description="عند نشر المقالات المعتمدة ستظهر في هذا القسم." />
-        ) : (
-          <div className="grid gap-12 lg:grid-cols-3">
-            {items.map((article) => (
-              <ArticleCard key={article.id} article={article} />
-            ))}
-          </div>
-        )}
-        {data ? (
-          <Pagination page={data.page} pageSize={data.pageSize} totalCount={data.totalCount} basePath="/articles" />
-        ) : null}
-      </Container>
-    </>
+        </div>
+      ) : (
+        <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {items.map((article) => (
+            <ArticleCard key={article.id} article={article} />
+          ))}
+        </div>
+      )}
+
+      {data ? (
+        <Pagination page={data.page} pageSize={data.pageSize} totalCount={data.totalCount} basePath="/articles" />
+      ) : null}
+    </div>
   );
 }

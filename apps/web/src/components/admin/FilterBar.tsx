@@ -28,10 +28,10 @@ export function FilterBar({
   }
 
   return (
-    <form onSubmit={onSubmit} className="clinic-panel mb-6 grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-4">
+    <form onSubmit={onSubmit} className="clinic-card mb-6 grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-4">
       {children}
       <div className="flex items-end gap-2 sm:col-span-2 lg:col-span-4">
-        <Button type="submit" variant="primary" size="md">
+        <Button type="submit" variant="accent" size="md">
           تطبيق التصفية
         </Button>
       </div>

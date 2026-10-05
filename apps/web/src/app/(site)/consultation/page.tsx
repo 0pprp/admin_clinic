@@ -1,7 +1,5 @@
 import { consultationPageCopy } from "@/lib/content/pages";
 import { createPageMetadata } from "@/lib/seo";
-import { BrandAccentLabel } from "@/components/brand/BrandAccentLabel";
-import { Container } from "@/components/shared/Container";
 import { PageIntro } from "@/components/shared/PageIntro";
 import { ConsultationForm } from "@/components/public/ConsultationForm";
 import { fetchPublic } from "@/lib/api/public";
@@ -13,51 +11,64 @@ export const metadata = createPageMetadata({
   path: "/consultation"
 });
 
+/** P07 · الاستشارات — نموذج طويل بحقول العيادة */
 export default async function ConsultationPage() {
   const settings = await fetchPublic<PublicSiteSettings>("/api/public/site-settings");
 
   return (
-    <>
+    <div className="clinic-shell py-10 sm:py-14">
       <PageIntro
+        embedded
         eyebrow={consultationPageCopy.eyebrow}
         title={consultationPageCopy.title}
         description={consultationPageCopy.intro}
       />
-      <Container className="space-y-16 py-16">
-        <section>
-          <h2 className="text-3xl font-semibold">{consultationPageCopy.forWhomTitle}</h2>
-          <ul className="mt-6 grid max-w-2xl gap-4">
-            {consultationPageCopy.forWhom.map((item) => (
-              <li key={item} className="clinic-card border-s-4 border-s-accent/60 px-5 py-4 text-base leading-8 text-muted">
-                {item}
-              </li>
-            ))}
-          </ul>
-        </section>
-        <section className="border-t border-border pt-16">
-          <h2 className="text-3xl font-semibold">{consultationPageCopy.processTitle}</h2>
-          <ol className="clinic-card mt-6 max-w-2xl divide-y divide-border p-5 sm:p-6">
-            {consultationPageCopy.process.map((item, index) => (
-              <li key={item} className="py-4 text-base leading-8 text-muted first:pt-0 last:pb-0">
-                <BrandAccentLabel as="span" className="text-sm font-bold tracking-wide">
-                  {String(index + 1).padStart(2, "0")}
-                </BrandAccentLabel>
-                <span className="ms-3">{item}</span>
-              </li>
-            ))}
-          </ol>
-        </section>
-        {settings?.consultationInfo ? (
-          <p className="clinic-card max-w-2xl whitespace-pre-wrap p-6 text-base leading-8 text-muted sm:p-8">{settings.consultationInfo}</p>
-        ) : null}
-        <section className="border-t border-border pt-16">
-          <h2 className="text-3xl font-semibold">طلب استشارة</h2>
-          <p className="mt-3 max-w-2xl text-sm leading-8 text-muted">{consultationPageCopy.note}</p>
-          <div className="clinic-card mt-8 max-w-2xl p-6 sm:p-8">
-            <ConsultationForm />
+
+      <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-start lg:gap-12">
+        <div className="space-y-10">
+          <section>
+            <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">{consultationPageCopy.forWhomTitle}</h2>
+            <ul className="mt-5 space-y-3">
+              {consultationPageCopy.forWhom.map((item) => (
+                <li
+                  key={item}
+                  className="clinic-card border-s-4 border-s-accent px-5 py-4 text-sm leading-8 text-muted sm:text-base"
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">{consultationPageCopy.processTitle}</h2>
+            <ol className="clinic-card mt-5 divide-y divide-border overflow-hidden px-5 sm:px-6">
+              {consultationPageCopy.process.map((item, index) => (
+                <li key={item} className="flex gap-4 py-4 text-sm leading-8 text-muted first:pt-5 last:pb-5 sm:text-base">
+                  <span className="shrink-0 text-sm font-bold text-accent">{String(index + 1).padStart(2, "0")}</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          {settings?.consultationInfo ? (
+            <p className="clinic-card whitespace-pre-wrap px-5 py-6 text-sm leading-8 text-muted sm:px-7 sm:text-base">
+              {settings.consultationInfo}
+            </p>
+          ) : null}
+        </div>
+
+        <aside>
+          <div className="clinic-card rounded-[1.25rem] p-6 sm:p-8 lg:sticky lg:top-24">
+            <h2 className="text-xl font-extrabold tracking-tight">طلب استشارة</h2>
+            <p className="mt-2 text-sm leading-7 text-muted">{consultationPageCopy.note}</p>
+            <div className="mt-6">
+              <ConsultationForm />
+            </div>
           </div>
-        </section>
-      </Container>
-    </>
+        </aside>
+      </div>
+    </div>
   );
 }

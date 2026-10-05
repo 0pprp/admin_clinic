@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import { ApiRequestError, apiFetch, parseJson } from "@/lib/api/client";
 import type { CreateConsultationResponse } from "@/lib/admin/types";
 import { Button } from "@/components/ui/clinic";
-import { clinicInputClassName } from "@/components/ui/clinic/Field";
+import { ClinicField, ClinicInput, ClinicTextarea, clinicInputClassName } from "@/components/ui/clinic/Field";
 
 const TYPES = [
   { value: "Business", label: "أعمال" },
@@ -19,8 +19,6 @@ const METHODS = [
   { value: "WhatsApp", label: "واتساب" },
   { value: "Email", label: "بريد" }
 ] as const;
-
-const fieldClass = `mt-2 ${clinicInputClassName}`;
 
 export function ConsultationForm() {
   const [fullName, setFullName] = useState("");
@@ -72,84 +70,84 @@ export function ConsultationForm() {
 
   if (success) {
     return (
-      <section>
-        <p className="text-lg font-semibold">تم استلام طلب الاستشارة بنجاح.</p>
-        <p className="mt-3 text-sm">رقم الطلب: {success.requestNumber}</p>
-        <p className="mt-4 max-w-xl text-sm leading-8 text-muted">
+      <div className="text-center">
+        <p className="text-lg font-extrabold text-foreground">تم استلام طلب الاستشارة بنجاح.</p>
+        <p className="mt-3 text-sm font-semibold text-accent">رقم الطلب: {success.requestNumber}</p>
+        <p className="mt-4 text-sm leading-8 text-muted">
           سيتواصل معك فريق العيادة الإدارية لتأكيد الموعد والتفاصيل.
         </p>
-      </section>
+      </div>
     );
   }
 
   return (
-    <form onSubmit={onSubmit} className="relative max-w-2xl space-y-5" noValidate>
+    <form onSubmit={onSubmit} className="relative space-y-1" noValidate>
       <div className="absolute h-0 w-0 overflow-hidden opacity-0" aria-hidden="true">
         <label>
           الموقع
           <input tabIndex={-1} autoComplete="off" value={website} onChange={(event) => setWebsite(event.target.value)} />
         </label>
       </div>
-      <label className="block text-sm">
-        الاسم الكامل
-        <input className={fieldClass} value={fullName} onChange={(event) => setFullName(event.target.value)} required />
-      </label>
-      <label className="block text-sm">
-        رقم الهاتف
-        <input className={fieldClass} inputMode="tel" value={phoneNumber} onChange={(event) => setPhoneNumber(event.target.value)} required />
-      </label>
-      <label className="block text-sm">
-        رقم واتساب
-        <input className={fieldClass} inputMode="tel" value={whatsAppNumber} onChange={(event) => setWhatsAppNumber(event.target.value)} />
-      </label>
-      <label className="block text-sm">
-        البريد الإلكتروني
-        <input className={fieldClass} type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-      </label>
-      <label className="block text-sm">
-        نوع الاستشارة
-        <select className={fieldClass} value={consultationType} onChange={(event) => setConsultationType(event.target.value)}>
+
+      <ClinicField label="الاسم الكامل">
+        <ClinicInput value={fullName} onChange={(event) => setFullName(event.target.value)} required />
+      </ClinicField>
+      <ClinicField label="رقم الهاتف">
+        <ClinicInput inputMode="tel" value={phoneNumber} onChange={(event) => setPhoneNumber(event.target.value)} required />
+      </ClinicField>
+      <ClinicField label="رقم واتساب">
+        <ClinicInput inputMode="tel" value={whatsAppNumber} onChange={(event) => setWhatsAppNumber(event.target.value)} />
+      </ClinicField>
+      <ClinicField label="البريد الإلكتروني">
+        <ClinicInput type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+      </ClinicField>
+      <ClinicField label="نوع الاستشارة">
+        <select
+          className={clinicInputClassName}
+          value={consultationType}
+          onChange={(event) => setConsultationType(event.target.value)}
+        >
           {TYPES.map((item) => (
             <option key={item.value} value={item.value}>
               {item.label}
             </option>
           ))}
         </select>
-      </label>
-      <label className="block text-sm">
-        اسم الشركة
-        <input className={fieldClass} value={companyName} onChange={(event) => setCompanyName(event.target.value)} />
-      </label>
-      <div className="grid gap-5 sm:grid-cols-2">
-        <label className="block text-sm">
-          التاريخ المفضل
-          <input className={fieldClass} type="date" value={preferredDate} onChange={(event) => setPreferredDate(event.target.value)} />
-        </label>
-        <label className="block text-sm">
-          الوقت المفضل
-          <input className={fieldClass} type="time" value={preferredTime} onChange={(event) => setPreferredTime(event.target.value)} />
-        </label>
+      </ClinicField>
+      <ClinicField label="اسم الشركة">
+        <ClinicInput value={companyName} onChange={(event) => setCompanyName(event.target.value)} />
+      </ClinicField>
+      <div className="grid gap-1 sm:grid-cols-2 sm:gap-4">
+        <ClinicField label="التاريخ المفضل">
+          <ClinicInput type="date" value={preferredDate} onChange={(event) => setPreferredDate(event.target.value)} />
+        </ClinicField>
+        <ClinicField label="الوقت المفضل">
+          <ClinicInput type="time" value={preferredTime} onChange={(event) => setPreferredTime(event.target.value)} />
+        </ClinicField>
       </div>
-      <label className="block text-sm">
-        الموضوع
-        <input className={fieldClass} value={topic} onChange={(event) => setTopic(event.target.value)} required />
-      </label>
-      <label className="block text-sm">
-        الرسالة
-        <textarea className={fieldClass} rows={5} value={message} onChange={(event) => setMessage(event.target.value)} required />
-      </label>
-      <label className="block text-sm">
-        طريقة التواصل المفضلة
-        <select className={fieldClass} value={preferredCommunicationMethod} onChange={(event) => setPreferredCommunicationMethod(event.target.value)}>
+      <ClinicField label="الموضوع">
+        <ClinicInput value={topic} onChange={(event) => setTopic(event.target.value)} required />
+      </ClinicField>
+      <ClinicField label="الرسالة">
+        <ClinicTextarea rows={5} value={message} onChange={(event) => setMessage(event.target.value)} required />
+      </ClinicField>
+      <ClinicField label="طريقة التواصل المفضلة">
+        <select
+          className={clinicInputClassName}
+          value={preferredCommunicationMethod}
+          onChange={(event) => setPreferredCommunicationMethod(event.target.value)}
+        >
           {METHODS.map((item) => (
             <option key={item.value} value={item.value}>
               {item.label}
             </option>
           ))}
         </select>
-      </label>
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
-      <Button type="submit" variant="accent" size="lg" disabled={pending}>
+      </ClinicField>
+
+      {error ? <p className="mb-4 text-sm text-red-700">{error}</p> : null}
+
+      <Button type="submit" variant="accent" size="lg" className="mt-2 w-full" disabled={pending}>
         {pending ? "جاري الإرسال..." : "إرسال طلب الاستشارة"}
       </Button>
     </form>

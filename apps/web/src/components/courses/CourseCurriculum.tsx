@@ -24,14 +24,14 @@ export function CourseCurriculum({
   }
 
   return (
-    <div className="clinic-card divide-y divide-border overflow-hidden px-5 sm:px-6">
+    <div className="clinic-card divide-y divide-border overflow-hidden rounded-[1.25rem]">
       {sections.map((section, index) => {
         const panelId = `${baseId}-panel-${index}`;
         const buttonId = `${baseId}-button-${index}`;
         const open = openIds.includes(section.id);
 
         return (
-          <div key={section.id}>
+          <div key={section.id} className="px-5 sm:px-6">
             <h3>
               <button
                 id={buttonId}
@@ -46,12 +46,12 @@ export function CourseCurriculum({
                 }
               >
                 <span>
-                  <span className="block text-lg font-semibold">{section.title}</span>
+                  <span className="block text-base font-bold sm:text-lg">{section.title}</span>
                   <span className="mt-1 block text-xs text-muted">
                     {section.lessonCount} دروس · {formatDuration(section.totalDurationSeconds)}
                   </span>
                 </span>
-                <span aria-hidden="true" className="mt-1 text-accent">
+                <span aria-hidden="true" className="mt-1 text-lg font-bold text-accent">
                   {open ? "−" : "+"}
                 </span>
               </button>
@@ -59,25 +59,25 @@ export function CourseCurriculum({
             <div id={panelId} role="region" aria-labelledby={buttonId} hidden={!open} className="pb-5">
               <ul className="space-y-3">
                 {section.lessons.map((lesson) => (
-                  <li key={lesson.id} className="flex items-center justify-between gap-4 text-sm">
+                  <li key={lesson.id} className="flex items-center justify-between gap-4 rounded-xl bg-surface-warm/60 px-3 py-3 text-sm">
                     <div>
-                      <p className="font-medium">
+                      <p className="font-semibold">
                         {lesson.title}
                         {lesson.isFreePreview ? (
-                          <span className="mr-2 align-middle text-[11px] text-accent">معاينة</span>
+                          <span className="ms-2 align-middle text-[11px] font-bold text-accent">معاينة</span>
                         ) : null}
                       </p>
-                      <p className="text-xs text-muted">{formatDuration(lesson.durationSeconds)}</p>
+                      <p className="mt-0.5 text-xs text-muted">{formatDuration(lesson.durationSeconds)}</p>
                     </div>
                     {lesson.isFreePreview ? (
                       <Link
                         href={`/courses/${encodeURIComponent(slug)}/preview/${lesson.id}`}
-                        className="rounded-xl border border-accent px-3 py-1.5 text-xs font-semibold text-accent transition hover:bg-accent hover:text-primary-foreground"
+                        className="shrink-0 rounded-xl bg-accent px-3 py-1.5 text-xs font-semibold text-primary-foreground transition hover:bg-accent-soft"
                       >
                         معاينة
                       </Link>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-xs text-muted" aria-label="درس محمي">
+                      <span className="inline-flex shrink-0 items-center gap-1 text-xs text-muted" aria-label="درس محمي">
                         <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" aria-hidden="true">
                           <path
                             fill="currentColor"

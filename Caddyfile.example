@@ -1,0 +1,36 @@
+example.com {
+	encode gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+	}
+
+	handle /health* {
+		reverse_proxy api:8080 {
+			header_up X-Forwarded-Proto {scheme}
+			header_up X-Forwarded-For {remote_ip}
+			header_up X-Forwarded-Host {host}
+			header_up Host {host}
+		}
+	}
+
+	handle /api* {
+		reverse_proxy api:8080 {
+			header_up X-Forwarded-Proto {scheme}
+			header_up X-Forwarded-For {remote_ip}
+			header_up X-Forwarded-Host {host}
+			header_up Host {host}
+		}
+	}
+
+	handle {
+		reverse_proxy web:3000 {
+			header_up X-Forwarded-Proto {scheme}
+			header_up X-Forwarded-For {remote_ip}
+			header_up X-Forwarded-Host {host}
+			header_up Host {host}
+		}
+	}
+}

@@ -1,0 +1,4 @@
+@MohammedRaouf.Api_HostAddress = http://localhost:5000
+
+GET {{MohammedRaouf.Api_HostAddress}}/health
+Accept: application/json

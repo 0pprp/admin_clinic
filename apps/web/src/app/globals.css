@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+:root {
+  /* العيادة الإدارية — كحلي / برتقالي / أبيض */
+  --background: #f3f6fa;
+  --foreground: #071b33;
+  --primary: #071b33;
+  --primary-foreground: #ffffff;
+  --accent: #f15a24;
+  --accent-soft: #ff7a45;
+  --muted: #5b6b7c;
+  --border: #d5dee8;
+  --surface: #ffffff;
+  --surface-warm: #e8eef5;
+  --surface-dark: #071b33;
+  --ring: #f15a24;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-surface: var(--surface);
+  --color-surface-warm: var(--surface-warm);
+  --color-surface-dark: var(--surface-dark);
+  --font-sans: var(--font-arabic-sans), var(--font-latin-sans), sans-serif;
+  --font-naskh: var(--font-arabic-naskh), "Amiri", serif;
+}
+
+/* دور الخط: Amiri لكل نص بلون الشعار البرتقالي؛ IBM Plex لباقي الواجهة */
+.font-naskh,
+.brand-accent-label {
+  font-family: var(--font-arabic-naskh), "Amiri", serif;
+}
+
+.brand-accent-label {
+  color: var(--accent-soft);
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  overflow-x: clip;
+}
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: 1rem;
+  top: -4rem;
+  z-index: 60;
+  background: var(--surface);
+  color: var(--foreground);
+  padding: 0.5rem 0.85rem;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.player-seek::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #f15a24;
+  cursor: pointer;
+}
+
+.player-seek::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: 0;
+  border-radius: 999px;
+  background: #f15a24;
+  cursor: pointer;
+}

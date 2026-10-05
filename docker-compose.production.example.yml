@@ -1,0 +1,72 @@
+# Example production compose for the first release.
+# This is NOT a live deployment file. Replace example.com and inject secrets
+# from the host environment. Do not commit real credentials.
+#
+# Reverse proxy recommendation: Caddy (automatic HTTPS).
+#
+#   Internet
+#     → HTTPS (Caddy)
+#       → /        Next.js
+#       → /api/*   ASP.NET Core
+#
+# PostgreSQL: use a managed instance with backups. A Postgres container is
+# intentionally omitted. If you add one for experiments, it is not the
+# production recommendation without backup, SSL, and restore testing.
+
+services:
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile.example:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+      - api
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_SITE_URL: https://example.com
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_SITE_URL: https://example.com
+    expose:
+      - "3000"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ForwardedHeaders__AllowAllProxies: "true"
+      App__PublicUrl: https://example.com
+      Cors__AllowedOrigins__0: https://example.com
+      ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection}
+      Jwt__Issuer: MohammedRaouf
+      Jwt__Audience: MohammedRaouf.Web
+      Jwt__SigningKey: ${Jwt__SigningKey}
+      Jwt__AccessTokenMinutes: "15"
+      Jwt__RefreshTokenDays: "14"
+      Email__Provider: Disabled
+      Video__Provider: BunnyStream
+      Video__TokenLifetimeMinutes: "10"
+      Video__Bunny__LibraryId: ${Video__Bunny__LibraryId}
+      Video__Bunny__CdnHostname: iframe.mediadelivery.net
+      Video__Bunny__TokenKey: ${Video__Bunny__TokenKey}
+    expose:
+      - "8080"
+
+volumes:
+  caddy_data:
+  caddy_config:

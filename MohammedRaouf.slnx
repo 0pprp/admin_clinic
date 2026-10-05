@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MohammedRaouf.Api/MohammedRaouf.Api.csproj" />
+    <Project Path="src/MohammedRaouf.Application/MohammedRaouf.Application.csproj" />
+    <Project Path="src/MohammedRaouf.Contracts/MohammedRaouf.Contracts.csproj" />
+    <Project Path="src/MohammedRaouf.Domain/MohammedRaouf.Domain.csproj" />
+    <Project Path="src/MohammedRaouf.Infrastructure/MohammedRaouf.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MohammedRaouf.IntegrationTests/MohammedRaouf.IntegrationTests.csproj" />
+    <Project Path="tests/MohammedRaouf.UnitTests/MohammedRaouf.UnitTests.csproj" />
+  </Folder>
+</Solution>

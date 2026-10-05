@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
+import { buttonClassName, Field, inputClassName } from "@/components/auth/AuthShell";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { ApiRequestError, apiFetch, parseJson } from "@/lib/api/client";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -70,7 +71,7 @@ export default function DashboardActivatePage() {
           <h2 className="mt-6 text-2xl font-semibold">{result.courseTitle}</h2>
           <Link
             href={`/dashboard/courses/${result.courseSlug}`}
-            className="mt-8 inline-flex rounded-md border border-accent bg-accent px-5 py-2.5 text-sm text-primary-foreground transition hover:bg-accent-soft"
+            className="mt-8 inline-flex rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-accent-soft"
           >
             ابدأ التعلم
           </Link>
@@ -85,27 +86,22 @@ export default function DashboardActivatePage() {
         تم استلام دفعتك؟ أدخل كود التفعيل الذي استلمته من فريق العيادة الإدارية.
       </p>
       <form onSubmit={onSubmit} className="clinic-card mt-10 max-w-xl px-5 py-8 sm:px-8">
-        <p className="font-naskh text-sm font-bold text-accent">لديك كود تفعيل؟</p>
-        <label className="mt-6 block text-sm" htmlFor="activation-code">
-          كود التفعيل
-        </label>
-        <input
-          id="activation-code"
-          name="code"
-          value={code}
-          onChange={(event) => setCode(event.target.value)}
-          autoComplete="off"
-          spellCheck={false}
-          dir="ltr"
-          placeholder="MR-8K2P-7X4M"
-          className="mt-2 w-full rounded-md border border-border bg-background px-3 py-3 text-left tracking-[0.18em] outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
-        />
-        {error ? <p className="mt-4 text-sm text-red-600">{error}</p> : null}
-        <button
-          type="submit"
-          disabled={pending || code.trim().length === 0}
-          className="mt-8 rounded-md border border-accent bg-accent px-5 py-2.5 text-sm text-primary-foreground transition hover:bg-accent-soft disabled:opacity-60"
-        >
+        <p className="text-sm font-bold text-accent">لديك كود تفعيل؟</p>
+        <Field label="كود التفعيل">
+          <input
+            id="activation-code"
+            name="code"
+            value={code}
+            onChange={(event) => setCode(event.target.value)}
+            autoComplete="off"
+            spellCheck={false}
+            dir="ltr"
+            placeholder="MR-8K2P-7X4M"
+            className={`${inputClassName} py-3 text-left tracking-[0.18em]`}
+          />
+        </Field>
+        {error ? <p className="mb-4 text-sm text-red-600">{error}</p> : null}
+        <button type="submit" disabled={pending || code.trim().length === 0} className={buttonClassName}>
           {pending ? "جاري التفعيل..." : "تفعيل الدورة"}
         </button>
       </form>

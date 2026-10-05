@@ -13,8 +13,10 @@ export default function PrivacyPage() {
   return (
     <>
       <PageIntro eyebrow="قانوني" title={legalCopy.privacyTitle} />
-      <Container className="py-16">
-        <p className="max-w-2xl text-base leading-8 text-muted">{legalCopy.privacyBody}</p>
+      <Container className="py-12 sm:py-16">
+        <div className="clinic-card max-w-2xl px-6 py-8 sm:px-8">
+          <p className="text-base leading-8 text-muted">{legalCopy.privacyBody}</p>
+        </div>
       </Container>
     </>
   );

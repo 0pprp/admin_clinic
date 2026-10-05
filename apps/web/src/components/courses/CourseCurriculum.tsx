@@ -17,14 +17,14 @@ export function CourseCurriculum({
 
   if (sections.length === 0) {
     return (
-      <p className="border border-dashed border-border bg-surface px-5 py-8 text-sm text-muted">
+      <p className="clinic-card border-dashed px-5 py-8 text-sm text-muted">
         منهج هذه الدورة سيُعرض هنا عند اعتماد الأقسام والدروس.
       </p>
     );
   }
 
   return (
-    <div className="divide-y divide-border border-y border-border">
+    <div className="clinic-card divide-y divide-border overflow-hidden px-5 sm:px-6">
       {sections.map((section, index) => {
         const panelId = `${baseId}-panel-${index}`;
         const buttonId = `${baseId}-button-${index}`;
@@ -72,7 +72,7 @@ export function CourseCurriculum({
                     {lesson.isFreePreview ? (
                       <Link
                         href={`/courses/${encodeURIComponent(slug)}/preview/${lesson.id}`}
-                        className="border border-accent px-3 py-1.5 text-xs text-accent"
+                        className="rounded-xl border border-accent px-3 py-1.5 text-xs font-semibold text-accent transition hover:bg-accent hover:text-primary-foreground"
                       >
                         معاينة
                       </Link>

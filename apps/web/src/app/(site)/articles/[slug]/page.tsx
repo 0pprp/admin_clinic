@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/shared/Container";
+import { PageIntro } from "@/components/shared/PageIntro";
 import { fetchPublic } from "@/lib/api/public";
 import type { ArticleDetail } from "@/lib/api/public-types";
 import { formatDate } from "@/lib/format";
@@ -35,11 +36,17 @@ export default async function ArticleDetailPage({ params }: PageProps<"/articles
   const published = formatDate(article.publishedAt);
 
   return (
-    <Container className="py-16 sm:py-20">
-      {published ? <p className="text-sm text-muted">{published}</p> : null}
-      <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-tight sm:text-5xl">{article.title}</h1>
-      <p className="mt-5 max-w-2xl text-lg leading-8 text-muted">{article.excerpt}</p>
-      <article className="mt-12 max-w-3xl whitespace-pre-line text-base leading-9">{article.content}</article>
-    </Container>
+    <>
+      <PageIntro
+        eyebrow={published ? `نُشر ${published}` : "المقالات"}
+        title={article.title}
+        description={article.excerpt}
+      />
+      <Container className="py-12 sm:py-16">
+        <article className="clinic-card max-w-3xl whitespace-pre-line px-6 py-8 text-base leading-9 sm:px-8">
+          {article.content}
+        </article>
+      </Container>
+    </>
   );
 }

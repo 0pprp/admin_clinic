@@ -5,13 +5,14 @@ import { PageIntro } from "@/components/shared/PageIntro";
 import { Pagination } from "@/components/shared/Pagination";
 import { fetchPublic } from "@/lib/api/public";
 import type { CourseSummary, Paged } from "@/lib/api/public-types";
+import { featuredCoursesCopy } from "@/lib/content/brand";
 import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = createPageMetadata({
   title: "الكورسات",
-  description: "كورسات العيادة الإدارية المنشورة. الشراء والتفعيل عبر طلب يدوي.",
+  description: featuredCoursesCopy.description,
   path: "/courses"
 });
 
@@ -23,16 +24,12 @@ export default async function CoursesPage({ searchParams }: PageProps<"/courses"
 
   return (
     <>
-      <PageIntro
-        eyebrow="الكورسات"
-        title="تعلّم مرتّب يمكن تطبيقه."
-        description="تظهر هنا الكورسات المنشورة فقط. تفاصيل الشراء والتفعيل ستأتي لاحقاً."
-      />
-      <Container className="py-16 sm:py-20">
+      <PageIntro eyebrow="الكورسات" title={featuredCoursesCopy.title} description={featuredCoursesCopy.description} />
+      <Container className="py-12 sm:py-16">
         {items.length === 0 ? (
           <EmptyState title="الكورسات ستتوفر قريباً" description="لا توجد كورسات منشورة للعرض في الوقت الحالي." />
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {items.map((course) => (
               <CourseCard key={course.id} course={course} />
             ))}

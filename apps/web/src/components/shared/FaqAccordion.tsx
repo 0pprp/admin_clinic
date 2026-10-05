@@ -12,7 +12,7 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
   }
 
   return (
-    <div className="clinic-panel divide-y divide-border overflow-hidden">
+    <div className="clinic-card divide-y divide-border overflow-hidden">
       {items.map((item, index) => {
         const panelId = `${baseId}-panel-${index}`;
         const buttonId = `${baseId}-button-${index}`;

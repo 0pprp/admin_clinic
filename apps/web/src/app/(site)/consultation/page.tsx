@@ -28,7 +28,7 @@ export default async function ConsultationPage() {
           <h2 className="text-3xl font-semibold">{consultationPageCopy.forWhomTitle}</h2>
           <ul className="mt-6 grid max-w-2xl gap-4">
             {consultationPageCopy.forWhom.map((item) => (
-              <li key={item} className="clinic-panel border-s-4 border-s-accent/60 px-5 py-4 text-base leading-8 text-muted">
+              <li key={item} className="clinic-card border-s-4 border-s-accent/60 px-5 py-4 text-base leading-8 text-muted">
                 {item}
               </li>
             ))}
@@ -36,7 +36,7 @@ export default async function ConsultationPage() {
         </section>
         <section className="border-t border-border pt-16">
           <h2 className="text-3xl font-semibold">{consultationPageCopy.processTitle}</h2>
-          <ol className="clinic-panel mt-6 max-w-2xl divide-y divide-border p-5 sm:p-6">
+          <ol className="clinic-card mt-6 max-w-2xl divide-y divide-border p-5 sm:p-6">
             {consultationPageCopy.process.map((item, index) => (
               <li key={item} className="py-4 text-base leading-8 text-muted first:pt-0 last:pb-0">
                 <BrandAccentLabel as="span" className="text-sm font-bold tracking-wide">
@@ -48,12 +48,12 @@ export default async function ConsultationPage() {
           </ol>
         </section>
         {settings?.consultationInfo ? (
-          <p className="clinic-panel max-w-2xl whitespace-pre-wrap p-6 text-base leading-8 text-muted sm:p-8">{settings.consultationInfo}</p>
+          <p className="clinic-card max-w-2xl whitespace-pre-wrap p-6 text-base leading-8 text-muted sm:p-8">{settings.consultationInfo}</p>
         ) : null}
         <section className="border-t border-border pt-16">
           <h2 className="text-3xl font-semibold">طلب استشارة</h2>
           <p className="mt-3 max-w-2xl text-sm leading-8 text-muted">{consultationPageCopy.note}</p>
-          <div className="clinic-panel mt-8 max-w-2xl p-6 sm:p-8">
+          <div className="clinic-card mt-8 max-w-2xl p-6 sm:p-8">
             <ConsultationForm />
           </div>
         </section>

@@ -73,8 +73,13 @@ export function HlsLessonPlayer({ src, title }: { src: string; title: string }) 
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [error, setError] = useState("");
 
-  menuRef.current = menu;
-  playingRef.current = playing;
+  useEffect(() => {
+    menuRef.current = menu;
+  }, [menu]);
+
+  useEffect(() => {
+    playingRef.current = playing;
+  }, [playing]);
 
   function clearHideTimer() {
     if (hideTimerRef.current) {

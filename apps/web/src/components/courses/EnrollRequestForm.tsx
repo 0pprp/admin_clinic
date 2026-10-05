@@ -78,7 +78,7 @@ export function EnrollRequestForm({
 
   return (
     <form onSubmit={onSubmit} className="max-w-3xl space-y-8">
-      <section className="clinic-panel p-6 sm:p-8">
+      <section className="clinic-card p-6 sm:p-8">
         <h2 className="text-xl font-semibold">ملخص الدورة</h2>
         <dl className="mt-4 grid gap-4 text-sm sm:grid-cols-2">
           <div>
@@ -95,7 +95,7 @@ export function EnrollRequestForm({
           </div>
         </dl>
       </section>
-      <section className="clinic-panel p-6 sm:p-8">
+      <section className="clinic-card p-6 sm:p-8">
         <div className="flex items-center justify-between gap-4">
           <h2 className="text-xl font-semibold">بيانات التواصل</h2>
           <Link href="/dashboard" className="text-sm text-accent hover:underline">
@@ -128,7 +128,7 @@ export function EnrollRequestForm({
           <p className="mt-4 text-sm text-red-700">يرجى إكمال بيانات حسابك قبل إرسال طلب الاشتراك.</p>
         ) : null}
       </section>
-      <section className="clinic-panel p-6 sm:p-8">
+      <section className="clinic-card p-6 sm:p-8">
         <label className="block text-sm font-medium">
           ملاحظة اختيارية
           <textarea

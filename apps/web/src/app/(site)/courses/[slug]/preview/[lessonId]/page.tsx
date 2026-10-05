@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
-import { BrandAccentLabel } from "@/components/brand/BrandAccentLabel";
 import { FreePreviewPlayer } from "@/components/courses/FreePreviewPlayer";
 import { Container } from "@/components/shared/Container";
+import { PageIntro } from "@/components/shared/PageIntro";
 import { fetchPublic, normalizeRouteSlug } from "@/lib/api/public";
 import type { LessonPreview } from "@/lib/api/public-types";
 import { formatDuration } from "@/lib/format";
@@ -32,7 +32,7 @@ async function resolvePreview(slug: string, lessonId: string) {
 export async function generateMetadata({
   params
 }: PageProps<"/courses/[slug]/preview/[lessonId]">): Promise<Metadata> {
-  const { slug, lessonId } = await params;
+  const { lessonId } = await params;
   const preview = await loadPreview(lessonId);
   if (!preview) {
     return { title: "معاينة غير متاحة" };
@@ -54,20 +54,27 @@ export default async function LessonPreviewPage({
     notFound();
   }
 
+  const introDescription = [
+    formatDuration(preview.durationSeconds),
+    preview.description
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
   return (
-    <Container className="py-16 sm:py-20">
-      <Link href={`/courses/${encodeURIComponent(preview.courseSlug)}`} className="text-sm text-accent hover:underline">
-        العودة إلى الكورس
-      </Link>
-      <BrandAccentLabel className="mt-8 text-base font-bold tracking-wide">معاينة مجانية</BrandAccentLabel>
-      <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-tight">{preview.title}</h1>
-      <p className="mt-3 text-sm text-muted">{formatDuration(preview.durationSeconds)}</p>
-      {preview.description ? (
-        <p className="mt-6 max-w-2xl text-base leading-8 text-muted">{preview.description}</p>
-      ) : null}
-      <div className="mt-10">
-        <FreePreviewPlayer lessonId={preview.lessonId} title={preview.title} />
-      </div>
-    </Container>
+    <>
+      <PageIntro eyebrow="معاينة مجانية" title={preview.title} description={introDescription || undefined} />
+      <Container className="py-12 sm:py-16">
+        <Link
+          href={`/courses/${encodeURIComponent(preview.courseSlug)}`}
+          className="text-sm font-medium text-accent hover:underline"
+        >
+          العودة إلى الكورس
+        </Link>
+        <div className="clinic-card mt-8 overflow-hidden p-2 sm:p-3">
+          <FreePreviewPlayer lessonId={preview.lessonId} title={preview.title} />
+        </div>
+      </Container>
+    </>
   );
 }

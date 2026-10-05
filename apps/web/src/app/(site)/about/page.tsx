@@ -35,7 +35,7 @@ export default async function AboutPage() {
           <h2 className="text-3xl font-semibold">{aboutCopy.interestsTitle}</h2>
           <ul className="mt-8 grid gap-4 sm:grid-cols-2">
             {interests.map((item) => (
-              <li key={item} className="clinic-panel border-s-4 border-s-accent px-5 py-4 text-lg">
+              <li key={item} className="clinic-card border-s-4 border-s-accent px-5 py-4 text-lg">
                 {item}
               </li>
             ))}

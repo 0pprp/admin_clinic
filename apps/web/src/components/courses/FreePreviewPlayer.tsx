@@ -5,6 +5,9 @@ import { HlsLessonPlayer } from "@/components/learning/HlsLessonPlayer";
 import { apiFetch } from "@/lib/api/client";
 import type { LessonPlayback } from "@/lib/learning";
 
+const playerShellClass =
+  "flex aspect-video items-center justify-center overflow-hidden rounded-xl border border-border bg-surface px-6 text-center";
+
 export function FreePreviewPlayer({ lessonId, title }: { lessonId: string; title: string }) {
   const [playback, setPlayback] = useState<LessonPlayback | null>(null);
   const [error, setError] = useState("");
@@ -37,7 +40,7 @@ export function FreePreviewPlayer({ lessonId, title }: { lessonId: string; title
 
   if (error) {
     return (
-      <div className="flex aspect-video items-center justify-center border border-border bg-surface px-6 text-center">
+      <div className={playerShellClass}>
         <p className="max-w-md text-sm leading-8 text-muted">{error}</p>
       </div>
     );
@@ -45,7 +48,7 @@ export function FreePreviewPlayer({ lessonId, title }: { lessonId: string; title
 
   if (!playback) {
     return (
-      <div className="flex aspect-video items-center justify-center border border-border bg-surface px-6 text-center">
+      <div className={playerShellClass}>
         <p className="text-sm text-muted">جاري تحميل المعاينة...</p>
       </div>
     );
@@ -53,7 +56,7 @@ export function FreePreviewPlayer({ lessonId, title }: { lessonId: string; title
 
   if (playback.playbackUnavailable || playback.kind !== "hls" || !playback.playbackUrl) {
     return (
-      <div className="flex aspect-video items-center justify-center border border-border bg-surface px-6 text-center">
+      <div className={playerShellClass}>
         <p className="max-w-md text-sm leading-8 text-muted">
           {playback.message || "الفيديو غير جاهز للمعاينة بعد."}
         </p>
@@ -62,7 +65,7 @@ export function FreePreviewPlayer({ lessonId, title }: { lessonId: string; title
   }
 
   return (
-    <div className="aspect-video overflow-hidden border border-border bg-black">
+    <div className="aspect-video overflow-hidden rounded-xl border border-border bg-black">
       <HlsLessonPlayer src={playback.playbackUrl} title={title} />
     </div>
   );

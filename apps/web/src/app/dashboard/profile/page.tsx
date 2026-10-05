@@ -105,8 +105,8 @@ export default function DashboardProfilePage() {
   }
 
   return (
-    <div>
-      <h1 className="text-3xl font-semibold">الملف الشخصي</h1>
+    <div className="max-w-xl">
+      <h1 className="text-3xl font-extrabold tracking-tight">الملف الشخصي</h1>
       <p className="mt-3 max-w-2xl text-sm leading-8 text-muted">حدّث بيانات التواصل الخاصة بك. البريد الإلكتروني غير قابل للتعديل حالياً.</p>
       <form onSubmit={onSaveProfile} className="clinic-card mt-8 max-w-xl px-5 py-8 sm:px-8">
         <Field label="الاسم الكامل">

@@ -1,23 +1,16 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { navItems } from "@/lib/content/brand";
-import { ButtonLink } from "@/components/ui/clinic";
-import { Container } from "@/components/shared/Container";
+import { BrandWordmark } from "@/components/ui/clinic";
 import { MobileNavigation } from "./MobileNavigation";
-import { Wordmark } from "./Wordmark";
 
 function SessionAction({ hasSession }: { hasSession: boolean }) {
-  if (hasSession) {
-    return (
-      <Link href="/dashboard" className="text-sm text-primary-foreground/90 transition hover:text-accent-soft">
-        لوحة التحكم
-      </Link>
-    );
-  }
-
   return (
-    <Link href="/login" className="text-sm text-primary-foreground/90 transition hover:text-accent-soft">
-      تسجيل الدخول
+    <Link
+      href={hasSession ? "/dashboard" : "/login"}
+      className="text-sm font-medium text-foreground/80 transition hover:text-accent"
+    >
+      {hasSession ? "لوحة التحكم" : "تسجيل الدخول"}
     </Link>
   );
 }
@@ -27,20 +20,20 @@ export async function SiteHeader() {
   const hasSession = jar.has("mr_access") || jar.has("mr_refresh");
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-surface-dark/95 backdrop-blur-md">
-      <Container className="flex h-16 items-center justify-between gap-3 sm:gap-4 lg:h-[4.75rem]">
-        <div className="min-w-0 flex-1">
-          <Wordmark inverted />
+    <header className="sticky top-0 z-40 border-b border-border/80 bg-surface/95 backdrop-blur-md">
+      <div className="clinic-shell flex h-[4.25rem] items-center justify-between gap-4 lg:h-[4.75rem]">
+        <div className="min-w-0 shrink-0">
+          <BrandWordmark />
         </div>
         <nav
-          className="hidden items-center gap-1 text-[13px] text-primary-foreground/80 xl:flex xl:gap-1 xl:text-sm"
+          className="hidden items-center gap-1 text-[13px] text-foreground/75 xl:flex xl:gap-0.5 xl:text-sm"
           aria-label="التنقل الرئيسي"
         >
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="whitespace-nowrap rounded-md px-2.5 py-2 transition hover:bg-white/5 hover:text-accent-soft"
+              className="whitespace-nowrap rounded-xl px-3 py-2 transition hover:bg-surface-warm hover:text-foreground"
             >
               {item.label}
             </Link>
@@ -48,12 +41,9 @@ export async function SiteHeader() {
         </nav>
         <div className="hidden shrink-0 items-center gap-4 lg:flex">
           <SessionAction hasSession={hasSession} />
-          <ButtonLink href="/courses" variant="accent" size="sm">
-            استكشف الكورسات
-          </ButtonLink>
         </div>
         <MobileNavigation hasSession={hasSession} />
-      </Container>
+      </div>
     </header>
   );
 }

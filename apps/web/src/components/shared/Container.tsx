@@ -7,5 +7,5 @@ export function Container({
   children: ReactNode;
   className?: string;
 }) {
-  return <div className={`mx-auto w-full max-w-[80rem] px-5 sm:px-8 ${className}`}>{children}</div>;
+  return <div className={`clinic-shell ${className}`}>{children}</div>;
 }

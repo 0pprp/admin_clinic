@@ -1,34 +1,13 @@
 import type { Metadata } from "next";
-import { Amiri } from "next/font/google";
-import localFont from "next/font/local";
+import { Cairo } from "next/font/google";
 import { brand } from "@/lib/content/brand";
 import { siteUrl } from "@/lib/seo";
 import "./globals.css";
 
-const arabicSans = localFont({
-  src: [
-    { path: "../fonts/ibm-plex-sans-arabic-400.woff2", weight: "400", style: "normal" },
-    { path: "../fonts/ibm-plex-sans-arabic-600.woff2", weight: "600", style: "normal" },
-    { path: "../fonts/ibm-plex-sans-arabic-700.woff2", weight: "700", style: "normal" }
-  ],
-  variable: "--font-arabic-sans",
-  display: "swap"
-});
-
-const latinSans = localFont({
-  src: [
-    { path: "../fonts/ibm-plex-sans-400.woff2", weight: "400", style: "normal" },
-    { path: "../fonts/ibm-plex-sans-600.woff2", weight: "600", style: "normal" }
-  ],
-  variable: "--font-latin-sans",
-  display: "swap"
-});
-
-/** خط ناسخ متصل لشعار: شخّص . عالج . طوّر */
-const arabicNaskh = Amiri({
+const cairo = Cairo({
   subsets: ["arabic", "latin"],
-  weight: ["400", "700"],
-  variable: "--font-arabic-naskh",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-cairo",
   display: "swap"
 });
 
@@ -48,12 +27,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="ar"
-      dir="rtl"
-      className={`${arabicSans.variable} ${latinSans.variable} ${arabicNaskh.variable} h-full antialiased`}
-    >
-      <body className={`${arabicSans.className} flex min-h-full flex-col`}>
+    <html lang="ar" dir="rtl" className={`${cairo.variable} h-full antialiased`}>
+      <body className={`${cairo.className} flex min-h-full flex-col`}>
         <a href="#main" className="skip-link">
           تخطي إلى المحتوى
         </a>

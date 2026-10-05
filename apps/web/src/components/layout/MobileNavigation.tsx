@@ -49,53 +49,48 @@ export function MobileNavigation({ hasSession }: { hasSession: boolean }) {
     open && mounted
       ? createPortal(
           <div className="fixed inset-0 z-[100] lg:hidden">
-            <button
-              type="button"
-              className="absolute inset-0 bg-black/60"
-              aria-label="إغلاق القائمة"
-              onClick={closeMenu}
-            />
+            <button type="button" className="absolute inset-0 bg-black/45" aria-label="إغلاق القائمة" onClick={closeMenu} />
             <div
               id={dialogId}
               role="dialog"
               aria-modal="true"
               aria-label="قائمة التنقل"
-              className="absolute inset-y-0 start-0 flex w-[min(22rem,92vw)] flex-col rounded-e-2xl border-e border-white/15 bg-[#061526] shadow-[0_0_40px_rgba(0,0,0,0.55)]"
+              className="absolute inset-y-0 start-0 flex w-[min(22rem,92vw)] flex-col rounded-e-2xl border-e border-border bg-surface shadow-[0_0_40px_rgba(15,23,42,0.18)]"
             >
-              <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-                <BrandWordmark inverted compact />
+              <div className="flex items-center justify-between border-b border-border px-5 py-4">
+                <BrandWordmark compact />
                 <button
                   ref={closeButtonRef}
                   type="button"
-                  className="rounded-md border border-white/20 px-3 py-1.5 text-sm text-accent-soft"
+                  className="rounded-xl border border-border px-3 py-1.5 text-sm text-foreground"
                   onClick={closeMenu}
                 >
                   إغلاق
                 </button>
               </div>
-              <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4 text-base text-primary-foreground">
+              <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4 text-base text-foreground">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="rounded-md px-3 py-3 transition hover:bg-white/10"
+                    className="rounded-xl px-3 py-3 transition hover:bg-surface-warm"
                     onClick={closeMenu}
                   >
                     {item.label}
                   </Link>
                 ))}
               </nav>
-              <div className="space-y-3 border-t border-white/10 px-5 py-5">
+              <div className="space-y-3 border-t border-border px-5 py-5">
                 <Link
                   href={hasSession ? "/dashboard" : "/login"}
-                  className="block text-sm text-primary-foreground/90"
+                  className="block text-sm font-medium text-foreground"
                   onClick={closeMenu}
                 >
                   {hasSession ? "لوحة التحكم" : "تسجيل الدخول"}
                 </Link>
                 <Link
                   href="/courses"
-                  className="inline-flex w-full items-center justify-center rounded-md border border-accent bg-accent px-4 py-3 text-sm text-primary-foreground"
+                  className="inline-flex w-full items-center justify-center rounded-xl bg-accent px-4 py-3 text-sm font-semibold text-primary-foreground"
                   onClick={closeMenu}
                 >
                   استكشف الكورسات
@@ -112,28 +107,16 @@ export function MobileNavigation({ hasSession }: { hasSession: boolean }) {
       <button
         ref={openButtonRef}
         type="button"
-        className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-white/25 bg-white/5 text-primary-foreground"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-surface text-foreground"
         aria-expanded={open}
         aria-controls={dialogId}
         aria-label={open ? "إغلاق القائمة" : "فتح القائمة"}
         onClick={() => setOpen((value) => !value)}
       >
         <span aria-hidden="true" className="relative block h-4 w-5">
-          <span
-            className={`absolute start-0 top-0 block h-0.5 w-5 rounded-full bg-current transition duration-200 ${
-              open ? "top-1.5 rotate-45" : ""
-            }`}
-          />
-          <span
-            className={`absolute start-0 top-1.5 block h-0.5 w-5 rounded-full bg-current transition duration-200 ${
-              open ? "opacity-0" : ""
-            }`}
-          />
-          <span
-            className={`absolute start-0 top-3 block h-0.5 w-5 rounded-full bg-current transition duration-200 ${
-              open ? "top-1.5 -rotate-45" : ""
-            }`}
-          />
+          <span className={`absolute start-0 top-0 block h-0.5 w-5 rounded-full bg-current transition ${open ? "top-1.5 rotate-45" : ""}`} />
+          <span className={`absolute start-0 top-1.5 block h-0.5 w-5 rounded-full bg-current transition ${open ? "opacity-0" : ""}`} />
+          <span className={`absolute start-0 top-3 block h-0.5 w-5 rounded-full bg-current transition ${open ? "top-1.5 -rotate-45" : ""}`} />
         </span>
       </button>
       {drawer}

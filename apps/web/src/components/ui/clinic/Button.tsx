@@ -21,7 +21,7 @@ type Size = keyof typeof sizes;
 
 function buttonClasses(variant: Variant, size: Size, className?: string) {
   return cn(
-    "inline-flex items-center justify-center gap-2 rounded-md border font-medium transition disabled:opacity-60",
+    "inline-flex items-center justify-center gap-2 rounded-xl border font-semibold transition disabled:opacity-60",
     variants[variant],
     sizes[size],
     className

@@ -5,18 +5,21 @@ import { useEffect, useState } from "react";
 import type { AdSlide } from "@/lib/content/ads";
 import { cn } from "./cn";
 
-function Bars({ light }: { light?: boolean }) {
-  const bars = [28, 44, 62, 84];
+function Bars() {
+  const bars = [
+    { h: 34, accent: false },
+    { h: 48, accent: false },
+    { h: 72, accent: true },
+    { h: 56, accent: false },
+    { h: 40, accent: false }
+  ];
   return (
-    <div className="flex h-28 items-end gap-2 sm:h-36 sm:gap-3" aria-hidden="true">
-      {bars.map((h, i) => (
+    <div className="flex h-28 items-end gap-2.5 sm:h-32" aria-hidden="true">
+      {bars.map((bar, index) => (
         <div
-          key={h}
-          className={cn(
-            "w-4 rounded-sm sm:w-5",
-            i === bars.length - 1 ? "bg-accent" : light ? "bg-primary/20" : "bg-white/25"
-          )}
-          style={{ height: `${h}%` }}
+          key={index}
+          className={cn("w-4 rounded-md sm:w-5", bar.accent ? "bg-accent" : "bg-white/20")}
+          style={{ height: `${bar.h}%` }}
         />
       ))}
     </div>
@@ -41,55 +44,35 @@ export function AdCarousel({ slides }: { slides: AdSlide[] }) {
   }
 
   const slide = slides[index] ?? slides[0];
-  const navy = slide.tone === "navy";
 
   return (
-    <section className="relative overflow-hidden" aria-roledescription="carousel" aria-label="إعلانات العيادة">
-      <div
-        className={cn(
-          "relative mx-auto max-w-6xl overflow-hidden rounded-2xl border",
-          navy ? "border-white/10 bg-surface-dark text-primary-foreground" : "border-border bg-surface text-foreground"
-        )}
-      >
-        <div className="grid items-center gap-8 px-6 py-8 sm:px-10 sm:py-10 lg:grid-cols-[1.2fr_0.8fr] lg:px-12 lg:py-12">
+    <section className="clinic-shell pb-4 sm:pb-6" aria-roledescription="carousel" aria-label="إعلانات العيادة">
+      <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-surface-dark text-primary-foreground">
+        <div className="grid items-center gap-8 px-6 py-8 sm:px-10 sm:py-10 lg:grid-cols-[1.15fr_0.85fr] lg:px-12">
           <div>
-            <p className={cn("font-naskh text-base font-bold sm:text-lg", navy ? "text-accent-soft" : "text-accent")}>
-              {slide.eyebrow}
-            </p>
-            <h2 className="mt-3 text-2xl font-semibold leading-tight tracking-tight sm:text-3xl lg:text-4xl">
-              {slide.title}
-            </h2>
-            <p className={cn("mt-4 max-w-xl text-sm leading-8 sm:text-base", navy ? "text-white/75" : "text-muted")}>
-              {slide.body}
-            </p>
+            <p className="text-sm font-bold text-accent">{slide.eyebrow}</p>
+            <h2 className="mt-3 text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl">{slide.title}</h2>
+            <p className="mt-3 max-w-xl text-sm leading-8 text-primary-foreground/70">{slide.body}</p>
             <Link
               href={slide.ctaHref}
-              className={cn(
-                "mt-6 inline-flex rounded-md px-5 py-3 text-sm font-medium transition",
-                navy
-                  ? "bg-accent text-primary-foreground hover:bg-accent-soft"
-                  : "bg-primary text-primary-foreground hover:bg-[#0a2744]"
-              )}
+              className="mt-6 inline-flex rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-accent-soft"
             >
               {slide.ctaLabel}
             </Link>
           </div>
           <div className="flex justify-start lg:justify-end">
-            <Bars light={!navy} />
+            <Bars />
           </div>
         </div>
         {slides.length > 1 ? (
-          <div className="absolute inset-x-0 bottom-3 flex justify-center gap-2">
+          <div className="flex items-center justify-center gap-2 pb-5">
             {slides.map((item, i) => (
               <button
                 key={item.id}
                 type="button"
                 aria-label={`الإعلان ${i + 1}`}
                 aria-current={i === index}
-                className={cn(
-                  "h-2 w-2 rounded-full transition",
-                  i === index ? "bg-accent" : navy ? "bg-white/35" : "bg-primary/25"
-                )}
+                className={cn("h-2 w-2 rounded-full transition", i === index ? "bg-accent" : "bg-white/30")}
                 onClick={() => setIndex(i)}
               />
             ))}

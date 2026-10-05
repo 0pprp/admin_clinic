@@ -8,11 +8,19 @@ export type AdSlide = {
   tone: "navy" | "light";
 };
 
-/** محتوى كاروسيل الرئيسية — مطابق لنصوص إعلانات Figma */
 export const homeAdSlides: AdSlide[] = [
   {
+    id: "diagnose",
+    eyebrow: "العيادة الإدارية | إعلان",
+    title: "ابدأ بالتشخيص الصحيح",
+    body: "استشارات إدارية لفهم واقع مؤسستك قبل أي علاج أو توسع.",
+    ctaLabel: "اطلب استشارة",
+    ctaHref: "/consultation",
+    tone: "navy"
+  },
+  {
     id: "lead",
-    eyebrow: "العيادة الإدارية",
+    eyebrow: "العيادة الإدارية | إعلان",
     title: "قيادة تصنع الفرق",
     body: "طوّر أسلوب إدارتك بمسارات عملية من التشخيص إلى التنفيذ.",
     ctaLabel: "استكشف الكورسات",
@@ -20,21 +28,12 @@ export const homeAdSlides: AdSlide[] = [
     tone: "navy"
   },
   {
-    id: "diagnose",
-    eyebrow: "ابدأ صح",
-    title: "ابدأ بالتشخيص الصحيح",
-    body: "قبل أي علاج إداري: افهم الخلل، رتّب الأولويات، وابنِ قراراً أوضح.",
-    ctaLabel: "اطلب استشارة",
-    ctaHref: "/consultation",
-    tone: "light"
-  },
-  {
     id: "practice",
-    eyebrow: "من المعرفة إلى التطبيق",
+    eyebrow: "العيادة الإدارية | إعلان",
     title: "حوّل المعرفة إلى ممارسة",
     body: "كورسات وتطبيقات تساعدك تنقل الفكرة من الشاشة إلى يوم العمل.",
-    ctaLabel: "تصفّح المحتوى",
-    ctaHref: "/articles",
+    ctaLabel: "تصفّح الكورسات",
+    ctaHref: "/courses",
     tone: "navy"
   }
 ];

@@ -1,19 +1,25 @@
 export const brand = {
   nameAr: "العيادة الإدارية",
   nameEn: "THE MANAGEMENT CLINIC",
-  taglineAr: "خدمات الاستشارات والحلول الإدارية",
-  sloganAr: "شخّص . عالج . طوّر",
+  taglineAr: "عالم أصغر... أفق أوسع",
+  sloganAr: "شخّص • عالج • طوّر",
   siteTitle: "العيادة الإدارية",
   siteDescription:
-    "العيادة الإدارية: استشارات وحلول إدارية عملية تساعدك على تشخيص التحديات، معالجة الخلل، وتطوير أداء فريقك ومؤسستك."
+    "استشارات وكورسات عملية تساعدك على فهم تحديات الإدارة وبناء فريق أقوى وخطوات قابلة للتطبيق."
 } as const;
 
 export const heroCopy = {
   eyebrow: brand.sloganAr,
-  title: "عيادة متخصصة في تشخيص وعلاج وتطوير الإدارة.",
+  title: "قرارات أوضح. إدارة تصنع أثرًا.",
   description:
-    "نحوّل مشاكل الإدارة اليومية إلى حلول واضحة قابلة للتطبيق: استشارات، كورسات، ومحتوى عملي لأصحاب القرار والفرق الإدارية."
+    "استشارات وكورسات عملية تساعدك على فهم تحديات الإدارة وبناء فريق أقوى وخطوات قابلة للتطبيق."
 } as const;
+
+export const homeSteps = [
+  { code: "01", title: "شخّص", body: "افهم التحدي قبل اتخاذ القرار" },
+  { code: "02", title: "عالج", body: "ضع خطة تناسب واقع فريقك" },
+  { code: "03", title: "طوّر", body: "حوّل الحل إلى عادة مستمرة" }
+] as const;
 
 export const aboutPreviewCopy = {
   eyebrow: "عن العيادة",
@@ -61,12 +67,16 @@ export const finalCtaCopy = {
   body: "تصفّح الكورسات، أو اطلب استشارة إذا كنت تحتاج نقاشاً أعمق حول تحدٍ إداري محدد."
 } as const;
 
+export const featuredCoursesCopy = {
+  title: "ابدأ من التحدي الذي تواجهه",
+  description: "كورسات مصممة لواقع العمل والبداية اليومية"
+} as const;
+
 export const navItems = [
   { href: "/", label: "الرئيسية" },
   { href: "/about", label: "عن العيادة" },
   { href: "/courses", label: "الكورسات" },
   { href: "/articles", label: "المقالات" },
   { href: "/consultation", label: "الاستشارات" },
-  { href: "/faq", label: "الأسئلة الشائعة" },
   { href: "/contact", label: "تواصل معنا" }
 ] as const;

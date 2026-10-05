@@ -1,24 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  /* العيادة الإدارية — نظام Figma: كحلي / برتقالي / أبيض */
-  --background: #f3f6fa;
-  --foreground: #071b33;
-  --primary: #071b33;
+  /* Exact Figma Clinic tokens (P01 / Design System) */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --primary: #0f172a;
   --primary-foreground: #ffffff;
-  --accent: #f15a24;
-  --accent-soft: #ff7a45;
-  --muted: #5b6b7c;
-  --border: #d5dee8;
+  --accent: #f97316;
+  --accent-soft: #fb923c;
+  --muted: #64748b;
+  --border: #e2e8f0;
   --surface: #ffffff;
-  --surface-warm: #e8eef5;
-  --surface-dark: #071b33;
-  --ring: #f15a24;
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 1rem;
-  --success: #0f6b4c;
-  --warning: #8a5a12;
+  --surface-warm: #f1f5f9;
+  --surface-dark: #0f172a;
+  --ring: #f97316;
+  --radius: 1rem;
+  --radius-sm: 0.75rem;
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.04);
 }
 
 @theme inline {
@@ -33,17 +31,8 @@
   --color-surface: var(--surface);
   --color-surface-warm: var(--surface-warm);
   --color-surface-dark: var(--surface-dark);
-  --font-sans: var(--font-arabic-sans), var(--font-latin-sans), sans-serif;
-  --font-naskh: var(--font-arabic-naskh), "Amiri", serif;
-}
-
-.font-naskh,
-.brand-accent-label {
-  font-family: var(--font-arabic-naskh), "Amiri", serif;
-}
-
-.brand-accent-label {
-  color: var(--accent-soft);
+  --font-sans: var(--font-cairo), "Cairo", sans-serif;
+  --font-naskh: var(--font-cairo), "Cairo", sans-serif;
 }
 
 html {
@@ -75,26 +64,39 @@ svg {
   inset-inline-start: 1rem;
   top: -4rem;
   z-index: 60;
+  border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--foreground);
   padding: 0.5rem 0.85rem;
-  border-radius: var(--radius-sm);
 }
 
 .skip-link:focus {
   top: 1rem;
 }
 
+.clinic-shell {
+  margin-inline: auto;
+  width: min(100% - 2rem, 72rem);
+}
+
 .clinic-card {
   border: 1px solid var(--border);
   background: var(--surface);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
 }
 
 .clinic-panel {
   border: 1px solid var(--border);
   background: var(--surface);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
+}
+
+.font-naskh,
+.brand-accent-label {
+  font-family: var(--font-cairo), "Cairo", sans-serif;
+  color: var(--accent);
+  font-weight: 700;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -117,7 +119,7 @@ svg {
   width: 12px;
   height: 12px;
   border-radius: 999px;
-  background: #f15a24;
+  background: #f97316;
   cursor: pointer;
 }
 
@@ -126,6 +128,6 @@ svg {
   height: 12px;
   border: 0;
   border-radius: 999px;
-  background: #f15a24;
+  background: #f97316;
   cursor: pointer;
 }

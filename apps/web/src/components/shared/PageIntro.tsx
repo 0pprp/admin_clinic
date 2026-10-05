@@ -1,5 +1,4 @@
 import { BrandAccentLabel } from "@/components/brand/BrandAccentLabel";
-import { Container } from "@/components/shared/Container";
 
 export function PageIntro({
   eyebrow,
@@ -11,18 +10,12 @@ export function PageIntro({
   description?: string;
 }) {
   return (
-    <section className="border-b border-border bg-surface-dark text-primary-foreground">
-      <Container className="py-16 sm:py-20">
-        {eyebrow ? (
-          <BrandAccentLabel className="text-base font-bold tracking-wide sm:text-lg">
-            {eyebrow}
-          </BrandAccentLabel>
-        ) : null}
-        <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">{title}</h1>
-        {description ? (
-          <p className="mt-5 max-w-2xl text-base leading-8 text-primary-foreground/70">{description}</p>
-        ) : null}
-      </Container>
+    <section className="border-b border-border bg-surface">
+      <div className="clinic-shell py-12 sm:py-16">
+        {eyebrow ? <BrandAccentLabel className="text-sm font-bold sm:text-base">{eyebrow}</BrandAccentLabel> : null}
+        <h1 className="mt-3 max-w-3xl text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl">{title}</h1>
+        {description ? <p className="mt-4 max-w-2xl text-base leading-8 text-muted">{description}</p> : null}
+      </div>
     </section>
   );
 }

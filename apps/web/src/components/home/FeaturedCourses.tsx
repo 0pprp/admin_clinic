@@ -1,32 +1,32 @@
 import Link from "next/link";
 import type { CourseSummary } from "@/lib/api/public-types";
 import { CourseCard } from "@/components/courses/CourseCard";
-import { Container } from "@/components/shared/Container";
+import { featuredCoursesCopy } from "@/lib/content/brand";
 import { EmptyState } from "@/components/shared/EmptyState";
-import { SectionHeading } from "@/components/shared/SectionHeading";
 
 export function FeaturedCourses({ courses }: { courses: CourseSummary[] }) {
   return (
-    <section className="bg-background">
-      <Container className="py-20">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <SectionHeading eyebrow="الكورسات" title="محتوى مرتّب للتطبيق." />
-          <Link href="/courses" className="text-sm text-accent hover:underline">
-            كل الكورسات
-          </Link>
+    <section className="clinic-shell py-10 sm:py-14">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="max-w-2xl">
+          <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{featuredCoursesCopy.title}</h2>
+          <p className="mt-2 text-sm leading-7 text-muted sm:text-base">{featuredCoursesCopy.description}</p>
         </div>
-        {courses.length === 0 ? (
-          <div className="mt-10">
-            <EmptyState title="الكورسات ستتوفر قريباً" description="عندما تُنشر الكورسات المميزة ستظهر هنا مباشرة." />
-          </div>
-        ) : (
-          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {courses.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
-          </div>
-        )}
-      </Container>
+        <Link href="/courses" className="text-sm font-semibold text-accent hover:underline">
+          كل الكورسات
+        </Link>
+      </div>
+      {courses.length === 0 ? (
+        <div className="mt-8">
+          <EmptyState title="الكورسات ستتوفر قريباً" description="عندما تُنشر الكورسات المميزة ستظهر هنا مباشرة." />
+        </div>
+      ) : (
+        <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {courses.map((course) => (
+            <CourseCard key={course.id} course={course} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

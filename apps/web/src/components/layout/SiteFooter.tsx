@@ -1,55 +1,39 @@
 import Link from "next/link";
-import { brand, navItems } from "@/lib/content/brand";
+import { brand } from "@/lib/content/brand";
 import type { PublicSiteSettings } from "@/lib/api/public-types";
-import { BrandAccentLabel } from "@/components/brand/BrandAccentLabel";
-import { Container } from "@/components/shared/Container";
-import { Wordmark } from "./Wordmark";
+import { BrandWordmark } from "@/components/ui/clinic";
+
+const footerLinks = [
+  { href: "/contact", label: "تواصل معنا" },
+  { href: "/faq", label: "الأسئلة الشائعة" },
+  { href: "/terms", label: "الشروط والأحكام" },
+  { href: "/privacy", label: "الخصوصية" }
+] as const;
 
 export function SiteFooter({ settings }: { settings: PublicSiteSettings | null }) {
   const year = new Date().getFullYear();
-  const footerLinks = navItems.filter((item) => item.href !== "/faq");
 
   return (
-    <footer className="bg-surface-dark text-primary-foreground">
-      <Container className="grid gap-12 py-14 sm:py-16 md:grid-cols-[1.2fr_1fr_1fr]">
+    <footer className="mt-auto bg-surface-dark text-primary-foreground">
+      <div className="clinic-shell flex flex-col gap-8 py-10 sm:flex-row sm:items-center sm:justify-between sm:py-12">
         <div>
-          <Wordmark inverted />
-          <p className="mt-5 max-w-sm text-sm leading-7 text-primary-foreground/70">
+          <BrandWordmark inverted />
+          <p className="mt-4 max-w-md text-sm leading-7 text-primary-foreground/65">
             {settings?.footerText ?? brand.siteDescription}
           </p>
         </div>
-        <div>
-          <BrandAccentLabel className="text-sm font-bold tracking-wide">استكشف</BrandAccentLabel>
-          <ul className="mt-4 space-y-3 text-sm text-primary-foreground/75">
-            {footerLinks.map((item) => (
-              <li key={item.href}>
-                <Link href={item.href} className="transition hover:text-accent-soft">
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <BrandAccentLabel className="text-sm font-bold tracking-wide">قانوني</BrandAccentLabel>
-          <ul className="mt-4 space-y-3 text-sm text-primary-foreground/75">
-            <li>
-              <Link href="/privacy" className="transition hover:text-accent-soft">
-                سياسة الخصوصية
-              </Link>
-            </li>
-            <li>
-              <Link href="/terms" className="transition hover:text-accent-soft">
-                الشروط والأحكام
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </Container>
+        <nav aria-label="روابط التذييل" className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-primary-foreground/80">
+          {footerLinks.map((item) => (
+            <Link key={item.href} href={item.href} className="transition hover:text-accent-soft">
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      </div>
       <div className="border-t border-white/10">
-        <Container className="py-5 text-xs text-primary-foreground/50">
+        <div className="clinic-shell py-4 text-xs text-primary-foreground/45">
           © {year} {settings?.brandName ?? brand.nameAr}. جميع الحقوق محفوظة.
-        </Container>
+        </div>
       </div>
     </footer>
   );

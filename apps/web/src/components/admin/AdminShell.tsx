@@ -52,29 +52,23 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   return (
     <ToastProvider>
       <div className="min-h-full bg-background text-foreground">
-        <header className="border-b border-white/10 bg-surface-dark text-primary-foreground">
+        <header className="border-b border-border bg-surface">
           <div className="flex items-center justify-between gap-3 px-4 py-3.5 lg:px-6">
             <div className="min-w-0">
-              <BrandWordmark inverted compact href="/admin" />
-              <p className="mt-1.5 truncate text-xs text-accent-soft">لوحة الإدارة · {title}</p>
+              <BrandWordmark compact href="/admin" />
+              <p className="mt-1.5 truncate text-xs font-semibold text-accent">لوحة الإدارة · {title}</p>
             </div>
             <div className="flex items-center gap-2 text-sm sm:gap-3">
-              <p className="hidden text-primary-foreground/80 sm:block">{user.fullName}</p>
-              <Link
-                href="/dashboard"
-                className="hidden rounded-md border border-white/20 px-3 py-1.5 transition hover:bg-white/5 sm:inline-flex"
-              >
+              <p className="hidden text-muted sm:block">{user.fullName}</p>
+              <Link href="/dashboard" className="hidden rounded-xl border border-border px-3 py-1.5 sm:inline-flex">
                 لوحة الطالب
               </Link>
-              <Link
-                href="/"
-                className="rounded-md border border-accent px-3 py-1.5 text-accent transition hover:bg-accent hover:text-primary-foreground"
-              >
+              <Link href="/" className="rounded-xl border border-accent px-3 py-1.5 font-semibold text-accent">
                 الموقع
               </Link>
               <button
                 type="button"
-                className="rounded-md border border-white/20 px-3 py-1.5 lg:hidden"
+                className="rounded-xl border border-border px-3 py-1.5 lg:hidden"
                 aria-expanded={open}
                 aria-controls={menuId}
                 onClick={() => setOpen((value) => !value)}
@@ -92,7 +86,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <nav aria-label="تنقل لوحة الإدارة" className="flex flex-col gap-5 text-sm">
               {groups.map((group) => (
                 <div key={group.title}>
-                  <p className="px-3 font-naskh text-[12px] font-bold text-accent">{group.title}</p>
+                  <p className="px-3 text-[12px] font-bold text-accent">{group.title}</p>
                   <div className="mt-2 flex flex-col gap-1">
                     {group.items.map((item) => {
                       const current = isNavCurrent(pathname, item);
@@ -101,8 +95,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                           key={item.href}
                           href={item.href}
                           aria-current={current ? "page" : undefined}
-                          className={`rounded-md px-3 py-2 transition ${
-                            current ? "bg-surface-warm font-medium text-foreground" : "text-muted hover:bg-surface-warm/70 hover:text-foreground"
+                          className={`rounded-xl px-3 py-2 transition ${
+                            current ? "bg-surface-warm font-semibold text-foreground" : "text-muted hover:bg-surface-warm/70 hover:text-foreground"
                           }`}
                           onClick={() => setOpen(false)}
                         >

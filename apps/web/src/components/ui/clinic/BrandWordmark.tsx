@@ -22,8 +22,8 @@ export function BrandWordmark({
       <span className="inline-flex min-w-0 flex-col items-start">
         <span
           className={cn(
-            "truncate font-semibold leading-none tracking-tight",
-            compact ? "text-sm sm:text-base" : "text-[0.95rem] sm:text-lg",
+            "truncate font-extrabold leading-none tracking-tight",
+            compact ? "text-sm sm:text-base" : "text-[0.98rem] sm:text-lg",
             inverted ? "text-primary-foreground" : "text-foreground"
           )}
         >
@@ -33,7 +33,7 @@ export function BrandWordmark({
           <span
             className={cn(
               "mt-1.5 hidden max-w-[15rem] truncate text-[10px] leading-none sm:block sm:text-[11px]",
-              inverted ? "text-primary-foreground/70" : "text-muted"
+              inverted ? "text-primary-foreground/65" : "text-muted"
             )}
           >
             {brand.taglineAr}

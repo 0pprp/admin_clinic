@@ -107,7 +107,11 @@ export default function AdminDashboardPage() {
       <PageHeader title="نظرة عامة" description="ملخص حالة المنصة حسب صلاحياتك." />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map((card) => (
-          <Link key={card.label} href={card.href} className="border border-border bg-surface px-5 py-5 hover:border-accent">
+          <Link
+            key={card.label}
+            href={card.href}
+            className="clinic-card px-5 py-5 transition hover:border-accent/40 hover:shadow-[0_12px_40px_rgba(7,27,51,0.08)]"
+          >
             <p className="text-xs text-muted">{card.label}</p>
             <p className="mt-3 text-2xl font-semibold">{card.value}</p>
           </Link>
@@ -203,7 +207,7 @@ function DashboardList({
   }>;
 }) {
   return (
-    <section className="border border-border bg-surface p-5">
+    <section className="clinic-panel p-5">
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-lg font-semibold">{title}</h2>
         <Link href={href} className="text-sm text-accent hover:underline">
@@ -218,7 +222,7 @@ function DashboardList({
         <ul className="mt-4 divide-y divide-border">
           {items.map((item) => (
             <li key={item.id} className="py-3">
-              <Link href={item.href} className="block hover:bg-surface-warm/40">
+              <Link href={item.href} className="block rounded-md px-2 py-1 hover:bg-surface-warm/40">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p className="font-medium">{item.title}</p>
                   <StatusBadge label={item.status} tone={statusTone(item.toneStatus)} />

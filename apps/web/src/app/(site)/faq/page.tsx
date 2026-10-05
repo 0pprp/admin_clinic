@@ -22,7 +22,7 @@ export default async function FaqPage() {
         title="إجابات مختصرة قبل أن تبدأ."
         description="تظهر هنا الأسئلة النشطة فقط."
       />
-      <Container className="py-16">
+      <Container className="py-16 sm:py-20">
         {items.length === 0 ? (
           <EmptyState title="لا توجد أسئلة معتمدة بعد" description="عند اعتماد الأسئلة الشائعة ستظهر في هذه الصفحة." />
         ) : (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { dangerButtonClassName, secondaryButtonClassName } from "@/lib/admin/ui";
+import { Button } from "@/components/ui/clinic";
 
 export function ConfirmDialog({
   open,
@@ -46,12 +46,12 @@ export function ConfirmDialog({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-surface-dark/50 p-4" role="presentation">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-surface-dark/50 p-4 backdrop-blur-sm" role="presentation">
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-dialog-title"
-        className="w-full max-w-md border border-border bg-surface p-6 text-foreground shadow-lg"
+        className="clinic-panel w-full max-w-md p-6 text-foreground shadow-[0_24px_64px_rgba(7,27,51,0.18)]"
       >
         <h2 id="confirm-dialog-title" className="text-lg font-semibold">
           {title}
@@ -59,17 +59,19 @@ export function ConfirmDialog({
         {description ? <p className="mt-3 text-sm leading-7 text-muted">{description}</p> : null}
         {children ? <div className="mt-4">{children}</div> : null}
         <div className="mt-6 flex flex-wrap justify-end gap-3">
-          <button type="button" className={secondaryButtonClassName} disabled={pending} onClick={onClose}>
+          <Button type="button" variant="soft" size="md" disabled={pending} onClick={onClose}>
             {cancelLabel}
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
-            className={tone === "danger" ? dangerButtonClassName : "inline-flex items-center justify-center border border-foreground bg-foreground px-4 py-2 text-sm text-primary-foreground disabled:opacity-50"}
+            variant={tone === "danger" ? "outline" : "primary"}
+            size="md"
             disabled={pending}
             onClick={onConfirm}
+            className={tone === "danger" ? "border-red-300 text-red-800 hover:border-red-400 hover:bg-red-50 hover:text-red-900" : undefined}
           >
             {pending ? "جاري التنفيذ..." : confirmLabel}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

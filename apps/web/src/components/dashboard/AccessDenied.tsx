@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { ButtonLink } from "@/components/ui/clinic";
 
 export function AccessDenied({
   title = "لا تملك صلاحية الوصول إلى هذا المحتوى.",
@@ -8,16 +8,16 @@ export function AccessDenied({
   description?: string;
 }) {
   return (
-    <section className="border border-border bg-surface px-5 py-10 sm:px-8">
+    <section className="clinic-panel px-5 py-10 sm:px-8 sm:py-12">
       <h1 className="text-2xl font-semibold">{title}</h1>
       <p className="mt-3 max-w-xl text-sm leading-8 text-muted">{description}</p>
       <div className="mt-8 flex flex-wrap gap-3">
-        <Link href="/dashboard/courses" className="border border-accent px-4 py-2 text-sm text-accent">
+        <ButtonLink href="/dashboard/courses" variant="accent" size="md">
           دوراتي
-        </Link>
-        <Link href="/contact" className="border border-border px-4 py-2 text-sm">
+        </ButtonLink>
+        <ButtonLink href="/contact" variant="soft" size="md">
           تواصل مع الدعم
-        </Link>
+        </ButtonLink>
       </div>
     </section>
   );

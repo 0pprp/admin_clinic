@@ -28,7 +28,7 @@ export default async function ContactPage() {
       />
       <Container className="space-y-16 py-16">
         {hasAny ? (
-          <ul className="max-w-xl space-y-6 text-lg">
+          <ul className="clinic-panel max-w-xl space-y-6 p-6 text-lg sm:p-8">
             {settings?.publicPhone ? (
               <li>
                 <BrandAccentLabel className="text-sm font-bold tracking-wide">الهاتف</BrandAccentLabel>
@@ -80,7 +80,7 @@ export default async function ContactPage() {
         )}
         <section className="border-t border-border pt-16">
           <h2 className="text-3xl font-semibold">أرسل رسالة</h2>
-          <div className="mt-8">
+          <div className="clinic-panel mt-8 max-w-2xl p-6 sm:p-8">
             <ContactForm />
           </div>
         </section>

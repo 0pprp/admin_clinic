@@ -28,7 +28,7 @@ export default async function CoursesPage({ searchParams }: PageProps<"/courses"
         title="تعلّم مرتّب يمكن تطبيقه."
         description="تظهر هنا الكورسات المنشورة فقط. تفاصيل الشراء والتفعيل ستأتي لاحقاً."
       />
-      <Container className="py-16">
+      <Container className="py-16 sm:py-20">
         {items.length === 0 ? (
           <EmptyState title="الكورسات ستتوفر قريباً" description="لا توجد كورسات منشورة للعرض في الوقت الحالي." />
         ) : (

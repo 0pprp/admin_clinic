@@ -108,7 +108,7 @@ export default async function CourseDetailPage({
               <CourseEnrollCta slug={course.slug} hasSession={hasSession} />
             </div>
           </div>
-          <div className="relative aspect-[16/10] overflow-hidden bg-[#151c24]">
+          <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-[#151c24] ring-1 ring-white/10">
             {course.thumbnailUrl ? (
               <Image
                 src={course.thumbnailUrl}
@@ -139,14 +139,14 @@ export default async function CourseDetailPage({
             <CourseCurriculum slug={course.slug} sections={course.sections} />
           </div>
         </section>
-        <section className="grid gap-10 lg:grid-cols-2">
-          <div>
+        <section className="grid gap-6 lg:grid-cols-2">
+          <div className="clinic-panel p-6 sm:p-8">
             <h2 className="text-2xl font-semibold">ماذا ستخرج به؟</h2>
             <p className="mt-4 text-sm leading-8 text-muted">
               TODO: تُضاف هنا مخرجات التعلّم المعتمدة لهذه الدورة، دون اختراع وعود غير موثقة.
             </p>
           </div>
-          <div>
+          <div className="clinic-panel p-6 sm:p-8">
             <h2 className="text-2xl font-semibold">لمن هذه الدورة؟</h2>
             <p className="mt-4 text-sm leading-8 text-muted">
               TODO: يُكتب هنا توصيف الجمهور المستهدف بعد اعتماد المحتوى الحقيقي.
@@ -159,7 +159,7 @@ export default async function CourseDetailPage({
             تقدّم العيادة الإدارية هذه الدورة ضمن كورساتها. التفاصيل الكاملة عن المنهج متاحة في صفحة «عن العيادة».
           </p>
         </section>
-        <section className="bg-surface-dark px-6 py-12 text-primary-foreground sm:px-10">
+        <section className="clinic-card overflow-hidden bg-surface-dark px-6 py-12 text-primary-foreground sm:px-10">
           <h2 className="text-3xl font-semibold">ابدأ عندما تكون جاهزاً.</h2>
           <p className="mt-4 max-w-xl text-sm leading-7 text-primary-foreground/70">
             الاشتراك يتم عبر طلب يدوي. بعد إرسال الطلب يتواصل معك الفريق لتأكيد التحويل ثم التفعيل.

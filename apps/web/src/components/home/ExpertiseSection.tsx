@@ -7,7 +7,7 @@ import { SectionHeading } from "@/components/shared/SectionHeading";
 export function ExpertiseSection({ items }: { items: ExpertiseItem[] }) {
   return (
     <section className="bg-surface">
-      <Container className="py-20">
+      <Container className="py-16 sm:py-20">
         <SectionHeading eyebrow="الخبرة" title="مجالات نعمل عليها بوضوح." />
         {items.length === 0 ? (
           <div className="mt-10">
@@ -17,9 +17,9 @@ export function ExpertiseSection({ items }: { items: ExpertiseItem[] }) {
             />
           </div>
         ) : (
-          <ul className="mt-12 grid gap-10 sm:grid-cols-2">
+          <ul className="mt-12 grid gap-5 sm:grid-cols-2 sm:gap-6">
             {items.map((item, index) => (
-              <li key={item.id} className="border-t border-border pt-6">
+              <li key={item.id} className="clinic-card p-6 sm:p-7">
                 <BrandAccentLabel className="text-sm font-bold tracking-wide">
                   {String(index + 1).padStart(2, "0")}
                 </BrandAccentLabel>

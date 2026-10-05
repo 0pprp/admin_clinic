@@ -4,10 +4,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import { ToastProvider } from "@/components/admin/ToastProvider";
+import { BrandLoading, BrandWordmark, Button } from "@/components/ui/clinic";
 import { getCurrentUser, logout } from "@/lib/auth/session";
 import { adminNavGroups, isNavCurrent, pageTitleForPath } from "@/lib/admin/nav";
 import { isStaff } from "@/lib/admin/roles";
-import { brand } from "@/lib/content/brand";
 import { safeInternalPath } from "@/lib/safe-path";
 import type { UserSummary } from "@/lib/api/types";
 
@@ -41,11 +41,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   }
 
   if (!user) {
-    return (
-      <div className="min-h-full bg-background px-4 py-16 text-foreground">
-        <p className="text-sm text-muted">جاري تحميل لوحة الإدارة...</p>
-      </div>
-    );
+    return <BrandLoading label="جاري تحميل لوحة الإدارة..." />;
   }
 
   const groups = adminNavGroups
@@ -56,23 +52,29 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   return (
     <ToastProvider>
       <div className="min-h-full bg-background text-foreground">
-        <header className="border-b border-border bg-surface-dark text-primary-foreground">
-          <div className="flex items-center justify-between gap-3 px-4 py-4 lg:px-6">
-            <div>
-              <p className="text-base font-semibold">{brand.nameAr}</p>
-              <p className="mt-1 text-xs text-accent-soft">لوحة الإدارة · {title}</p>
+        <header className="border-b border-white/10 bg-surface-dark text-primary-foreground">
+          <div className="flex items-center justify-between gap-3 px-4 py-3.5 lg:px-6">
+            <div className="min-w-0">
+              <BrandWordmark inverted compact href="/admin" />
+              <p className="mt-1.5 truncate text-xs text-accent-soft">لوحة الإدارة · {title}</p>
             </div>
-            <div className="flex items-center gap-3 text-sm">
-              <p className="hidden sm:block text-primary-foreground/80">{user.fullName}</p>
-              <Link href="/dashboard" className="hidden border border-white/20 px-3 py-1.5 sm:inline-flex">
+            <div className="flex items-center gap-2 text-sm sm:gap-3">
+              <p className="hidden text-primary-foreground/80 sm:block">{user.fullName}</p>
+              <Link
+                href="/dashboard"
+                className="hidden rounded-md border border-white/20 px-3 py-1.5 transition hover:bg-white/5 sm:inline-flex"
+              >
                 لوحة الطالب
               </Link>
-              <Link href="/" className="border border-accent px-3 py-1.5 text-accent hover:bg-accent hover:text-surface-dark">
+              <Link
+                href="/"
+                className="rounded-md border border-accent px-3 py-1.5 text-accent transition hover:bg-accent hover:text-primary-foreground"
+              >
                 الموقع
               </Link>
               <button
                 type="button"
-                className="border border-white/20 px-3 py-1.5 lg:hidden"
+                className="rounded-md border border-white/20 px-3 py-1.5 lg:hidden"
                 aria-expanded={open}
                 aria-controls={menuId}
                 onClick={() => setOpen((value) => !value)}
@@ -82,15 +84,15 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         </header>
-        <div className="lg:grid lg:grid-cols-[16rem_minmax(0,1fr)]">
+        <div className="lg:grid lg:grid-cols-[16.5rem_minmax(0,1fr)]">
           <aside
             id={menuId}
-            className={`${open ? "block" : "hidden"} border-b border-border bg-surface px-3 py-4 lg:block lg:min-h-[calc(100vh-4.5rem)] lg:border-b-0 lg:border-l lg:px-4 lg:py-6`}
+            className={`${open ? "block" : "hidden"} border-b border-border bg-surface px-3 py-4 lg:block lg:min-h-[calc(100vh-4.75rem)] lg:border-b-0 lg:border-l lg:px-4 lg:py-6`}
           >
             <nav aria-label="تنقل لوحة الإدارة" className="flex flex-col gap-5 text-sm">
               {groups.map((group) => (
                 <div key={group.title}>
-                  <p className="px-3 text-[11px] font-semibold tracking-[0.14em] text-accent">{group.title}</p>
+                  <p className="px-3 font-naskh text-[12px] font-bold text-accent">{group.title}</p>
                   <div className="mt-2 flex flex-col gap-1">
                     {group.items.map((item) => {
                       const current = isNavCurrent(pathname, item);
@@ -99,7 +101,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                           key={item.href}
                           href={item.href}
                           aria-current={current ? "page" : undefined}
-                          className={`px-3 py-2 ${current ? "bg-surface-warm text-foreground" : "text-muted hover:text-foreground"}`}
+                          className={`rounded-md px-3 py-2 transition ${
+                            current ? "bg-surface-warm font-medium text-foreground" : "text-muted hover:bg-surface-warm/70 hover:text-foreground"
+                          }`}
                           onClick={() => setOpen(false)}
                         >
                           {item.label}
@@ -109,9 +113,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                   </div>
                 </div>
               ))}
-              <button type="button" className="px-3 py-2 text-start text-muted hover:text-foreground" onClick={onLogout}>
+              <Button variant="ghost" className="justify-start px-3 text-muted" onClick={onLogout}>
                 تسجيل الخروج
-              </button>
+              </Button>
             </nav>
           </aside>
           <main id="main" className="px-4 py-8 sm:py-10 lg:px-8">

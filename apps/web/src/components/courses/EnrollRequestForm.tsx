@@ -8,6 +8,8 @@ import { getCurrentUser } from "@/lib/auth/session";
 import type { UserSummary } from "@/lib/api/types";
 import { courseAccessLabel, formatIqd } from "@/lib/format";
 import type { PurchaseCreated } from "@/lib/purchases";
+import { Button } from "@/components/ui/clinic";
+import { clinicInputClassName } from "@/components/ui/clinic/Field";
 
 export function EnrollRequestForm({
   courseId,
@@ -75,8 +77,8 @@ export function EnrollRequestForm({
   const profileIncomplete = !user.fullName || !user.phoneNumber || !user.whatsAppNumber || !user.email || !user.governorate;
 
   return (
-    <form onSubmit={onSubmit} className="space-y-10">
-      <section>
+    <form onSubmit={onSubmit} className="max-w-3xl space-y-8">
+      <section className="clinic-panel p-6 sm:p-8">
         <h2 className="text-xl font-semibold">ملخص الدورة</h2>
         <dl className="mt-4 grid gap-4 text-sm sm:grid-cols-2">
           <div>
@@ -93,7 +95,7 @@ export function EnrollRequestForm({
           </div>
         </dl>
       </section>
-      <section>
+      <section className="clinic-panel p-6 sm:p-8">
         <div className="flex items-center justify-between gap-4">
           <h2 className="text-xl font-semibold">بيانات التواصل</h2>
           <Link href="/dashboard" className="text-sm text-accent hover:underline">
@@ -126,11 +128,11 @@ export function EnrollRequestForm({
           <p className="mt-4 text-sm text-red-700">يرجى إكمال بيانات حسابك قبل إرسال طلب الاشتراك.</p>
         ) : null}
       </section>
-      <section>
-        <label className="block text-sm">
+      <section className="clinic-panel p-6 sm:p-8">
+        <label className="block text-sm font-medium">
           ملاحظة اختيارية
           <textarea
-            className="mt-2 w-full border border-border bg-background px-3 py-2 text-sm"
+            className={`mt-2 ${clinicInputClassName} min-h-28 resize-y`}
             rows={4}
             value={notes}
             onChange={(event) => setNotes(event.target.value)}
@@ -148,13 +150,9 @@ export function EnrollRequestForm({
         أفهم أن إرسال الطلب لا يعني تفعيل الدورة، وسيتواصل معي الفريق لتأكيد الدفع.
       </label>
       {error ? <p className="text-sm text-red-700">{error}</p> : null}
-      <button
-        type="submit"
-        disabled={pending || !accepted || profileIncomplete}
-        className="inline-flex border border-accent bg-accent px-5 py-3 text-sm text-surface-dark disabled:opacity-50"
-      >
+      <Button type="submit" variant="accent" size="lg" disabled={pending || !accepted || profileIncomplete}>
         {pending ? "جاري إرسال الطلب..." : "إرسال طلب الاشتراك"}
-      </button>
+      </Button>
     </form>
   );
 }

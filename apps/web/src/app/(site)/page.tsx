@@ -10,6 +10,8 @@ import { StatisticsSection } from "@/components/home/StatisticsSection";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 import { TrustStrip } from "@/components/home/TrustStrip";
 import { WhySection } from "@/components/home/WhySection";
+import { AdCarousel } from "@/components/ui/clinic";
+import { Container } from "@/components/shared/Container";
 import { fetchPublic } from "@/lib/api/public";
 import type {
   ArticleSummary,
@@ -19,6 +21,7 @@ import type {
   StatisticItem,
   TestimonialItem
 } from "@/lib/api/public-types";
+import { homeAdSlides } from "@/lib/content/ads";
 import { brand } from "@/lib/content/brand";
 import { resolveHeroImage } from "@/lib/media/hero-image";
 import { createPageMetadata } from "@/lib/seo";
@@ -49,6 +52,9 @@ export default async function HomePage() {
   return (
     <>
       <HeroSection imageSrc={resolveHeroImage()} />
+      <Container className="py-8 sm:py-10">
+        <AdCarousel slides={homeAdSlides} />
+      </Container>
       <TrustStrip expertise={expertise ?? []} />
       <AboutPreview />
       <ExpertiseSection items={expertise ?? []} />

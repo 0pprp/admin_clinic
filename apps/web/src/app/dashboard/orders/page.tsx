@@ -41,9 +41,9 @@ export default function DashboardOrdersPage() {
       {items.length === 0 ? (
         <EmptyState title="لا توجد طلبات بعد" description="يمكنك إرسال طلب اشتراك من صفحة الدورة." />
       ) : (
-        <ul className="divide-y divide-border border-y border-border">
+        <ul className="clinic-panel divide-y divide-border overflow-hidden">
           {items.map((item) => (
-            <li key={item.id} className="flex flex-col gap-2 py-5 sm:flex-row sm:items-center sm:justify-between">
+            <li key={item.id} className="flex flex-col gap-2 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
               <div>
                 <p className="font-medium">{item.courseTitle}</p>
                 <p className="mt-1 text-xs text-muted">

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { positioningAreas } from "@/lib/content/brand";
 import { aboutCopy } from "@/lib/content/pages";
 import { fetchPublic } from "@/lib/api/public";
@@ -6,6 +5,7 @@ import type { ExpertiseItem } from "@/lib/api/public-types";
 import { createPageMetadata } from "@/lib/seo";
 import { BrandSlogan } from "@/components/brand/BrandSlogan";
 import { brand } from "@/lib/content/brand";
+import { ButtonLink } from "@/components/ui/clinic";
 import { Container } from "@/components/shared/Container";
 import { PageIntro } from "@/components/shared/PageIntro";
 
@@ -35,7 +35,7 @@ export default async function AboutPage() {
           <h2 className="text-3xl font-semibold">{aboutCopy.interestsTitle}</h2>
           <ul className="mt-8 grid gap-4 sm:grid-cols-2">
             {interests.map((item) => (
-              <li key={item} className="border-s-2 border-accent ps-4 text-lg">
+              <li key={item} className="clinic-panel border-s-4 border-s-accent px-5 py-4 text-lg">
                 {item}
               </li>
             ))}
@@ -46,15 +46,20 @@ export default async function AboutPage() {
           <p className="mt-5 max-w-2xl text-base leading-8 text-muted">{aboutCopy.storyBody}</p>
           <BrandSlogan className="mt-5 text-xl font-bold sm:text-2xl">{brand.sloganAr}</BrandSlogan>
         </section>
-        <section className="bg-surface-dark px-6 py-12 text-primary-foreground sm:px-10">
+        <section className="clinic-card overflow-hidden bg-surface-dark px-6 py-12 text-primary-foreground sm:px-10">
           <h2 className="text-3xl font-semibold">ابدأ من المحتوى أو من نقاش أعمق.</h2>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/courses" className="border border-accent bg-accent px-5 py-3 text-sm text-primary-foreground">
+            <ButtonLink href="/courses" variant="accent" size="lg">
               استكشف الكورسات
-            </Link>
-            <Link href="/consultation" className="border border-primary-foreground/25 px-5 py-3 text-sm">
+            </ButtonLink>
+            <ButtonLink
+              href="/consultation"
+              variant="outline"
+              size="lg"
+              className="border-primary-foreground/25 text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+            >
               احجز استشارة
-            </Link>
+            </ButtonLink>
           </div>
         </section>
       </Container>

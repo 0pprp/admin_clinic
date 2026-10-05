@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ButtonLink } from "@/components/ui/clinic";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ApiRequestError, apiFetch, parseJson } from "@/lib/api/client";
@@ -71,12 +72,16 @@ export default function DashboardPage() {
       <p className="mt-3 max-w-2xl text-sm leading-8 text-muted">تابع دوراتك وتقدمك التعليمي من مكان واحد.</p>
       <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map((card) => (
-          <Link key={card.label} href={card.href} className="border border-border bg-surface px-5 py-6 hover:border-accent">
+          <Link
+            key={card.label}
+            href={card.href}
+            className="clinic-card px-5 py-6 transition hover:border-accent/40 hover:shadow-[0_12px_40px_rgba(7,27,51,0.08)]"
+          >
             <p className="text-xs tracking-[0.16em] text-muted">{card.label}</p>
             <p className="mt-3 text-2xl font-semibold">{card.value}</p>
           </Link>
         ))}
-        <section className="border border-border bg-surface px-5 py-6">
+        <section className="clinic-card px-5 py-6 sm:col-span-2 xl:col-span-1">
           <p className="text-xs tracking-[0.16em] text-muted">متابعة التعلم</p>
           {summary.continueLearning ? (
             <>
@@ -85,12 +90,14 @@ export default function DashboardPage() {
               {summary.continueLearning.lastWatchedAt ? (
                 <p className="mt-2 text-xs text-muted">{formatBaghdadDateTime(summary.continueLearning.lastWatchedAt)}</p>
               ) : null}
-              <Link
+              <ButtonLink
                 href={lessonHref(summary.continueLearning.courseSlug, summary.continueLearning.lessonId)}
-                className="mt-4 inline-flex text-sm text-accent hover:underline"
+                variant="ghost"
+                size="sm"
+                className="mt-4 px-0 text-accent hover:bg-transparent"
               >
                 متابعة التعلم
-              </Link>
+              </ButtonLink>
             </>
           ) : (
             <>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { navItems } from "@/lib/content/brand";
+import { BrandWordmark } from "@/components/ui/clinic";
 
 export function MobileNavigation({ hasSession }: { hasSession: boolean }) {
   const [open, setOpen] = useState(false);
@@ -59,14 +60,14 @@ export function MobileNavigation({ hasSession }: { hasSession: boolean }) {
               role="dialog"
               aria-modal="true"
               aria-label="قائمة التنقل"
-              className="absolute inset-y-0 start-0 flex w-[min(22rem,92vw)] flex-col border-e border-white/15 bg-[#061526] shadow-[0_0_40px_rgba(0,0,0,0.55)]"
+              className="absolute inset-y-0 start-0 flex w-[min(22rem,92vw)] flex-col rounded-e-2xl border-e border-white/15 bg-[#061526] shadow-[0_0_40px_rgba(0,0,0,0.55)]"
             >
               <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-                <p className="text-sm font-semibold text-primary-foreground">القائمة</p>
+                <BrandWordmark inverted compact />
                 <button
                   ref={closeButtonRef}
                   type="button"
-                  className="border border-white/20 px-3 py-1.5 text-sm text-accent-soft"
+                  className="rounded-md border border-white/20 px-3 py-1.5 text-sm text-accent-soft"
                   onClick={closeMenu}
                 >
                   إغلاق
@@ -77,7 +78,7 @@ export function MobileNavigation({ hasSession }: { hasSession: boolean }) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="rounded-sm px-3 py-3 transition hover:bg-white/10"
+                    className="rounded-md px-3 py-3 transition hover:bg-white/10"
                     onClick={closeMenu}
                   >
                     {item.label}
@@ -94,7 +95,7 @@ export function MobileNavigation({ hasSession }: { hasSession: boolean }) {
                 </Link>
                 <Link
                   href="/courses"
-                  className="inline-flex w-full items-center justify-center border border-accent bg-accent px-4 py-3 text-sm text-primary-foreground"
+                  className="inline-flex w-full items-center justify-center rounded-md border border-accent bg-accent px-4 py-3 text-sm text-primary-foreground"
                   onClick={closeMenu}
                 >
                   استكشف الكورسات
@@ -111,7 +112,7 @@ export function MobileNavigation({ hasSession }: { hasSession: boolean }) {
       <button
         ref={openButtonRef}
         type="button"
-        className="inline-flex h-11 w-11 items-center justify-center rounded-sm border border-white/25 bg-white/5 text-primary-foreground"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-white/25 bg-white/5 text-primary-foreground"
         aria-expanded={open}
         aria-controls={dialogId}
         aria-label={open ? "إغلاق القائمة" : "فتح القائمة"}

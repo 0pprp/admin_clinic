@@ -12,25 +12,25 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
   }
 
   return (
-    <div className="divide-y divide-border border-y border-border">
+    <div className="clinic-panel divide-y divide-border overflow-hidden">
       {items.map((item, index) => {
         const panelId = `${baseId}-panel-${index}`;
         const buttonId = `${baseId}-button-${index}`;
         const open = openIds.includes(item.id);
 
         return (
-          <div key={item.id}>
+          <div key={item.id} className="px-5 sm:px-6">
             <h3>
               <button
                 id={buttonId}
                 type="button"
-                className="flex w-full items-start justify-between gap-6 py-5 text-right text-lg font-semibold"
+                className="flex w-full items-start justify-between gap-6 py-5 text-right text-lg font-semibold transition hover:text-accent"
                 aria-expanded={open}
                 aria-controls={panelId}
                 onClick={() => toggle(item.id)}
               >
                 <span>{item.question}</span>
-                <span aria-hidden="true" className="mt-1 text-accent">
+                <span aria-hidden="true" className="mt-1 shrink-0 text-accent">
                   {open ? "−" : "+"}
                 </span>
               </button>

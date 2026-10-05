@@ -11,7 +11,7 @@ export function SiteFooter({ settings }: { settings: PublicSiteSettings | null }
 
   return (
     <footer className="bg-surface-dark text-primary-foreground">
-      <Container className="grid gap-12 py-16 md:grid-cols-[1.2fr_1fr_1fr]">
+      <Container className="grid gap-12 py-14 sm:py-16 md:grid-cols-[1.2fr_1fr_1fr]">
         <div>
           <Wordmark inverted />
           <p className="mt-5 max-w-sm text-sm leading-7 text-primary-foreground/70">
@@ -23,7 +23,7 @@ export function SiteFooter({ settings }: { settings: PublicSiteSettings | null }
           <ul className="mt-4 space-y-3 text-sm text-primary-foreground/75">
             {footerLinks.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="hover:text-accent-soft">
+                <Link href={item.href} className="transition hover:text-accent-soft">
                   {item.label}
                 </Link>
               </li>
@@ -34,12 +34,12 @@ export function SiteFooter({ settings }: { settings: PublicSiteSettings | null }
           <BrandAccentLabel className="text-sm font-bold tracking-wide">قانوني</BrandAccentLabel>
           <ul className="mt-4 space-y-3 text-sm text-primary-foreground/75">
             <li>
-              <Link href="/privacy" className="hover:text-accent-soft">
+              <Link href="/privacy" className="transition hover:text-accent-soft">
                 سياسة الخصوصية
               </Link>
             </li>
             <li>
-              <Link href="/terms" className="hover:text-accent-soft">
+              <Link href="/terms" className="transition hover:text-accent-soft">
                 الشروط والأحكام
               </Link>
             </li>

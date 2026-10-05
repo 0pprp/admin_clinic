@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* العيادة الإدارية — كحلي / برتقالي / أبيض */
+  /* العيادة الإدارية — نظام Figma: كحلي / برتقالي / أبيض */
   --background: #f3f6fa;
   --foreground: #071b33;
   --primary: #071b33;
@@ -14,6 +14,11 @@
   --surface-warm: #e8eef5;
   --surface-dark: #071b33;
   --ring: #f15a24;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --success: #0f6b4c;
+  --warning: #8a5a12;
 }
 
 @theme inline {
@@ -32,7 +37,6 @@
   --font-naskh: var(--font-arabic-naskh), "Amiri", serif;
 }
 
-/* دور الخط: Amiri لكل نص بلون الشعار البرتقالي؛ IBM Plex لباقي الواجهة */
 .font-naskh,
 .brand-accent-label {
   font-family: var(--font-arabic-naskh), "Amiri", serif;
@@ -74,10 +78,23 @@ svg {
   background: var(--surface);
   color: var(--foreground);
   padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-sm);
 }
 
 .skip-link:focus {
   top: 1rem;
+}
+
+.clinic-card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+}
+
+.clinic-panel {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-md);
 }
 
 @media (prefers-reduced-motion: reduce) {

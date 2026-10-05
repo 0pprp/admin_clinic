@@ -65,12 +65,12 @@ export default function DashboardActivatePage() {
   if (result) {
     return (
       <DashboardShell title="تم تفعيل الدورة بنجاح">
-        <section className="max-w-2xl border border-border bg-surface px-5 py-8 sm:px-8">
+        <section className="clinic-card max-w-2xl px-5 py-8 sm:px-8">
           <p className="text-sm leading-8 text-muted">أصبحت الدورة جزءاً من حسابك، ويمكنك البدء متى شئت.</p>
           <h2 className="mt-6 text-2xl font-semibold">{result.courseTitle}</h2>
           <Link
             href={`/dashboard/courses/${result.courseSlug}`}
-            className="mt-8 inline-flex border border-accent px-5 py-2.5 text-sm text-accent"
+            className="mt-8 inline-flex rounded-md border border-accent bg-accent px-5 py-2.5 text-sm text-primary-foreground transition hover:bg-accent-soft"
           >
             ابدأ التعلم
           </Link>
@@ -80,12 +80,12 @@ export default function DashboardActivatePage() {
   }
 
   return (
-    <DashboardShell title="تفعيل دورة">
+    <DashboardShell title="تفعيل كود">
       <p className="max-w-2xl text-sm leading-8 text-muted">
         تم استلام دفعتك؟ أدخل كود التفعيل الذي استلمته من فريق العيادة الإدارية.
       </p>
-      <form onSubmit={onSubmit} className="mt-10 max-w-xl border border-border bg-surface px-5 py-8 sm:px-8">
-        <p className="text-xs tracking-[0.2em] text-accent">لديك كود تفعيل؟</p>
+      <form onSubmit={onSubmit} className="clinic-card mt-10 max-w-xl px-5 py-8 sm:px-8">
+        <p className="font-naskh text-sm font-bold text-accent">لديك كود تفعيل؟</p>
         <label className="mt-6 block text-sm" htmlFor="activation-code">
           كود التفعيل
         </label>
@@ -98,13 +98,13 @@ export default function DashboardActivatePage() {
           spellCheck={false}
           dir="ltr"
           placeholder="MR-8K2P-7X4M"
-          className="mt-2 w-full border border-border bg-background px-3 py-3 text-left tracking-[0.18em] outline-none focus:border-accent"
+          className="mt-2 w-full rounded-md border border-border bg-background px-3 py-3 text-left tracking-[0.18em] outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
         />
-        {error ? <p className="mt-4 text-sm text-red-400">{error}</p> : null}
+        {error ? <p className="mt-4 text-sm text-red-600">{error}</p> : null}
         <button
           type="submit"
           disabled={pending || code.trim().length === 0}
-          className="mt-8 border border-accent bg-accent px-5 py-2.5 text-sm text-background disabled:opacity-60"
+          className="mt-8 rounded-md border border-accent bg-accent px-5 py-2.5 text-sm text-primary-foreground transition hover:bg-accent-soft disabled:opacity-60"
         >
           {pending ? "جاري التفعيل..." : "تفعيل الدورة"}
         </button>

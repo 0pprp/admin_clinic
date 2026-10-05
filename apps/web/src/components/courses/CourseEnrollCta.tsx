@@ -1,24 +1,18 @@
-import Link from "next/link";
+import { ButtonLink } from "@/components/ui/clinic";
 
 export function CourseEnrollCta({ slug, hasSession }: { slug: string; hasSession: boolean }) {
   if (hasSession) {
     return (
-      <Link
-        href={`/courses/${slug}/enroll`}
-        className="inline-flex border border-accent bg-accent px-5 py-3 text-sm text-surface-dark"
-      >
+      <ButtonLink href={`/courses/${slug}/enroll`} variant="accent" size="lg">
         اشترك الآن
-      </Link>
+      </ButtonLink>
     );
   }
 
   const from = encodeURIComponent(`/courses/${slug}`);
   return (
-    <Link
-      href={`/login?from=${from}&intent=enroll`}
-      className="inline-flex border border-accent bg-accent px-5 py-3 text-sm text-surface-dark"
-    >
+    <ButtonLink href={`/login?from=${from}&intent=enroll`} variant="accent" size="lg">
       اشترك الآن
-    </Link>
+    </ButtonLink>
   );
 }

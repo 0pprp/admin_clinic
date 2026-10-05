@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { ButtonLink } from "@/components/ui/clinic";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CourseThumbnail } from "@/components/dashboard/CourseThumbnail";
@@ -68,11 +68,11 @@ export default function DashboardCoursesPage() {
       <h1 className="text-3xl font-semibold">دوراتي</h1>
       <p className="mt-3 max-w-2xl text-sm leading-8 text-muted">كل الدورات المرتبطة بحسابك، مع تقدمك الحالي.</p>
       {items.length === 0 ? (
-        <section className="mt-10 border border-dashed border-border bg-surface px-6 py-12 text-center">
+        <section className="clinic-panel mt-10 border-dashed px-6 py-12 text-center">
           <p className="text-lg font-semibold">لا توجد دورات مفعلة في حسابك حالياً.</p>
-          <Link href="/courses" className="mt-6 inline-flex border border-accent px-4 py-2 text-sm text-accent">
+          <ButtonLink href="/courses" variant="accent" size="md" className="mt-6">
             استكشف الدورات
-          </Link>
+          </ButtonLink>
         </section>
       ) : (
         <>
@@ -110,7 +110,7 @@ function CourseEnrollmentCard({ item }: { item: StudentEnrollment }) {
     item.canAccess && item.continueLessonId ? lessonHref(item.courseSlug, item.continueLessonId) : null;
 
   return (
-    <li className="overflow-hidden border border-border bg-surface">
+    <li className="clinic-card overflow-hidden">
       <CourseThumbnail title={item.courseTitle} src={item.thumbnailUrl} />
       <div className="p-5">
         <div className="flex items-start justify-between gap-3">
@@ -126,19 +126,19 @@ function CourseEnrollmentCard({ item }: { item: StudentEnrollment }) {
         <div className="mt-5 flex flex-wrap gap-3 text-sm">
           {item.canAccess ? (
             <>
-              <Link href={`/dashboard/courses/${item.courseSlug}`} className="border border-accent px-3 py-1.5 text-accent">
+              <ButtonLink href={`/dashboard/courses/${item.courseSlug}`} variant="accent" size="sm">
                 فتح الدورة
-              </Link>
+              </ButtonLink>
               {continueHref ? (
-                <Link href={continueHref} className="border border-border px-3 py-1.5">
+                <ButtonLink href={continueHref} variant="soft" size="sm">
                   متابعة التعلم
-                </Link>
+                </ButtonLink>
               ) : null}
             </>
           ) : item.status === "Suspended" ? (
-            <Link href="/contact" className="border border-border px-3 py-1.5">
+            <ButtonLink href="/contact" variant="soft" size="sm">
               تواصل مع الدعم
-            </Link>
+            </ButtonLink>
           ) : null}
         </div>
       </div>

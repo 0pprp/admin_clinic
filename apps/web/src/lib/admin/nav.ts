@@ -42,7 +42,8 @@ export const adminNavGroups: AdminNavGroup[] = [
     items: [
       { href: "/admin/courses", label: "الكورسات والدروس والفيديو", visible: canManageCourses },
       { href: "/admin/articles", label: "المقالات", visible: canManageContent },
-      { href: "/admin/faq", label: "الأسئلة الشائعة", visible: canManageContent }
+      { href: "/admin/faq", label: "الأسئلة الشائعة", visible: canManageContent },
+      { href: "/admin/ads", label: "الإعلانات", visible: canManageContent }
     ]
   },
   {

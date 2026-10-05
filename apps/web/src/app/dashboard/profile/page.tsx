@@ -108,7 +108,7 @@ export default function DashboardProfilePage() {
     <div>
       <h1 className="text-3xl font-semibold">الملف الشخصي</h1>
       <p className="mt-3 max-w-2xl text-sm leading-8 text-muted">حدّث بيانات التواصل الخاصة بك. البريد الإلكتروني غير قابل للتعديل حالياً.</p>
-      <form onSubmit={onSaveProfile} className="mt-8 max-w-xl border border-border bg-surface px-5 py-8 sm:px-8">
+      <form onSubmit={onSaveProfile} className="clinic-card mt-8 max-w-xl px-5 py-8 sm:px-8">
         <Field label="الاسم الكامل">
           <input className={inputClassName} value={fullName} onChange={(event) => setFullName(event.target.value)} required />
         </Field>
@@ -124,13 +124,13 @@ export default function DashboardProfilePage() {
         <Field label="المحافظة">
           <input className={inputClassName} value={governorate} onChange={(event) => setGovernorate(event.target.value)} />
         </Field>
-        {profileError ? <p className="mb-4 text-sm text-red-400">{profileError}</p> : null}
+        {profileError ? <p className="mb-4 text-sm text-red-600">{profileError}</p> : null}
         {profileSuccess ? <p className="mb-4 text-sm text-accent">{profileSuccess}</p> : null}
         <button type="submit" disabled={profilePending} className={buttonClassName}>
           {profilePending ? "جاري الحفظ..." : "حفظ التغييرات"}
         </button>
       </form>
-      <form onSubmit={onChangePassword} className="mt-8 max-w-xl border border-border bg-surface px-5 py-8 sm:px-8">
+      <form onSubmit={onChangePassword} className="clinic-card mt-8 max-w-xl px-5 py-8 sm:px-8">
         <h2 className="text-xl font-semibold">تغيير كلمة المرور</h2>
         <div className="mt-6">
           <Field label="كلمة المرور الحالية">
@@ -161,7 +161,7 @@ export default function DashboardProfilePage() {
             />
           </Field>
         </div>
-        {passwordError ? <p className="mb-4 text-sm text-red-400">{passwordError}</p> : null}
+        {passwordError ? <p className="mb-4 text-sm text-red-600">{passwordError}</p> : null}
         {passwordSuccess ? <p className="mb-4 text-sm text-accent">{passwordSuccess}</p> : null}
         <button type="submit" disabled={passwordPending} className={buttonClassName}>
           {passwordPending ? "جاري التحديث..." : "تغيير كلمة المرور"}

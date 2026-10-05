@@ -3,8 +3,10 @@
 import { FormEvent, useState } from "react";
 import { ApiRequestError, apiFetch, parseJson } from "@/lib/api/client";
 import type { CreateContactResponse } from "@/lib/admin/types";
+import { Button } from "@/components/ui/clinic";
+import { clinicInputClassName } from "@/components/ui/clinic/Field";
 
-const fieldClass = "mt-2 w-full border border-border bg-background px-3 py-2 text-sm";
+const fieldClass = `mt-2 ${clinicInputClassName}`;
 
 export function ContactForm() {
   const [name, setName] = useState("");
@@ -44,7 +46,7 @@ export function ContactForm() {
 
   if (success) {
     return (
-      <section className="border border-border bg-surface px-6 py-8">
+      <section>
         <p className="text-lg font-semibold">تم استلام رسالتك بنجاح.</p>
         <p className="mt-3 max-w-xl text-sm leading-8 text-muted">سيتواصل معك الفريق عند الحاجة عبر البيانات التي أرسلتها.</p>
       </section>
@@ -80,9 +82,9 @@ export function ContactForm() {
         <textarea className={fieldClass} rows={5} value={message} onChange={(event) => setMessage(event.target.value)} required />
       </label>
       {error ? <p className="text-sm text-red-700">{error}</p> : null}
-      <button type="submit" disabled={pending} className="inline-flex border border-accent bg-accent px-5 py-3 text-sm text-surface-dark disabled:opacity-50">
+      <Button type="submit" variant="accent" size="lg" disabled={pending}>
         {pending ? "جاري الإرسال..." : "إرسال الرسالة"}
-      </button>
+      </Button>
     </form>
   );
 }

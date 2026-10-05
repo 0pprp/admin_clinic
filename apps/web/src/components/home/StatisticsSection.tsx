@@ -1,4 +1,5 @@
 import type { StatisticItem } from "@/lib/api/public-types";
+import { Metric } from "@/components/ui/clinic";
 import { Container } from "@/components/shared/Container";
 
 export function StatisticsSection({ items }: { items: StatisticItem[] }) {
@@ -8,12 +9,9 @@ export function StatisticsSection({ items }: { items: StatisticItem[] }) {
 
   return (
     <section className="bg-surface-warm" aria-label="مؤشرات المنصة">
-      <Container className="grid gap-10 py-16 sm:grid-cols-2 lg:grid-cols-4">
+      <Container className="grid gap-4 py-14 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 lg:py-16">
         {items.map((item) => (
-          <div key={item.id} className="text-center sm:text-start">
-            <p className="text-3xl font-semibold tracking-tight">{item.displayValue}</p>
-            <p className="mt-2 text-sm text-muted">{item.label}</p>
-          </div>
+          <Metric key={item.id} value={item.displayValue} label={item.label} />
         ))}
       </Container>
     </section>

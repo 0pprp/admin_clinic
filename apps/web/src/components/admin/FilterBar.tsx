@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
+import { Button } from "@/components/ui/clinic";
+import { clinicInputClassName } from "@/components/ui/clinic/Field";
 import { withListQuery } from "@/lib/admin/query";
-import { inputClassName, secondaryButtonClassName } from "@/lib/admin/ui";
 
 export function FilterBar({
   pathname,
@@ -27,12 +28,12 @@ export function FilterBar({
   }
 
   return (
-    <form onSubmit={onSubmit} className="mb-6 grid gap-3 border border-border bg-surface p-4 sm:grid-cols-2 lg:grid-cols-4">
+    <form onSubmit={onSubmit} className="clinic-panel mb-6 grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-4">
       {children}
       <div className="flex items-end gap-2 sm:col-span-2 lg:col-span-4">
-        <button type="submit" className={secondaryButtonClassName}>
+        <Button type="submit" variant="primary" size="md">
           تطبيق التصفية
-        </button>
+        </Button>
       </div>
     </form>
   );
@@ -53,8 +54,8 @@ export function FilterField({
 }) {
   return (
     <label className="block text-sm">
-      <span className="mb-1.5 block text-muted">{label}</span>
-      <input className={inputClassName} name={name} type={type} defaultValue={defaultValue} placeholder={placeholder} />
+      <span className="mb-1.5 block font-medium text-foreground">{label}</span>
+      <input className={clinicInputClassName} name={name} type={type} defaultValue={defaultValue} placeholder={placeholder} />
     </label>
   );
 }
@@ -72,8 +73,8 @@ export function FilterSelect({
 }) {
   return (
     <label className="block text-sm">
-      <span className="mb-1.5 block text-muted">{label}</span>
-      <select className={inputClassName} name={name} defaultValue={defaultValue}>
+      <span className="mb-1.5 block font-medium text-foreground">{label}</span>
+      <select className={clinicInputClassName} name={name} defaultValue={defaultValue}>
         {options.map((option) => (
           <option key={option.value || "all"} value={option.value}>
             {option.label}

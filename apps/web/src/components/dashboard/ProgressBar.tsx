@@ -11,7 +11,7 @@ export function ProgressBar({
     <div>
       <div className="mb-2 flex items-center justify-between gap-3 text-sm">
         <span className="text-muted">{label}</span>
-        <span className="font-medium">{clamped}%</span>
+        <span className="font-medium text-primary">{clamped}%</span>
       </div>
       <div
         role="progressbar"
@@ -19,9 +19,9 @@ export function ProgressBar({
         aria-valuenow={clamped}
         aria-valuemin={0}
         aria-valuemax={100}
-        className="h-2 overflow-hidden bg-surface-warm"
+        className="h-2.5 overflow-hidden rounded-full bg-surface-warm"
       >
-        <div className="h-full bg-accent transition-[width]" style={{ width: `${clamped}%` }} />
+        <div className="h-full rounded-full bg-accent transition-[width]" style={{ width: `${clamped}%` }} />
       </div>
     </div>
   );

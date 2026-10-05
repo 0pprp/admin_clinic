@@ -109,7 +109,7 @@ export default function ContactMessageDetailPage() {
         }
       />
       {error ? <div className="mb-4"><ErrorState message={error} /></div> : null}
-      <section className="grid gap-4 border border-border bg-surface px-5 py-6 text-sm sm:grid-cols-2">
+      <section className="clinic-card grid gap-4 px-5 py-6 text-sm sm:grid-cols-2">
         <Info label="الاسم" value={detail.name} />
         <Info label="البريد" value={detail.email} />
         <Info label="الهاتف" value={detail.phone} />
@@ -121,7 +121,7 @@ export default function ContactMessageDetailPage() {
         </div>
         <Info label="التاريخ" value={formatBaghdadDateTime(detail.createdAt)} />
       </section>
-      <section className="mt-6 border border-border px-5 py-4 text-sm">
+      <section className="clinic-card mt-6 px-5 py-4 text-sm">
         <p className="text-muted">الرسالة</p>
         <p className="mt-2 leading-7 whitespace-pre-wrap">{detail.message}</p>
       </section>

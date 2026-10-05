@@ -143,7 +143,7 @@ export default function FaqAdminPage() {
     <>
       <PageHeader title="الأسئلة الشائعة" description="إضافة وتعديل وترتيب الأسئلة." />
       {error ? <ErrorState message={error} /> : null}
-      <form onSubmit={onCreate} className="mb-8 grid gap-3 border border-border bg-surface p-5">
+      <form onSubmit={onCreate} className="clinic-card mb-8 grid gap-3 p-5">
         <Field label="السؤال">
           <input className={inputClassName} value={question} onChange={(event) => setQuestion(event.target.value)} required />
         </Field>
@@ -163,7 +163,7 @@ export default function FaqAdminPage() {
       {items && items.length > 0 ? (
         <ul className="space-y-4">
           {items.map((item, index) => (
-            <li key={item.id} className="border border-border bg-surface p-4">
+            <li key={item.id} className="clinic-card p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <p className="font-medium">{item.question}</p>

@@ -28,9 +28,9 @@ export function AdminPagination({
   }
 
   return (
-    <nav className="mt-6 flex items-center justify-between border-t border-border pt-4 text-sm" aria-label="ترقيم الصفحات">
+    <nav className="mt-6 flex items-center justify-between gap-3 clinic-card px-4 py-3.5 text-sm" aria-label="ترقيم الصفحات">
       {page > 1 ? (
-        <Link href={hrefFor(page - 1)} className="text-foreground hover:text-accent">
+        <Link href={hrefFor(page - 1)} className="font-semibold text-accent hover:underline">
           الصفحة السابقة
         </Link>
       ) : (
@@ -40,7 +40,7 @@ export function AdminPagination({
         صفحة {page} من {totalPages} · {totalCount} عنصر
       </p>
       {page < totalPages ? (
-        <Link href={hrefFor(page + 1)} className="text-foreground hover:text-accent">
+        <Link href={hrefFor(page + 1)} className="font-semibold text-accent hover:underline">
           الصفحة التالية
         </Link>
       ) : (

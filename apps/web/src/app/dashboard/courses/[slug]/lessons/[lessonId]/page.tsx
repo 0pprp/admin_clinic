@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { AccessDenied } from "@/components/dashboard/AccessDenied";
 import { CourseCurriculumNav } from "@/components/learning/CourseCurriculumNav";
 import { HlsLessonPlayer } from "@/components/learning/HlsLessonPlayer";
+import { Badge, Button, ButtonLink } from "@/components/ui/clinic";
 import { ApiRequestError, apiFetch, parseJson } from "@/lib/api/client";
 import { getCurrentUser } from "@/lib/auth/session";
 import { formatDuration } from "@/lib/format";
@@ -48,6 +49,7 @@ function LessonPlayer({ playback, title }: { playback: LessonPlayback | null; ti
   );
 }
 
+/** S04 · صفحة الدرس — غلاف العيادة حول المشغّل دون تغيير سلوك HLS */
 export default function StudentLessonPage() {
   const router = useRouter();
   const params = useParams<{ slug: string; lessonId: string }>();
@@ -128,7 +130,7 @@ export default function StudentLessonPage() {
   }
 
   if (error) {
-    return <p className="text-sm text-red-400">{error}</p>;
+    return <p className="text-sm text-red-600">{error}</p>;
   }
 
   if (!lesson) {
@@ -141,60 +143,63 @@ export default function StudentLessonPage() {
     lesson.sections.some((section) => section.lessons.length > 0);
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem]">
+    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18.5rem]">
       <div>
         <nav className="text-sm text-muted" aria-label="مسار التنقل">
-          <Link href="/dashboard/courses" className="hover:text-foreground">
-            دوراتي
+          <Link href="/dashboard/courses" className="font-semibold text-accent hover:underline">
+            كورساتي
           </Link>
-          <span className="mx-2">/</span>
+          <span className="mx-2 text-border">/</span>
           <Link href={`/dashboard/courses/${lesson.courseSlug}`} className="hover:text-foreground">
             {lesson.courseTitle}
           </Link>
-          <span className="mx-2">/</span>
+          <span className="mx-2 text-border">/</span>
           <span className="text-foreground">{lesson.title}</span>
         </nav>
-        <div className="mt-6 overflow-hidden border border-border bg-black">
+
+        <div className="clinic-card mt-6 overflow-hidden bg-black">
           <div className="aspect-video">
             <LessonPlayer playback={playback} title={lesson.title} />
           </div>
         </div>
-        <h1 className="mt-6 text-3xl font-semibold">{lesson.title}</h1>
+
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <h1 className="text-3xl font-extrabold tracking-tight">{lesson.title}</h1>
+          {lesson.isCompleted ? <Badge tone="mint">مكتمل</Badge> : null}
+        </div>
         <p className="mt-2 text-sm text-muted">{formatDuration(lesson.durationSeconds)}</p>
         {lesson.description ? <p className="mt-4 max-w-2xl text-sm leading-8 text-muted">{lesson.description}</p> : null}
+
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          {lesson.isCompleted ? (
-            <p className="text-sm text-accent">✓ مكتمل</p>
-          ) : (
-            <button
-              type="button"
-              onClick={markComplete}
-              disabled={pending}
-              className="border border-accent bg-accent px-4 py-2 text-sm text-background disabled:opacity-60"
-            >
+          {lesson.isCompleted ? null : (
+            <Button variant="accent" size="md" onClick={markComplete} disabled={pending}>
               {pending ? "جاري الحفظ..." : "تحديد كمكتمل"}
-            </button>
+            </Button>
           )}
-          {progressError ? <p className="text-sm text-red-400">{progressError}</p> : null}
+          {progressError ? <p className="text-sm text-red-600">{progressError}</p> : null}
         </div>
-        <div className="mt-8 flex flex-wrap gap-3 text-sm">
+
+        <div className="mt-8 flex flex-wrap gap-3">
           {lesson.previousLesson ? (
-            <Link href={lessonHref(lesson.courseSlug, lesson.previousLesson.id)} className="border border-border px-4 py-2">
+            <ButtonLink href={lessonHref(lesson.courseSlug, lesson.previousLesson.id)} variant="soft" size="md">
               الدرس السابق
-            </Link>
+            </ButtonLink>
           ) : null}
           {allComplete ? (
-            <p className="border border-accent px-4 py-2 text-accent">أكملت الدورة</p>
+            <Badge tone="orange" className="px-4 py-2 text-sm">
+              أكملت الدورة
+            </Badge>
           ) : lesson.nextLesson ? (
-            <Link href={nextHref} className="border border-accent px-4 py-2 text-accent">
+            <ButtonLink href={nextHref} variant="accent" size="md">
               الدرس التالي
-            </Link>
+            </ButtonLink>
           ) : (
-            <Link href={`/dashboard/courses/${lesson.courseSlug}`} className="border border-accent px-4 py-2 text-accent">
+            <ButtonLink href={`/dashboard/courses/${lesson.courseSlug}`} variant="accent" size="md">
               العودة إلى الدورة
-            </Link>
+            </ButtonLink>
           )}
         </div>
+
         <div className="mt-10 lg:hidden">
           <CourseCurriculumNav
             courseTitle={lesson.courseTitle}
@@ -206,14 +211,17 @@ export default function StudentLessonPage() {
           />
         </div>
       </div>
+
       <aside className="hidden lg:block">
-        <CourseCurriculumNav
-          courseTitle={lesson.courseTitle}
-          courseSlug={lesson.courseSlug}
-          sections={lesson.sections}
-          progressPercent={lesson.progressPercent}
-          currentLessonId={lesson.id}
-        />
+        <div className="clinic-card sticky top-6 px-4 py-5">
+          <CourseCurriculumNav
+            courseTitle={lesson.courseTitle}
+            courseSlug={lesson.courseSlug}
+            sections={lesson.sections}
+            progressPercent={lesson.progressPercent}
+            currentLessonId={lesson.id}
+          />
+        </div>
       </aside>
     </div>
   );

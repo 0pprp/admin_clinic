@@ -233,12 +233,12 @@ export default function PurchaseRequestDetailPage() {
         </section>
       ) : null}
       {activated ? (
-        <section className="mb-6 border border-border bg-surface px-5 py-5">
+        <section className="clinic-card mb-6 px-5 py-5">
           <p className="font-medium">تم تفعيل الدورة: {activated.courseTitle}</p>
           <p className="mt-1 text-sm text-muted">رقم الطلب {activated.requestNumber}</p>
         </section>
       ) : null}
-      <section className="grid gap-4 border border-border bg-surface px-5 py-6 text-sm sm:grid-cols-2">
+      <section className="clinic-card grid gap-4 px-5 py-6 text-sm sm:grid-cols-2">
         <Info label="الطالب" value={detail.fullName} />
         <Info label="البريد" value={detail.email} />
         <Info label="الهاتف" value={detail.phoneNumber} />
@@ -260,13 +260,13 @@ export default function PurchaseRequestDetailPage() {
         <Info label="أكّده" value={detail.confirmedBy} />
       </section>
       {detail.customerNotes ? (
-        <section className="mt-6 border border-border px-5 py-4 text-sm">
+        <section className="clinic-card mt-6 px-5 py-4 text-sm">
           <p className="text-muted">ملاحظات الطالب</p>
           <p className="mt-2 leading-7 whitespace-pre-wrap">{detail.customerNotes}</p>
         </section>
       ) : null}
       {detail.adminNotes ? (
-        <section className="mt-6 border border-border px-5 py-4 text-sm">
+        <section className="clinic-card mt-6 px-5 py-4 text-sm">
           <p className="text-muted">ملاحظات الإدارة</p>
           <p className="mt-2 leading-7 whitespace-pre-wrap">{detail.adminNotes}</p>
         </section>

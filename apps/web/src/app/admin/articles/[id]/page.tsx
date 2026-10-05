@@ -141,7 +141,7 @@ export default function ArticleEditorPage() {
       />
       <StatusBadge label={labelOrRaw(contentStatusLabel, article.status)} tone={statusTone(article.status)} />
       {error ? <div className="mt-4"><ErrorState message={error} /></div> : null}
-      <form onSubmit={onSave} className="mt-6 grid gap-4">
+      <form onSubmit={onSave} className="clinic-card mt-6 grid gap-4 p-5">
         <Field label="العنوان">
           <input className={inputClassName} value={title} onChange={(event) => setTitle(event.target.value)} required />
         </Field>

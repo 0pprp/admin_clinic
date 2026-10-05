@@ -1,10 +1,11 @@
 "use client";
 
-import { ButtonLink } from "@/components/ui/clinic";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CourseThumbnail } from "@/components/dashboard/CourseThumbnail";
 import { ProgressBar } from "@/components/dashboard/ProgressBar";
+import { PageIntro } from "@/components/shared/PageIntro";
+import { Badge, ButtonLink } from "@/components/ui/clinic";
 import { ApiRequestError, apiFetch, parseJson } from "@/lib/api/client";
 import { getCurrentUser } from "@/lib/auth/session";
 import { formatBaghdadDateTime } from "@/lib/format";
@@ -16,6 +17,20 @@ import {
 } from "@/lib/learning";
 import { safeInternalPath } from "@/lib/safe-path";
 
+function statusTone(status: string, canAccess: boolean): "orange" | "mint" | "sand" | "rose" | "navy" {
+  if (canAccess) {
+    return "mint";
+  }
+  if (status === "Suspended") {
+    return "sand";
+  }
+  if (status === "Revoked") {
+    return "rose";
+  }
+  return "navy";
+}
+
+/** S02 · كورساتي — قائمة الدورات مع التقدّم */
 export default function DashboardCoursesPage() {
   const router = useRouter();
   const [items, setItems] = useState<StudentEnrollment[] | null>(null);
@@ -45,8 +60,8 @@ export default function DashboardCoursesPage() {
   if (error) {
     return (
       <div>
-        <h1 className="text-3xl font-semibold">دوراتي</h1>
-        <p className="mt-6 text-sm text-red-400">{error}</p>
+        <PageIntro embedded eyebrow="مساحة المتعلم" title="كورساتي" />
+        <p className="mt-6 text-sm text-red-600">{error}</p>
       </div>
     );
   }
@@ -54,8 +69,7 @@ export default function DashboardCoursesPage() {
   if (!items) {
     return (
       <div>
-        <h1 className="text-3xl font-semibold">دوراتي</h1>
-        <p className="mt-6 text-sm text-muted">جاري تحميل الدورات...</p>
+        <PageIntro embedded eyebrow="مساحة المتعلم" title="كورساتي" description="جاري تحميل الدورات..." />
       </div>
     );
   }
@@ -65,19 +79,32 @@ export default function DashboardCoursesPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-semibold">دوراتي</h1>
-      <p className="mt-3 max-w-2xl text-sm leading-8 text-muted">كل الدورات المرتبطة بحسابك، مع تقدمك الحالي.</p>
+      <PageIntro
+        embedded
+        eyebrow="مساحة المتعلم"
+        title="كورساتي"
+        description="كل الدورات المرتبطة بحسابك، مع تقدمك الحالي."
+      />
+
       {items.length === 0 ? (
         <section className="clinic-panel mt-10 border-dashed px-6 py-12 text-center">
-          <p className="text-lg font-semibold">لا توجد دورات مفعلة في حسابك حالياً.</p>
-          <ButtonLink href="/courses" variant="accent" size="md" className="mt-6">
-            استكشف الدورات
-          </ButtonLink>
+          <p className="text-lg font-bold">لا توجد دورات مفعلة في حسابك حالياً.</p>
+          <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-muted">
+            استكشف الكتالوج وأرسل طلب اشتراك، أو فعّل كوداً استلمته من الفريق.
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <ButtonLink href="/courses" variant="accent" size="md">
+              استكشف الدورات
+            </ButtonLink>
+            <ButtonLink href="/dashboard/activate" variant="soft" size="md">
+              تفعيل كود
+            </ButtonLink>
+          </div>
         </section>
       ) : (
         <>
           <section className="mt-10">
-            <h2 className="text-xl font-semibold">الدورات النشطة</h2>
+            <h2 className="text-xl font-extrabold tracking-tight">الدورات النشطة</h2>
             {active.length === 0 ? (
               <p className="mt-4 text-sm text-muted">لا توجد دورات يمكن التعلّم منها حالياً.</p>
             ) : (
@@ -90,7 +117,7 @@ export default function DashboardCoursesPage() {
           </section>
           {previous.length > 0 ? (
             <section className="mt-12">
-              <h2 className="text-xl font-semibold">الدورات السابقة</h2>
+              <h2 className="text-xl font-extrabold tracking-tight">الدورات السابقة</h2>
               <ul className="mt-6 grid gap-5 md:grid-cols-2">
                 {previous.map((item) => (
                   <CourseEnrollmentCard key={item.id} item={item} />
@@ -114,8 +141,10 @@ function CourseEnrollmentCard({ item }: { item: StudentEnrollment }) {
       <CourseThumbnail title={item.courseTitle} src={item.thumbnailUrl} />
       <div className="p-5">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="text-lg font-semibold">{item.courseTitle}</h3>
-          <p className="text-xs text-muted">{enrollmentStatusLabel(item.status, item.canAccess, item.expiresAt)}</p>
+          <h3 className="text-lg font-bold leading-7">{item.courseTitle}</h3>
+          <Badge tone={statusTone(item.status, item.canAccess)}>
+            {enrollmentStatusLabel(item.status, item.canAccess, item.expiresAt)}
+          </Badge>
         </div>
         <p className="mt-3 text-xs text-muted">بدأت في {formatBaghdadDateTime(item.startedAt)}</p>
         {item.expiresAt ? <p className="mt-1 text-xs text-muted">تنتهي في {formatBaghdadDateTime(item.expiresAt)}</p> : null}

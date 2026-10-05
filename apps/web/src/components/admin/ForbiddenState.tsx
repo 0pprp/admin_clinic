@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { secondaryButtonClassName } from "@/lib/admin/ui";
+import { ButtonLink } from "@/components/ui/clinic";
 
 export function ForbiddenState({
   title = "ليست لديك صلاحية لعرض هذه الصفحة.",
@@ -9,12 +8,13 @@ export function ForbiddenState({
   description?: string;
 }) {
   return (
-    <section className="border border-border bg-surface px-5 py-10">
-      <h1 className="text-2xl font-semibold">{title}</h1>
+    <section className="clinic-card px-5 py-10 sm:px-8">
+      <p className="text-sm font-bold text-accent">غير مصرح</p>
+      <h1 className="mt-2 text-2xl font-extrabold tracking-tight">{title}</h1>
       <p className="mt-3 max-w-xl text-sm leading-8 text-muted">{description}</p>
-      <Link href="/admin" className={`mt-8 ${secondaryButtonClassName}`}>
+      <ButtonLink href="/admin" variant="accent" className="mt-8">
         العودة إلى لوحة الإدارة
-      </Link>
+      </ButtonLink>
     </section>
   );
 }

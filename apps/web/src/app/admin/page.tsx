@@ -7,6 +7,7 @@ import { EmptyState } from "@/components/shared/EmptyState";
 import { ForbiddenState } from "@/components/admin/ForbiddenState";
 import { LoadingState, ErrorState, PageHeader } from "@/components/admin/PageHeader";
 import { StatusBadge } from "@/components/admin/StatusBadge";
+import { ButtonLink } from "@/components/ui/clinic";
 import { adminJson, errorMessage, isForbidden, isUnauthorized } from "@/lib/admin/http";
 import {
   canManageConsultations,
@@ -110,14 +111,16 @@ export default function AdminDashboardPage() {
           <Link
             key={card.label}
             href={card.href}
-            className="clinic-card px-5 py-5 transition hover:border-accent/40 hover:shadow-[0_12px_40px_rgba(7,27,51,0.08)]"
+            className="clinic-card group px-5 py-5 transition hover:border-accent/45 hover:shadow-[0_12px_40px_rgba(15,23,42,0.08)]"
           >
-            <p className="text-xs text-muted">{card.label}</p>
-            <p className="mt-3 text-2xl font-semibold">{card.value}</p>
+            <p className="text-xs font-medium text-muted">{card.label}</p>
+            <p className="mt-3 text-3xl font-extrabold tracking-tight text-primary transition group-hover:text-accent">
+              {card.value}
+            </p>
           </Link>
         ))}
       </div>
-      <div className="mt-10 grid gap-8 xl:grid-cols-2">
+      <div className="mt-10 grid gap-6 xl:grid-cols-2">
         {canManagePayments(roles) ? (
           <DashboardList
             title="آخر طلبات الاشتراك"
@@ -207,12 +210,12 @@ function DashboardList({
   }>;
 }) {
   return (
-    <section className="clinic-panel p-5">
+    <section className="clinic-card p-5">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold">{title}</h2>
-        <Link href={href} className="text-sm text-accent hover:underline">
+        <h2 className="text-lg font-extrabold tracking-tight">{title}</h2>
+        <ButtonLink href={href} variant="ghost" size="sm" className="text-accent">
           عرض الكل
-        </Link>
+        </ButtonLink>
       </div>
       {items.length === 0 ? (
         <div className="mt-4">
@@ -222,9 +225,9 @@ function DashboardList({
         <ul className="mt-4 divide-y divide-border">
           {items.map((item) => (
             <li key={item.id} className="py-3">
-              <Link href={item.href} className="block rounded-md px-2 py-1 hover:bg-surface-warm/40">
+              <Link href={item.href} className="block rounded-xl px-2 py-1.5 transition hover:bg-surface-warm/70">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="font-medium">{item.title}</p>
+                  <p className="font-semibold">{item.title}</p>
                   <StatusBadge label={item.status} tone={statusTone(item.toneStatus)} />
                 </div>
                 <p className="mt-1 text-xs text-muted">

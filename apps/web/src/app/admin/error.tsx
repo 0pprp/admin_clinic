@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { Button } from "@/components/ui/clinic";
 
 export default function AdminError({
   error,
@@ -14,12 +15,13 @@ export default function AdminError({
   }, [error]);
 
   return (
-    <section className="border border-border bg-surface px-5 py-10">
-      <h1 className="text-2xl font-semibold">تعذر عرض الصفحة</h1>
+    <section className="clinic-card px-5 py-10 sm:px-8">
+      <p className="text-sm font-bold text-accent">خطأ</p>
+      <h1 className="mt-2 text-2xl font-extrabold tracking-tight">تعذر عرض الصفحة</h1>
       <p className="mt-3 text-sm leading-8 text-muted">حدث خطأ أثناء تحميل لوحة الإدارة. يمكنك المحاولة مرة أخرى.</p>
-      <button type="button" className="mt-8 border border-foreground px-4 py-2 text-sm" onClick={reset}>
+      <Button type="button" variant="accent" className="mt-8" onClick={reset}>
         إعادة المحاولة
-      </button>
+      </Button>
     </section>
   );
 }

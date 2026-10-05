@@ -26,7 +26,14 @@ function Bars() {
   );
 }
 
-export function AdCarousel({ slides }: { slides: AdSlide[] }) {
+export function AdCarousel({
+  slides,
+  embedded = false
+}: {
+  slides: AdSlide[];
+  /** عند التضمين داخل لوحة الإدارة دون clinic-shell */
+  embedded?: boolean;
+}) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -51,8 +58,12 @@ export function AdCarousel({ slides }: { slides: AdSlide[] }) {
   }
 
   return (
-    <section className="clinic-shell pb-4 sm:pb-6" aria-roledescription="carousel" aria-label="إعلانات العيادة">
-      <p className="mb-3 text-sm text-muted">إعلان من العيادة</p>
+    <section
+      className={embedded ? undefined : "clinic-shell pb-4 sm:pb-6"}
+      aria-roledescription="carousel"
+      aria-label="إعلانات العيادة"
+    >
+      {embedded ? null : <p className="mb-3 text-sm text-muted">إعلان من العيادة</p>}
       <div className="overflow-hidden rounded-[1.75rem] bg-surface-dark text-primary-foreground">
         <div className="grid items-center gap-8 px-6 py-8 sm:px-10 sm:py-10 lg:grid-cols-[1.15fr_0.85fr] lg:px-12">
           <div>

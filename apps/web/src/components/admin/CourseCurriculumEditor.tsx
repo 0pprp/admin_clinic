@@ -218,7 +218,7 @@ export function CourseCurriculumEditor({
     <section className="mt-10">
       <h2 className="text-lg font-semibold">الأقسام والدروس</h2>
       {error ? <p className="mt-3 text-sm text-red-700">{error}</p> : null}
-      <form onSubmit={addSection} className="mt-4 grid gap-3 border border-border bg-surface p-4 sm:grid-cols-[1fr_1fr_auto]">
+      <form onSubmit={addSection} className="clinic-card mt-4 grid gap-3 p-4 sm:grid-cols-[1fr_1fr_auto]">
         <input className={inputClassName} placeholder="عنوان قسم جديد" value={sectionTitle} onChange={(event) => setSectionTitle(event.target.value)} required />
         <input className={inputClassName} placeholder="وصف اختياري" value={sectionDescription} onChange={(event) => setSectionDescription(event.target.value)} />
         <button type="submit" className={secondaryButtonClassName} disabled={pending}>
@@ -229,7 +229,7 @@ export function CourseCurriculumEditor({
         {sections.map((section, index) => {
           const lessons = [...section.lessons].sort((a, b) => a.sortOrder - b.sortOrder);
           return (
-            <article key={section.id} className="border border-border bg-surface p-4">
+            <article key={section.id} className="clinic-card p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <h3 className="font-semibold">{section.title}</h3>
@@ -344,7 +344,7 @@ export function CourseCurriculumEditor({
       </div>
       {lessonForm ? (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-surface-dark/50 p-4">
-          <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto border border-border bg-surface p-6" role="dialog" aria-modal="true">
+          <div className="clinic-card max-h-[90vh] w-full max-w-lg overflow-y-auto p-6 shadow-[0_24px_64px_rgba(15,23,42,0.22)]" role="dialog" aria-modal="true">
             <h3 className="text-lg font-semibold">{lessonForm.id ? "تعديل الدرس" : "درس جديد"}</h3>
             <div className="mt-4 space-y-3">
               <Field label="العنوان">

@@ -144,7 +144,7 @@ export default function CourseEditorPage() {
         <span className="text-sm text-muted">{accessTypeLabel(course.accessType)}</span>
       </div>
       {error ? <div className="mb-4"><ErrorState message={error} /></div> : null}
-      <form onSubmit={onSave} className="grid gap-4 sm:grid-cols-2">
+      <form onSubmit={onSave} className="clinic-card grid gap-4 p-5 sm:grid-cols-2">
         <Field label="العنوان">
           <input className={inputClassName} value={form.title} onChange={(event) => setForm({ ...form, title: event.target.value })} required />
         </Field>

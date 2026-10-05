@@ -159,7 +159,7 @@ export default function SettingsPage() {
               type="button"
               role="tab"
               aria-selected={active}
-              className={`border px-4 py-2 text-sm ${active ? "border-accent bg-accent text-primary-foreground" : "border-border bg-surface text-muted hover:text-foreground"}`}
+              className={`rounded-xl border px-4 py-2 text-sm font-semibold transition ${active ? "border-accent bg-accent text-primary-foreground" : "border-border bg-surface text-muted hover:border-accent/40 hover:text-foreground"}`}
               onClick={() => setTab(item.id)}
             >
               {item.label}
@@ -170,7 +170,7 @@ export default function SettingsPage() {
       <p className="mb-4 text-sm text-muted">{tabs.find((item) => item.id === tab)?.hint}</p>
 
       {tab === "identity" ? (
-        <form onSubmit={saveContent} className="grid gap-4 border border-border bg-surface p-5">
+        <form onSubmit={saveContent} className="clinic-card grid gap-4 p-5">
           <h2 className="text-lg font-semibold">الهوية والنصوص الظاهرة</h2>
           <Field label="اسم العلامة">
             <input className={inputClassName} value={settings.brandName ?? ""} disabled={!contentEditable} onChange={(event) => setSettings({ ...settings, brandName: event.target.value })} />
@@ -208,7 +208,7 @@ export default function SettingsPage() {
 
       {tab === "payment" ? (
         paymentEditable ? (
-          <form onSubmit={savePayment} className="grid gap-4 border border-border bg-surface p-5">
+          <form onSubmit={savePayment} className="clinic-card grid gap-4 p-5">
             <h2 className="text-lg font-semibold">الدفع والتحويل</h2>
             <Field label="طرق الدفع">
               <textarea className={inputClassName} rows={3} value={settings.paymentMethods ?? ""} onChange={(event) => setSettings({ ...settings, paymentMethods: event.target.value })} />
@@ -372,7 +372,7 @@ function HomeContentLists() {
   return (
     <div className="mt-10 space-y-10">
       {error ? <ErrorState message={error} /> : null}
-      <section className="border border-border bg-surface p-5">
+      <section className="clinic-card p-5">
         <h2 className="text-lg font-semibold">مجالات الخبرة</h2>
         <form onSubmit={addExpertise} className="mt-4 grid gap-3 sm:grid-cols-2">
           <input className={inputClassName} placeholder="العنوان" value={expTitle} onChange={(event) => setExpTitle(event.target.value)} required />
@@ -398,7 +398,7 @@ function HomeContentLists() {
           ))}
         </ul>
       </section>
-      <section className="border border-border bg-surface p-5">
+      <section className="clinic-card p-5">
         <h2 className="text-lg font-semibold">الشهادات</h2>
         <form onSubmit={addTestimonial} className="mt-4 grid gap-3">
           <input className={inputClassName} placeholder="الاسم الظاهر" value={testName} onChange={(event) => setTestName(event.target.value)} required />
@@ -421,7 +421,7 @@ function HomeContentLists() {
           ))}
         </ul>
       </section>
-      <section className="border border-border bg-surface p-5">
+      <section className="clinic-card p-5">
         <h2 className="text-lg font-semibold">الإحصاءات</h2>
         <ul className="mt-4 space-y-4">
           {statistics.map((item) => (

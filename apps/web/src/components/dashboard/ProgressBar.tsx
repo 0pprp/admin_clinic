@@ -11,7 +11,7 @@ export function ProgressBar({
     <div>
       <div className="mb-2 flex items-center justify-between gap-3 text-sm">
         <span className="text-muted">{label}</span>
-        <span className="font-medium text-primary">{clamped}%</span>
+        <span className="font-bold text-accent">{clamped}%</span>
       </div>
       <div
         role="progressbar"

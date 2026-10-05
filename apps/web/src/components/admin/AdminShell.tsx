@@ -7,7 +7,7 @@ import { ToastProvider } from "@/components/admin/ToastProvider";
 import { BrandLoading, BrandMark, Button } from "@/components/ui/clinic";
 import { brand } from "@/lib/content/brand";
 import { getCurrentUser, logout } from "@/lib/auth/session";
-import { adminNavGroups, isNavCurrent, pageTitleForPath } from "@/lib/admin/nav";
+import { adminNavGroups, isNavCurrent } from "@/lib/admin/nav";
 import { isStaff } from "@/lib/admin/roles";
 import { safeInternalPath } from "@/lib/safe-path";
 import type { UserSummary } from "@/lib/api/types";
@@ -52,7 +52,6 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const groups = adminNavGroups
     .map((group) => ({ ...group, items: group.items.filter((item) => item.visible(user.roles)) }))
     .filter((group) => group.items.length > 0);
-  const title = pageTitleForPath(pathname, user.roles);
 
   return (
     <ToastProvider>
@@ -62,8 +61,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           <aside
             id={menuId}
             className={`${
-              open ? "fixed inset-0 z-40 flex flex-col" : "hidden"
-            } bg-surface-dark text-primary-foreground lg:static lg:flex lg:flex-col`}
+              open ? "fixed inset-y-0 inset-inline-start-0 z-40 flex w-[min(100%,17rem)] flex-col" : "hidden"
+            } bg-surface-dark text-primary-foreground lg:static lg:flex lg:w-auto lg:flex-col`}
           >
             <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-4 lg:px-5">
               <Link href="/admin" className="inline-flex min-w-0 items-center gap-2.5" onClick={() => setOpen(false)}>
@@ -98,7 +97,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                             className={`rounded-xl px-3 py-2.5 transition ${
                               current
                                 ? "bg-accent font-semibold text-primary-foreground shadow-[0_8px_20px_rgba(249,115,22,0.28)]"
-                                : "text-primary-foreground/75 hover:bg-white/8 hover:text-primary-foreground"
+                                : "text-primary-foreground/75 hover:bg-white/10 hover:text-primary-foreground"
                             }`}
                             onClick={() => setOpen(false)}
                           >
@@ -130,7 +129,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 </Link>
                 <Button
                   variant="ghost"
-                  className="justify-center text-primary-foreground/70 hover:bg-white/8 hover:text-primary-foreground"
+                  className="justify-center text-primary-foreground/70 hover:bg-white/10 hover:text-primary-foreground"
                   onClick={onLogout}
                 >
                   تسجيل الخروج
@@ -142,7 +141,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           {open ? (
             <button
               type="button"
-              className="fixed inset-0 z-30 bg-surface-dark/40 backdrop-blur-[2px] lg:hidden"
+              className="fixed inset-0 z-30 bg-surface-dark/45 backdrop-blur-[2px] lg:hidden"
               aria-label="إغلاق القائمة"
               onClick={() => setOpen(false)}
             />
@@ -151,12 +150,20 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           <div className="flex min-w-0 flex-col">
             <header className="sticky top-0 z-20 border-b border-border bg-surface/95 backdrop-blur">
               <div className="flex items-center justify-between gap-3 px-4 py-3.5 sm:px-6 lg:px-8">
-                <div className="min-w-0">
-                  <p className="text-xs font-bold text-accent">لوحة الإدارة</p>
-                  <h1 className="mt-0.5 truncate text-lg font-extrabold tracking-tight sm:text-xl">{title}</h1>
+                <div className="min-w-0 lg:hidden">
+                  <Link href="/admin" className="inline-flex items-center gap-2">
+                    <BrandMark className="h-7 w-7" />
+                    <span className="text-sm font-extrabold tracking-tight">{brand.nameAr}</span>
+                  </Link>
                 </div>
+                <p className="hidden text-sm text-muted lg:block">مرحباً، {user.fullName}</p>
                 <div className="flex shrink-0 items-center gap-2">
-                  <p className="hidden text-sm text-muted md:block">{user.fullName}</p>
+                  <Link
+                    href="/"
+                    className="hidden rounded-xl border border-border px-3 py-2 text-sm font-semibold transition hover:border-accent hover:text-accent sm:inline-flex"
+                  >
+                    الموقع
+                  </Link>
                   <button
                     type="button"
                     className="rounded-xl border border-border bg-surface px-3 py-2 text-sm font-semibold lg:hidden"

@@ -140,7 +140,7 @@ function CoursesContent() {
         }
       />
       {creating ? (
-        <form onSubmit={onCreate} className="mb-8 grid gap-4 border border-border bg-surface p-5 sm:grid-cols-2">
+        <form onSubmit={onCreate} className="clinic-card mb-8 grid gap-4 p-5 sm:grid-cols-2">
           <Field label="العنوان">
             <input
               className={inputClassName}

@@ -125,7 +125,7 @@ function ArticlesContent() {
         }
       />
       {creating ? (
-        <form onSubmit={onCreate} className="mb-8 grid gap-4 border border-border bg-surface p-5">
+        <form onSubmit={onCreate} className="clinic-card mb-8 grid gap-4 p-5">
           <Field label="العنوان">
             <input className={inputClassName} value={title} onChange={(event) => setTitle(event.target.value)} required />
           </Field>

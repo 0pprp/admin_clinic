@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { Badge, ButtonLink } from "@/components/ui/clinic";
 import { apiFetch, parseJson } from "@/lib/api/client";
 import { getCurrentUser } from "@/lib/auth/session";
 import { formatBaghdadDateTime, formatIqd } from "@/lib/format";
@@ -15,6 +15,26 @@ import {
   type StudentPurchaseDetail
 } from "@/lib/purchases";
 
+function purchaseTone(status: string): "orange" | "mint" | "sand" | "rose" | "navy" | "sky" {
+  switch (status) {
+    case "Completed":
+      return "mint";
+    case "ActivationCodeIssued":
+      return "orange";
+    case "AwaitingPayment":
+    case "PaymentReceived":
+      return "sky";
+    case "Rejected":
+    case "Cancelled":
+      return "rose";
+    case "Contacted":
+      return "sand";
+    default:
+      return "navy";
+  }
+}
+
+/** S06 · تفاصيل الطلب */
 export default function DashboardOrderDetailPage() {
   return (
     <Suspense
@@ -82,48 +102,51 @@ function OrderDetailContent() {
     (instructions.paymentMethods || instructions.transferInstructions || instructions.supportPhone || instructions.supportWhatsApp);
 
   return (
-    <DashboardShell title={created ? "تم استلام طلب الاشتراك بنجاح" : "تفاصيل الطلب"}>
-      {created ? (
-        <p className="mb-8 max-w-2xl text-sm leading-8 text-muted">
-          سيتواصل معك فريقنا لتأكيد تفاصيل الدفع والتفعيل.
-        </p>
-      ) : null}
-      <section className="grid gap-4 border border-border bg-surface px-5 py-6 text-sm sm:grid-cols-2">
+    <DashboardShell
+      title={created ? "تم استلام طلب الاشتراك بنجاح" : "تفاصيل الطلب"}
+      description={created ? "سيتواصل معك فريقنا لتأكيد تفاصيل الدفع والتفعيل." : undefined}
+    >
+      <section className="clinic-card grid gap-5 px-5 py-6 text-sm sm:grid-cols-2 sm:px-6">
         <div>
-          <p className="text-muted">رقم الطلب</p>
-          <p className="mt-1 break-all font-medium">{detail.requestNumber}</p>
+          <p className="text-xs font-bold text-accent">رقم الطلب</p>
+          <p className="mt-1 break-all font-semibold">{detail.requestNumber}</p>
         </div>
         <div>
-          <p className="text-muted">الدورة</p>
-          <p className="mt-1 font-medium">{detail.courseTitle}</p>
+          <p className="text-xs font-bold text-accent">الدورة</p>
+          <p className="mt-1 font-semibold">{detail.courseTitle}</p>
         </div>
         <div>
-          <p className="text-muted">السعر</p>
-          <p className="mt-1 font-medium">{formatIqd(detail.amountIQD)}</p>
+          <p className="text-xs font-bold text-accent">السعر</p>
+          <p className="mt-1 font-semibold">{formatIqd(detail.amountIQD)}</p>
         </div>
         <div>
-          <p className="text-muted">الحالة</p>
-          <p className="mt-1">{purchaseStatusText(detail.status)}</p>
+          <p className="text-xs font-bold text-accent">الحالة</p>
+          <div className="mt-1">
+            <Badge tone={purchaseTone(detail.status)}>{purchaseStatusText(detail.status)}</Badge>
+          </div>
         </div>
-        <div>
-          <p className="text-muted">تاريخ الطلب</p>
+        <div className="sm:col-span-2">
+          <p className="text-xs font-bold text-accent">تاريخ الطلب</p>
           <p className="mt-1">{formatBaghdadDateTime(detail.createdAt)}</p>
         </div>
       </section>
+
       <p className="mt-6 max-w-2xl text-sm leading-8 text-muted">{purchaseStatusGuidance(detail.status)}</p>
+
       {detail.status === "ActivationCodeIssued" ? (
-        <Link href="/dashboard/activate" className="mt-6 inline-flex border border-accent px-4 py-2 text-sm text-accent">
+        <ButtonLink href="/dashboard/activate" variant="accent" size="md" className="mt-6">
           تفعيل دورة
-        </Link>
+        </ButtonLink>
       ) : null}
       {detail.status === "Completed" && detail.hasActiveEnrollment ? (
-        <Link href="/dashboard/courses" className="mt-6 inline-flex border border-accent px-4 py-2 text-sm text-accent">
-          الانتقال إلى دوراتي
-        </Link>
+        <ButtonLink href="/dashboard/courses" variant="accent" size="md" className="mt-6">
+          الانتقال إلى كورساتي
+        </ButtonLink>
       ) : null}
+
       {detail.status === "AwaitingPayment" ? (
-        <section className="mt-8 border border-border px-5 py-6 text-sm">
-          <h2 className="text-lg font-semibold">تعليمات التحويل</h2>
+        <section className="clinic-card mt-8 px-5 py-6 text-sm sm:px-6">
+          <h2 className="text-lg font-extrabold tracking-tight">تعليمات التحويل</h2>
           {hasInstructions ? (
             <div className="mt-4 space-y-3 leading-8">
               {instructions?.paymentMethods ? <p>{instructions.paymentMethods}</p> : null}
@@ -136,24 +159,27 @@ function OrderDetailContent() {
           )}
         </section>
       ) : null}
-      <section className="mt-10">
-        <h2 className="text-lg font-semibold">تتبع الطلب</h2>
-        <ol className="mt-5 space-y-4 border-r border-border pr-4">
+
+      <section className="clinic-card mt-8 px-5 py-6 sm:px-6">
+        <h2 className="text-lg font-extrabold tracking-tight">تتبع الطلب</h2>
+        <ol className="mt-5 space-y-4 border-r-2 border-accent/30 pr-4">
           {detail.timeline.map((event, index) => (
-            <li key={`${event.status}-${index}`}>
-              <p className="font-medium">{purchaseTimelineLabel(event.status)}</p>
+            <li key={`${event.status}-${index}`} className="relative">
+              <span className="absolute -right-[1.35rem] top-1.5 h-2.5 w-2.5 rounded-full bg-accent" aria-hidden="true" />
+              <p className="font-semibold">{purchaseTimelineLabel(event.status)}</p>
               <p className="text-xs text-muted">{formatBaghdadDateTime(event.createdAt)}</p>
             </li>
           ))}
         </ol>
       </section>
-      <div className="mt-10 flex flex-wrap gap-4 text-sm">
-        <Link href="/dashboard/orders" className="border border-border px-4 py-2">
+
+      <div className="mt-10 flex flex-wrap gap-3">
+        <ButtonLink href="/dashboard/orders" variant="soft" size="md">
           متابعة حالة الطلب
-        </Link>
-        <Link href="/courses" className="border border-accent px-4 py-2 text-accent">
+        </ButtonLink>
+        <ButtonLink href="/courses" variant="outline" size="md">
           العودة إلى الدورات
-        </Link>
+        </ButtonLink>
       </div>
     </DashboardShell>
   );

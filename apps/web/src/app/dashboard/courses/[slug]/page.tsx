@@ -6,12 +6,14 @@ import { useEffect, useState } from "react";
 import { AccessDenied } from "@/components/dashboard/AccessDenied";
 import { CourseThumbnail } from "@/components/dashboard/CourseThumbnail";
 import { CourseCurriculumNav } from "@/components/learning/CourseCurriculumNav";
+import { Badge, ButtonLink } from "@/components/ui/clinic";
 import { ApiRequestError, apiFetch, parseJson } from "@/lib/api/client";
 import { getCurrentUser } from "@/lib/auth/session";
 import { formatBaghdadDateTime } from "@/lib/format";
 import { lessonHref, type StudentCourseLearning } from "@/lib/learning";
 import { safeInternalPath } from "@/lib/safe-path";
 
+/** S03 · تفاصيل الدورة داخل مساحة المتعلم */
 export default function StudentCoursePage() {
   const router = useRouter();
   const params = useParams<{ slug: string }>();
@@ -66,7 +68,7 @@ export default function StudentCoursePage() {
   }
 
   if (error) {
-    return <p className="text-sm text-red-400">{error}</p>;
+    return <p className="text-sm text-red-600">{error}</p>;
   }
 
   if (!course) {
@@ -80,30 +82,37 @@ export default function StudentCoursePage() {
       : null;
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem]">
+    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18.5rem]">
       <div>
         <nav className="text-sm text-muted" aria-label="مسار التنقل">
-          <Link href="/dashboard/courses" className="hover:text-foreground">
-            دوراتي
+          <Link href="/dashboard/courses" className="font-semibold text-accent hover:underline">
+            كورساتي
           </Link>
-          <span className="mx-2">/</span>
+          <span className="mx-2 text-border">/</span>
           <span className="text-foreground">{course.title}</span>
         </nav>
-        <div className="mt-6 overflow-hidden border border-border">
+
+        <div className="clinic-card mt-6 overflow-hidden">
           <CourseThumbnail title={course.title} src={course.thumbnailUrl} sizes="(max-width: 1024px) 100vw, 720px" />
         </div>
-        <h1 className="mt-6 text-3xl font-semibold">{course.title}</h1>
-        {course.courseCompleted ? <p className="mt-3 text-sm text-accent">أكملت الدورة</p> : null}
+
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{course.title}</h1>
+          {course.courseCompleted ? <Badge tone="mint">أكملت الدورة</Badge> : null}
+        </div>
+
         <p className="mt-4 max-w-2xl text-sm leading-8 text-muted">{course.description}</p>
         <p className="mt-4 text-xs text-muted">بدأت في {formatBaghdadDateTime(course.startedAt)}</p>
         {course.expiresAt ? (
           <p className="mt-1 text-xs text-muted">تنتهي في {formatBaghdadDateTime(course.expiresAt)}</p>
         ) : null}
+
         {continueHref ? (
-          <Link href={continueHref} className="mt-8 inline-flex border border-accent px-4 py-2 text-sm text-accent">
+          <ButtonLink href={continueHref} variant="accent" size="md" className="mt-8">
             {course.courseCompleted ? "مراجعة الدورة" : "متابعة التعلم"}
-          </Link>
+          </ButtonLink>
         ) : null}
+
         <div className="mt-10 lg:hidden">
           <CourseCurriculumNav
             courseTitle={course.title}
@@ -114,13 +123,16 @@ export default function StudentCoursePage() {
           />
         </div>
       </div>
+
       <aside className="hidden lg:block">
-        <CourseCurriculumNav
-          courseTitle={course.title}
-          courseSlug={course.slug}
-          sections={course.sections}
-          progressPercent={course.progressPercent}
-        />
+        <div className="clinic-card sticky top-6 px-4 py-5">
+          <CourseCurriculumNav
+            courseTitle={course.title}
+            courseSlug={course.slug}
+            sections={course.sections}
+            progressPercent={course.progressPercent}
+          />
+        </div>
       </aside>
     </div>
   );

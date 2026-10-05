@@ -2,12 +2,14 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Field, buttonClassName, inputClassName } from "@/components/auth/AuthShell";
+import { PageIntro } from "@/components/shared/PageIntro";
+import { Button, ClinicField, ClinicInput } from "@/components/ui/clinic";
 import { ApiRequestError, apiFetch, parseJson } from "@/lib/api/client";
 import { getCurrentUser } from "@/lib/auth/session";
 import type { UserSummary } from "@/lib/api/types";
 import { safeInternalPath } from "@/lib/safe-path";
 
+/** S08 · الملف الشخصي — نماذج ClinicField */
 export default function DashboardProfilePage() {
   const router = useRouter();
   const [user, setUser] = useState<UserSummary | null>(null);
@@ -101,71 +103,80 @@ export default function DashboardProfilePage() {
   }
 
   if (!user) {
-    return <p className="text-sm text-muted">جاري تحميل الملف الشخصي...</p>;
+    return (
+      <div>
+        <PageIntro embedded eyebrow="مساحة المتعلم" title="الملف الشخصي" description="جاري تحميل الملف الشخصي..." />
+      </div>
+    );
   }
 
   return (
     <div className="max-w-xl">
-      <h1 className="text-3xl font-extrabold tracking-tight">الملف الشخصي</h1>
-      <p className="mt-3 max-w-2xl text-sm leading-8 text-muted">حدّث بيانات التواصل الخاصة بك. البريد الإلكتروني غير قابل للتعديل حالياً.</p>
-      <form onSubmit={onSaveProfile} className="clinic-card mt-8 max-w-xl px-5 py-8 sm:px-8">
-        <Field label="الاسم الكامل">
-          <input className={inputClassName} value={fullName} onChange={(event) => setFullName(event.target.value)} required />
-        </Field>
-        <Field label="البريد الإلكتروني">
-          <input className={`${inputClassName} opacity-70`} value={user.email} readOnly />
-        </Field>
-        <Field label="رقم الهاتف">
-          <input className={inputClassName} value={phoneNumber} onChange={(event) => setPhoneNumber(event.target.value)} />
-        </Field>
-        <Field label="واتساب">
-          <input className={inputClassName} value={whatsAppNumber} onChange={(event) => setWhatsAppNumber(event.target.value)} />
-        </Field>
-        <Field label="المحافظة">
-          <input className={inputClassName} value={governorate} onChange={(event) => setGovernorate(event.target.value)} />
-        </Field>
+      <PageIntro
+        embedded
+        eyebrow="مساحة المتعلم"
+        title="الملف الشخصي"
+        description="حدّث بيانات التواصل الخاصة بك. البريد الإلكتروني غير قابل للتعديل حالياً."
+      />
+
+      <form onSubmit={onSaveProfile} className="clinic-card mt-8 px-5 py-8 sm:px-8">
+        <p className="mb-6 text-sm font-bold text-accent">بيانات التواصل</p>
+        <ClinicField label="الاسم الكامل">
+          <ClinicInput value={fullName} onChange={(event) => setFullName(event.target.value)} required />
+        </ClinicField>
+        <ClinicField label="البريد الإلكتروني" hint="لا يمكن تعديل البريد من هنا.">
+          <ClinicInput value={user.email} readOnly className="opacity-70" />
+        </ClinicField>
+        <ClinicField label="رقم الهاتف">
+          <ClinicInput inputMode="tel" value={phoneNumber} onChange={(event) => setPhoneNumber(event.target.value)} />
+        </ClinicField>
+        <ClinicField label="واتساب">
+          <ClinicInput inputMode="tel" value={whatsAppNumber} onChange={(event) => setWhatsAppNumber(event.target.value)} />
+        </ClinicField>
+        <ClinicField label="المحافظة">
+          <ClinicInput value={governorate} onChange={(event) => setGovernorate(event.target.value)} />
+        </ClinicField>
         {profileError ? <p className="mb-4 text-sm text-red-600">{profileError}</p> : null}
-        {profileSuccess ? <p className="mb-4 text-sm text-accent">{profileSuccess}</p> : null}
-        <button type="submit" disabled={profilePending} className={buttonClassName}>
+        {profileSuccess ? <p className="mb-4 text-sm font-semibold text-accent">{profileSuccess}</p> : null}
+        <Button type="submit" variant="accent" size="lg" className="w-full" disabled={profilePending}>
           {profilePending ? "جاري الحفظ..." : "حفظ التغييرات"}
-        </button>
+        </Button>
       </form>
-      <form onSubmit={onChangePassword} className="clinic-card mt-8 max-w-xl px-5 py-8 sm:px-8">
-        <h2 className="text-xl font-semibold">تغيير كلمة المرور</h2>
+
+      <form onSubmit={onChangePassword} className="clinic-card mt-8 px-5 py-8 sm:px-8">
+        <h2 className="text-xl font-extrabold tracking-tight">تغيير كلمة المرور</h2>
+        <p className="mt-2 text-sm text-muted">بعد التحديث ستُعاد إلى صفحة تسجيل الدخول.</p>
         <div className="mt-6">
-          <Field label="كلمة المرور الحالية">
-            <input
-              className={inputClassName}
+          <ClinicField label="كلمة المرور الحالية">
+            <ClinicInput
               type="password"
               autoComplete="current-password"
               value={currentPassword}
               onChange={(event) => setCurrentPassword(event.target.value)}
             />
-          </Field>
-          <Field label="كلمة المرور الجديدة">
-            <input
-              className={inputClassName}
+          </ClinicField>
+          <ClinicField label="كلمة المرور الجديدة">
+            <ClinicInput
               type="password"
               autoComplete="new-password"
               value={newPassword}
               onChange={(event) => setNewPassword(event.target.value)}
             />
-          </Field>
-          <Field label="تأكيد كلمة المرور">
-            <input
-              className={inputClassName}
+          </ClinicField>
+          <ClinicField label="تأكيد كلمة المرور">
+            <ClinicInput
               type="password"
               autoComplete="new-password"
               value={confirmPassword}
               onChange={(event) => setConfirmPassword(event.target.value)}
             />
-          </Field>
+          </ClinicField>
         </div>
         {passwordError ? <p className="mb-4 text-sm text-red-600">{passwordError}</p> : null}
-        {passwordSuccess ? <p className="mb-4 text-sm text-accent">{passwordSuccess}</p> : null}
-        <button type="submit" disabled={passwordPending} className={buttonClassName}>
+        {passwordSuccess ? <p className="mb-4 text-sm font-semibold text-accent">{passwordSuccess}</p> : null}
+        <Button type="submit" variant="primary" size="lg" className="w-full" disabled={passwordPending}>
           {passwordPending ? "جاري التحديث..." : "تغيير كلمة المرور"}
-        </button>
+        </Button>
       </form>
     </div>
   );

@@ -157,7 +157,7 @@ export default function StudentDetailPage() {
         }
       />
       {error ? <div className="mb-4"><ErrorState message={error} /></div> : null}
-      <section className="grid gap-4 border border-border bg-surface px-5 py-6 text-sm sm:grid-cols-2">
+      <section className="clinic-card grid gap-4 px-5 py-6 text-sm sm:grid-cols-2">
         <Info label="الهاتف" value={detail.phoneNumber} />
         <Info label="واتساب" value={detail.whatsAppNumber} />
         <Info label="المحافظة" value={detail.governorate} />
@@ -185,7 +185,7 @@ export default function StudentDetailPage() {
           </button>
         )}
       </div>
-      <h2 className="mt-10 text-lg font-semibold">طلبات الاشتراك</h2>
+      <h2 className="mt-10 text-lg font-extrabold tracking-tight">طلبات الاشتراك</h2>
       {detail.purchaseRequests.length === 0 ? (
         <p className="mt-3 text-sm text-muted">لا توجد طلبات.</p>
       ) : (
@@ -218,7 +218,7 @@ export default function StudentDetailPage() {
           </table>
         </AdminTable>
       )}
-      <h2 className="mt-10 text-lg font-semibold">الاشتراكات والتقدم</h2>
+      <h2 className="mt-10 text-lg font-extrabold tracking-tight">الاشتراكات والتقدم</h2>
       {detail.enrollments.length === 0 ? (
         <p className="mt-3 text-sm text-muted">لا توجد اشتراكات.</p>
       ) : (

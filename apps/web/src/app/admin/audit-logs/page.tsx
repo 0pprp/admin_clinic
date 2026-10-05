@@ -129,7 +129,7 @@ function AuditLogsContent() {
       ) : null}
       {detailError ? <div className="mt-4"><ErrorState message={detailError} /></div> : null}
       {detail ? (
-        <section className="mt-6 border border-border bg-surface p-5 text-sm">
+        <section className="clinic-card mt-6 p-5 text-sm">
           <div className="flex items-start justify-between gap-3">
             <h2 className="text-lg font-semibold">تفاصيل العملية</h2>
             <button type="button" className={secondaryButtonClassName} onClick={() => setDetail(null)}>
@@ -140,7 +140,7 @@ function AuditLogsContent() {
           <p className="mt-2">{detail.description}</p>
           {detail.ipAddress ? <p className="mt-2 text-muted">عنوان الشبكة: {detail.ipAddress}</p> : null}
           {detail.metadataJson ? (
-            <pre className="mt-4 overflow-x-auto border border-border bg-background p-3 text-xs leading-6 whitespace-pre-wrap">
+            <pre className="mt-4 overflow-x-auto rounded-xl border border-border bg-surface-warm p-3 text-xs leading-6 whitespace-pre-wrap">
               {prettyJson(detail.metadataJson)}
             </pre>
           ) : (

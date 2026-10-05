@@ -26,7 +26,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {message ? (
         <div
           role="status"
-          className="fixed bottom-4 start-4 z-50 max-w-sm border border-border bg-surface-dark px-4 py-3 text-sm text-primary-foreground shadow-lg"
+          className="fixed bottom-4 start-4 z-50 max-w-sm rounded-xl border border-accent/30 bg-surface-dark px-4 py-3 text-sm font-medium text-primary-foreground shadow-[0_16px_40px_rgba(15,23,42,0.28)]"
         >
           {message}
         </div>

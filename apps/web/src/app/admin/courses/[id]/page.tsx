@@ -11,6 +11,7 @@ import { StatusBadge } from "@/components/admin/StatusBadge";
 import { useToast } from "@/components/admin/ToastProvider";
 import { adminJson, errorMessage, isForbidden, isNotFound, isUnauthorized } from "@/lib/admin/http";
 import { accessTypeLabel, courseLevelLabel, courseStatusLabel, featuredLabel, labelOrRaw, statusTone } from "@/lib/admin/labels";
+import { ClinicSelect } from "@/components/ui/clinic";
 import { inputClassName, primaryButtonClassName, secondaryButtonClassName } from "@/lib/admin/ui";
 import type { AdminCourseDetail, SaveCourseRequest } from "@/lib/admin/types";
 import { formatBaghdadDateTime } from "@/lib/format";
@@ -165,27 +166,31 @@ export default function CourseEditorPage() {
           <input className={inputClassName} type="number" min={0} value={form.priceIQD} onChange={(event) => setForm({ ...form, priceIQD: Number(event.target.value) })} />
         </Field>
         <Field label="المستوى">
-          <select className={inputClassName} value={form.level} onChange={(event) => setForm({ ...form, level: event.target.value })}>
-            <option value="Beginner">مبتدئ</option>
-            <option value="Intermediate">متوسط</option>
-            <option value="Advanced">متقدم</option>
-          </select>
+          <ClinicSelect
+            value={form.level}
+            onChange={(level) => setForm({ ...form, level })}
+            options={[
+              { value: "Beginner", label: "مبتدئ" },
+              { value: "Intermediate", label: "متوسط" },
+              { value: "Advanced", label: "متقدم" }
+            ]}
+          />
         </Field>
         <Field label="نوع الوصول">
-          <select
-            className={inputClassName}
+          <ClinicSelect
             value={form.accessType}
-            onChange={(event) =>
+            onChange={(accessType) =>
               setForm({
                 ...form,
-                accessType: event.target.value,
-                accessDurationDays: event.target.value === "Lifetime" ? null : form.accessDurationDays ?? 30
+                accessType,
+                accessDurationDays: accessType === "Lifetime" ? null : form.accessDurationDays ?? 30
               })
             }
-          >
-            <option value="Lifetime">مدى الحياة</option>
-            <option value="LimitedDuration">مدة محدودة</option>
-          </select>
+            options={[
+              { value: "Lifetime", label: "مدى الحياة" },
+              { value: "LimitedDuration", label: "مدة محدودة" }
+            ]}
+          />
         </Field>
         {form.accessType === "LimitedDuration" ? (
           <Field label="مدة الوصول بالأيام">

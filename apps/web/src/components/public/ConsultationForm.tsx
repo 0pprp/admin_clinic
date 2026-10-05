@@ -3,8 +3,8 @@
 import { FormEvent, useState } from "react";
 import { ApiRequestError, apiFetch, parseJson } from "@/lib/api/client";
 import type { CreateConsultationResponse } from "@/lib/admin/types";
-import { Button } from "@/components/ui/clinic";
-import { ClinicField, ClinicInput, ClinicTextarea, clinicInputClassName } from "@/components/ui/clinic/Field";
+import { Button, ClinicDatePicker, ClinicSelect, ClinicTimePicker } from "@/components/ui/clinic";
+import { ClinicField, ClinicInput, ClinicTextarea } from "@/components/ui/clinic/Field";
 
 const TYPES = [
   { value: "Business", label: "أعمال" },
@@ -102,27 +102,22 @@ export function ConsultationForm() {
         <ClinicInput type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
       </ClinicField>
       <ClinicField label="نوع الاستشارة">
-        <select
-          className={clinicInputClassName}
+        <ClinicSelect
+          options={[...TYPES]}
           value={consultationType}
-          onChange={(event) => setConsultationType(event.target.value)}
-        >
-          {TYPES.map((item) => (
-            <option key={item.value} value={item.value}>
-              {item.label}
-            </option>
-          ))}
-        </select>
+          onChange={setConsultationType}
+          placeholder="اختر نوع الاستشارة"
+        />
       </ClinicField>
       <ClinicField label="اسم الشركة">
         <ClinicInput value={companyName} onChange={(event) => setCompanyName(event.target.value)} />
       </ClinicField>
       <div className="grid gap-1 sm:grid-cols-2 sm:gap-4">
         <ClinicField label="التاريخ المفضل">
-          <ClinicInput type="date" value={preferredDate} onChange={(event) => setPreferredDate(event.target.value)} />
+          <ClinicDatePicker value={preferredDate} onChange={setPreferredDate} placeholder="اختر التاريخ" />
         </ClinicField>
         <ClinicField label="الوقت المفضل">
-          <ClinicInput type="time" value={preferredTime} onChange={(event) => setPreferredTime(event.target.value)} />
+          <ClinicTimePicker value={preferredTime} onChange={setPreferredTime} placeholder="اختر الوقت" />
         </ClinicField>
       </div>
       <ClinicField label="الموضوع">
@@ -132,17 +127,12 @@ export function ConsultationForm() {
         <ClinicTextarea rows={5} value={message} onChange={(event) => setMessage(event.target.value)} required />
       </ClinicField>
       <ClinicField label="طريقة التواصل المفضلة">
-        <select
-          className={clinicInputClassName}
+        <ClinicSelect
+          options={[...METHODS]}
           value={preferredCommunicationMethod}
-          onChange={(event) => setPreferredCommunicationMethod(event.target.value)}
-        >
-          {METHODS.map((item) => (
-            <option key={item.value} value={item.value}>
-              {item.label}
-            </option>
-          ))}
-        </select>
+          onChange={setPreferredCommunicationMethod}
+          placeholder="اختر طريقة التواصل"
+        />
       </ClinicField>
 
       {error ? <p className="mb-4 text-sm text-red-700">{error}</p> : null}

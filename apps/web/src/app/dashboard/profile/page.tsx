@@ -3,10 +3,11 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PageIntro } from "@/components/shared/PageIntro";
-import { Button, ClinicField, ClinicInput } from "@/components/ui/clinic";
+import { Button, ClinicField, ClinicInput, ClinicSelect } from "@/components/ui/clinic";
 import { ApiRequestError, apiFetch, parseJson } from "@/lib/api/client";
 import { getCurrentUser } from "@/lib/auth/session";
 import type { UserSummary } from "@/lib/api/types";
+import { IRAQ_GOVERNORATES } from "@/lib/data/governorates";
 import { safeInternalPath } from "@/lib/safe-path";
 
 /** S08 · الملف الشخصي — نماذج ClinicField */
@@ -134,7 +135,12 @@ export default function DashboardProfilePage() {
           <ClinicInput inputMode="tel" value={whatsAppNumber} onChange={(event) => setWhatsAppNumber(event.target.value)} />
         </ClinicField>
         <ClinicField label="المحافظة">
-          <ClinicInput value={governorate} onChange={(event) => setGovernorate(event.target.value)} />
+          <ClinicSelect
+            value={governorate}
+            onChange={setGovernorate}
+            placeholder="اختر المحافظة"
+            options={IRAQ_GOVERNORATES.map((item) => ({ value: item, label: item }))}
+          />
         </ClinicField>
         {profileError ? <p className="mb-4 text-sm text-red-600">{profileError}</p> : null}
         {profileSuccess ? <p className="mb-4 text-sm font-semibold text-accent">{profileSuccess}</p> : null}

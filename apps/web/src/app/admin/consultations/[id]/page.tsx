@@ -16,10 +16,22 @@ import {
   labelOrRaw,
   statusTone
 } from "@/lib/admin/labels";
+import { ClinicDatePicker, ClinicTimePicker } from "@/components/ui/clinic";
 import { inputClassName, primaryButtonClassName, secondaryButtonClassName } from "@/lib/admin/ui";
 import type { AdminConsultationDetail } from "@/lib/admin/types";
 import { formatBaghdadDateTime, formatDate } from "@/lib/format";
 import { safeInternalPath } from "@/lib/safe-path";
+
+function formatTimeOnly(value: string | null | undefined) {
+  if (!value) return "—";
+  const match = value.match(/^(\d{1,2}):(\d{2})/);
+  if (!match) return value;
+  const hour24 = Number(match[1]);
+  const minute = match[2];
+  const period = hour24 >= 12 ? "مساءً" : "صباحاً";
+  const hour12 = hour24 % 12 || 12;
+  return `${hour12}:${minute} ${period}`;
+}
 
 type ActionKind = "contacted" | "schedule" | "complete" | "cancel" | "reject";
 
@@ -177,10 +189,10 @@ export default function ConsultationDetailPage() {
         {detail.status === "Contacted" ? (
           <>
             <Field label="تاريخ الموعد">
-              <input className={inputClassName} type="date" value={scheduledDate} onChange={(event) => setScheduledDate(event.target.value)} />
+              <ClinicDatePicker value={scheduledDate} onChange={setScheduledDate} placeholder="اختر التاريخ" />
             </Field>
             <Field label="وقت الموعد">
-              <input className={inputClassName} type="time" value={scheduledTime} onChange={(event) => setScheduledTime(event.target.value)} />
+              <ClinicTimePicker value={scheduledTime} onChange={setScheduledTime} placeholder="اختر الوقت" />
             </Field>
           </>
         ) : null}
@@ -247,12 +259,4 @@ function Info({ label, value }: { label: string; value: string | null | undefine
       <p className="mt-1 break-all">{value || "—"}</p>
     </div>
   );
-}
-
-function formatTimeOnly(value: string | null): string | null {
-  if (!value) {
-    return null;
-  }
-
-  return value.slice(0, 5);
 }

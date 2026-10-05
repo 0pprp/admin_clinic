@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
-import { Button } from "@/components/ui/clinic";
+import { Button, ClinicDatePicker, ClinicSelect } from "@/components/ui/clinic";
 import { clinicInputClassName } from "@/components/ui/clinic/Field";
 import { withListQuery } from "@/lib/admin/query";
 
@@ -55,7 +55,17 @@ export function FilterField({
   return (
     <label className="block text-sm">
       <span className="mb-1.5 block font-medium text-foreground">{label}</span>
-      <input className={clinicInputClassName} name={name} type={type} defaultValue={defaultValue} placeholder={placeholder} />
+      {type === "date" ? (
+        <ClinicDatePicker name={name} defaultValue={defaultValue} placeholder={placeholder || "اختر التاريخ"} />
+      ) : (
+        <input
+          className={clinicInputClassName}
+          name={name}
+          type={type}
+          defaultValue={defaultValue}
+          placeholder={placeholder}
+        />
+      )}
     </label>
   );
 }
@@ -74,13 +84,7 @@ export function FilterSelect({
   return (
     <label className="block text-sm">
       <span className="mb-1.5 block font-medium text-foreground">{label}</span>
-      <select className={clinicInputClassName} name={name} defaultValue={defaultValue}>
-        {options.map((option) => (
-          <option key={option.value || "all"} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+      <ClinicSelect name={name} defaultValue={defaultValue} options={options} placeholder="الكل" />
     </label>
   );
 }

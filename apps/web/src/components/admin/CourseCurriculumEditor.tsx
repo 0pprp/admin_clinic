@@ -5,6 +5,7 @@ import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { Field } from "@/components/admin/PageHeader";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { useToast } from "@/components/admin/ToastProvider";
+import { ClinicSelect } from "@/components/ui/clinic";
 import { adminJson, adminVoid, errorMessage } from "@/lib/admin/http";
 import { labelOrRaw, lessonStatusLabel, statusTone, videoProcessingLabel, videoProviderLabel } from "@/lib/admin/labels";
 import { inputClassName, primaryButtonClassName, secondaryButtonClassName } from "@/lib/admin/ui";
@@ -13,6 +14,10 @@ import { formatDuration } from "@/lib/format";
 import { apiUpload, readApiError } from "@/lib/api/client";
 
 const VIDEO_PROVIDERS = ["SelfHostedHls", "None", "BunnyStream"];
+const VIDEO_PROVIDER_OPTIONS = VIDEO_PROVIDERS.map((provider) => ({
+  value: provider,
+  label: labelOrRaw(videoProviderLabel, provider)
+}));
 
 export function CourseCurriculumEditor({
   course,
@@ -361,13 +366,11 @@ export function CourseCurriculumEditor({
                 معاينة مجانية
               </label>
               <Field label="مصدر الفيديو">
-                <select className={inputClassName} value={lessonForm.videoProvider} onChange={(event) => setLessonForm({ ...lessonForm, videoProvider: event.target.value })}>
-                  {VIDEO_PROVIDERS.map((provider) => (
-                    <option key={provider} value={provider}>
-                      {labelOrRaw(videoProviderLabel, provider)}
-                    </option>
-                  ))}
-                </select>
+                <ClinicSelect
+                  value={lessonForm.videoProvider}
+                  onChange={(videoProvider) => setLessonForm({ ...lessonForm, videoProvider })}
+                  options={VIDEO_PROVIDER_OPTIONS}
+                />
               </Field>
               {lessonForm.videoProvider === "SelfHostedHls" ? (
                 <Field label="رفع فيديو إلى سيرفر العيادة">

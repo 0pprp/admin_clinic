@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { PageHeader } from "@/components/admin/PageHeader";
-import { AdCarousel, Badge, Button, ClinicField, ClinicInput, ClinicTextarea, clinicInputClassName } from "@/components/ui/clinic";
+import { AdCarousel, Badge, Button, ClinicField, ClinicInput, ClinicSelect, ClinicTextarea } from "@/components/ui/clinic";
 import { homeAdSlides, type AdSlide } from "@/lib/content/ads";
 
 const emptyDraft: AdSlide = {
@@ -151,16 +151,14 @@ export default function AdminAdsPage() {
               />
             </ClinicField>
             <ClinicField label="النمط">
-              <select
-                className={clinicInputClassName}
+              <ClinicSelect
                 value={draft.tone}
-                onChange={(event) =>
-                  setDraft((value) => ({ ...value, tone: event.target.value as AdSlide["tone"] }))
-                }
-              >
-                <option value="navy">كحلي</option>
-                <option value="light">فاتح</option>
-              </select>
+                onChange={(next) => setDraft((value) => ({ ...value, tone: next as AdSlide["tone"] }))}
+                options={[
+                  { value: "navy", label: "كحلي" },
+                  { value: "light", label: "فاتح" }
+                ]}
+              />
             </ClinicField>
             <Button variant="accent" onClick={saveDraft} disabled={!draft.title.trim()}>
               حفظ الإعلان

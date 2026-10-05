@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { AuthShell, Field, buttonClassName, inputClassName } from "@/components/auth/AuthShell";
+import { ClinicSelect } from "@/components/ui/clinic";
 import { ApiRequestError } from "@/lib/api/client";
 import { register } from "@/lib/auth/session";
 import { IRAQ_GOVERNORATES } from "@/lib/data/governorates";
@@ -113,18 +114,12 @@ export default function RegisterPage() {
           />
         </Field>
         <Field label="المحافظة">
-          <select
-            className={inputClassName}
+          <ClinicSelect
             value={governorate}
-            onChange={(event) => setGovernorate(event.target.value)}
-          >
-            <option value="">اختر المحافظة</option>
-            {IRAQ_GOVERNORATES.map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
+            onChange={setGovernorate}
+            placeholder="اختر المحافظة"
+            options={IRAQ_GOVERNORATES.map((item) => ({ value: item, label: item }))}
+          />
         </Field>
         <Field label="كلمة المرور">
           <input

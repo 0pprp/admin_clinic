@@ -48,7 +48,7 @@ export function MobileNavigation({ hasSession }: { hasSession: boolean }) {
   const drawer =
     open && mounted
       ? createPortal(
-          <div className="fixed inset-0 z-[100] lg:hidden">
+          <div className="fixed inset-0 z-[100] xl:hidden">
             <button type="button" className="absolute inset-0 bg-black/45" aria-label="إغلاق القائمة" onClick={closeMenu} />
             <div
               id={dialogId}
@@ -103,11 +103,11 @@ export function MobileNavigation({ hasSession }: { hasSession: boolean }) {
       : null;
 
   return (
-    <div className="lg:hidden">
+    <div className="xl:hidden">
       <button
         ref={openButtonRef}
         type="button"
-        className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-surface text-foreground"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-surface text-foreground sm:h-11 sm:w-11"
         aria-expanded={open}
         aria-controls={dialogId}
         aria-label={open ? "إغلاق القائمة" : "فتح القائمة"}

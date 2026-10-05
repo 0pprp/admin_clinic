@@ -14,11 +14,11 @@ function Bars() {
     { h: 88, accent: false }
   ];
   return (
-    <div className="flex h-28 items-end gap-2.5 sm:h-32" aria-hidden="true">
+    <div className="flex h-24 items-end gap-2 sm:h-28 sm:gap-2.5 md:h-32" aria-hidden="true">
       {bars.map((bar, index) => (
         <div
           key={index}
-          className={cn("w-4 rounded-md sm:w-5", bar.accent ? "bg-accent" : "bg-white/20")}
+          className={cn("w-3.5 rounded-md sm:w-4 md:w-5", bar.accent ? "bg-accent" : "bg-white/20")}
           style={{ height: `${bar.h}%` }}
         />
       ))}
@@ -59,21 +59,31 @@ export function AdCarousel({
 
   return (
     <section
-      className={embedded ? undefined : "clinic-shell pb-4 sm:pb-6"}
+      className={embedded ? undefined : "clinic-shell-bleed pb-4 sm:pb-6"}
       aria-roledescription="carousel"
       aria-label="إعلانات العيادة"
     >
-      {embedded ? null : <p className="mb-3 text-sm text-muted">إعلان من العيادة</p>}
-      <div className="overflow-hidden rounded-[1.75rem] bg-surface-dark text-primary-foreground">
-        <div className="grid items-center gap-8 px-6 py-8 sm:px-10 sm:py-10 lg:grid-cols-[1.15fr_0.85fr] lg:px-12">
+      {embedded ? null : (
+        <p className="mb-3 px-3 text-sm text-muted sm:px-0">إعلان من العيادة</p>
+      )}
+      <div
+        className={cn(
+          "overflow-hidden bg-surface-dark text-primary-foreground",
+          embedded ? "rounded-[1.75rem]" : "rounded-none sm:rounded-[1.75rem]"
+        )}
+      >
+        {/* Mobile: stacked full-bleed; tablet+: keep single column until lg split */}
+        <div className="grid items-center gap-6 px-4 py-7 sm:gap-8 sm:px-8 sm:py-9 md:px-10 md:py-10 lg:grid-cols-[1.15fr_0.85fr] lg:px-12">
           <div>
             <p className="text-sm font-medium text-primary-foreground/55">{slide.eyebrow}</p>
-            <h2 className="mt-3 text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl">{slide.title}</h2>
-            <p className="mt-3 max-w-xl text-sm leading-8 text-primary-foreground/70">{slide.body}</p>
+            <h2 className="mt-2 text-xl font-extrabold leading-tight tracking-tight sm:mt-3 sm:text-2xl md:text-3xl">
+              {slide.title}
+            </h2>
+            <p className="mt-3 max-w-xl text-sm leading-7 text-primary-foreground/70 sm:leading-8">{slide.body}</p>
             {slide.ctaHref && slide.ctaLabel ? (
               <Link
                 href={slide.ctaHref}
-                className="mt-6 inline-flex rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-accent-soft"
+                className="mt-5 inline-flex w-full items-center justify-center rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-accent-soft sm:mt-6 sm:w-auto"
               >
                 {slide.ctaLabel}
               </Link>
@@ -84,7 +94,7 @@ export function AdCarousel({
           </div>
         </div>
         {slides.length > 1 ? (
-          <div className="flex flex-wrap items-center justify-between gap-3 px-6 pb-5 sm:px-10 lg:px-12">
+          <div className="flex flex-wrap items-center justify-between gap-3 px-4 pb-4 sm:px-8 sm:pb-5 md:px-10 lg:px-12">
             <div className="flex items-center gap-2">
               {slides.map((item, i) => (
                 <button

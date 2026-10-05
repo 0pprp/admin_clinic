@@ -11,14 +11,14 @@ export function AuthShell({
   children: ReactNode;
 }) {
   return (
-    <div className="clinic-shell flex flex-col items-center px-5 py-12 sm:py-16">
+    <div className="clinic-shell flex flex-col items-center py-8 sm:py-12 md:py-16">
       <div className="w-full max-w-md text-center">
-        <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">{title}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl">{title}</h1>
         {description ? <p className="mt-3 text-sm leading-7 text-muted sm:text-base">{description}</p> : null}
       </div>
-      <div className="mt-8 w-full max-w-md rounded-[1.25rem] border border-border bg-surface p-7 shadow-[0_12px_40px_rgba(15,23,42,0.06)] sm:p-8">
-        <div className="mb-6 flex justify-center">
-          <BrandMark className="h-11 w-11" />
+      <div className="mt-6 w-full max-w-md rounded-[1.25rem] border border-border bg-surface p-5 shadow-[0_12px_40px_rgba(15,23,42,0.06)] sm:mt-8 sm:p-7 md:p-8">
+        <div className="mb-5 flex justify-center sm:mb-6">
+          <BrandMark className="h-10 w-10 sm:h-11 sm:w-11" />
         </div>
         {children}
       </div>

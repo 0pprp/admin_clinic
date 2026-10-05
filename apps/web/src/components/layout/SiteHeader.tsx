@@ -21,7 +21,7 @@ export async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/80 bg-surface/95 backdrop-blur-md">
-      <div className="clinic-shell flex h-[4.25rem] items-center justify-between gap-4 lg:h-[4.75rem]">
+      <div className="clinic-shell flex h-16 items-center justify-between gap-3 sm:h-[4.25rem] sm:gap-4 xl:h-[4.75rem]">
         <div className="min-w-0 shrink-0">
           <BrandWordmark />
         </div>
@@ -39,10 +39,12 @@ export async function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <div className="hidden shrink-0 items-center gap-4 lg:flex">
-          <SessionAction hasSession={hasSession} />
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <div className="hidden md:block xl:ms-1">
+            <SessionAction hasSession={hasSession} />
+          </div>
+          <MobileNavigation hasSession={hasSession} />
         </div>
-        <MobileNavigation hasSession={hasSession} />
       </div>
     </header>
   );

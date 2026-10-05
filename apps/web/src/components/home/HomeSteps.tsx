@@ -2,10 +2,11 @@ import { homeSteps } from "@/lib/content/brand";
 
 export function HomeSteps() {
   return (
-    <section className="clinic-shell py-8 sm:py-10" aria-label="مسار العمل">
-      <ul className="grid gap-4 sm:grid-cols-3">
+    <section className="clinic-shell py-6 sm:py-8 md:py-10" aria-label="مسار العمل">
+      {/* Mobile + tablet: single column; desktop: 3-up */}
+      <ul className="grid gap-3 sm:gap-4 lg:grid-cols-3">
         {homeSteps.map((step) => (
-          <li key={step.code} className="clinic-card px-5 py-7 text-center sm:px-6">
+          <li key={step.code} className="clinic-card px-4 py-6 text-center sm:px-6 sm:py-7">
             <p className="text-sm font-extrabold text-foreground">
               {step.code} / {step.title}
             </p>

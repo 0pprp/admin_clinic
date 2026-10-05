@@ -66,7 +66,7 @@ export default async function CourseDetailPage({
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <div className="clinic-shell py-10 sm:py-14">
+      <div className="clinic-shell py-8 sm:py-10 md:py-14">
         <nav className="text-xs text-muted" aria-label="مسار التنقل">
           <Link href="/" className="hover:text-accent">
             الرئيسية
@@ -79,9 +79,9 @@ export default async function CourseDetailPage({
           <span className="text-foreground">{course.title}</span>
         </nav>
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-10">
+        <div className="mt-6 grid gap-6 sm:mt-8 sm:gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-10">
           {/* المحتوى على اليمين في RTL، اللوحة على اليسار */}
-          <div className="min-w-0 space-y-8">
+          <div className="min-w-0 space-y-6 sm:space-y-8">
             <div className="relative aspect-[16/9] overflow-hidden rounded-[1.25rem] bg-surface-dark sm:aspect-[2/1]">
               {course.thumbnailUrl ? (
                 <Image
@@ -94,7 +94,7 @@ export default async function CourseDetailPage({
                   priority
                 />
               ) : (
-                <div className="flex h-full items-end p-6 text-primary-foreground sm:p-8">
+                <div className="flex h-full items-end p-5 text-primary-foreground sm:p-8">
                   <p className="text-sm font-bold text-accent">كورس</p>
                 </div>
               )}
@@ -102,25 +102,25 @@ export default async function CourseDetailPage({
 
             <header>
               <p className="text-sm font-bold text-accent">{courseLevelLabel(course.level)}</p>
-              <h1 className="mt-3 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">{course.title}</h1>
-              <p className="mt-4 max-w-2xl text-sm leading-8 text-muted sm:text-base">{course.shortDescription}</p>
+              <h1 className="mt-3 text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl md:text-4xl">{course.title}</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-muted sm:mt-4 sm:text-base sm:leading-8">{course.shortDescription}</p>
             </header>
 
-            <section className="clinic-card px-5 py-6 sm:px-7 sm:py-8">
-              <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">عن الدورة</h2>
-              <div className="mt-4 whitespace-pre-line text-sm leading-8 text-muted sm:text-base">{course.description}</div>
+            <section className="clinic-card px-4 py-5 sm:px-7 sm:py-8">
+              <h2 className="text-lg font-extrabold tracking-tight sm:text-xl md:text-2xl">عن الدورة</h2>
+              <div className="mt-4 whitespace-pre-line text-sm leading-7 text-muted sm:text-base sm:leading-8">{course.description}</div>
             </section>
 
             <section>
-              <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">المنهج</h2>
-              <div className="mt-5">
+              <h2 className="text-lg font-extrabold tracking-tight sm:text-xl md:text-2xl">المنهج</h2>
+              <div className="mt-4 sm:mt-5">
                 <CourseCurriculum slug={course.slug} sections={course.sections} />
               </div>
             </section>
           </div>
 
           <aside className="lg:sticky lg:top-24">
-            <div className="clinic-card p-5 sm:p-6">
+            <div className="clinic-card p-4 sm:p-6">
               <p className="text-sm font-bold text-muted">سعر الاشتراك</p>
               <p className="mt-2 text-3xl font-extrabold tracking-tight text-foreground">{formatIqd(course.priceIQD)}</p>
 

@@ -149,35 +149,40 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
           <div className="flex min-w-0 flex-col">
             <header className="sticky top-0 z-20 border-b border-border bg-surface/95 backdrop-blur">
-              <div className="flex items-center justify-between gap-3 px-4 py-3.5 sm:px-6 lg:px-8">
+              <div className="flex items-center justify-between gap-2 px-3 py-3 sm:gap-3 sm:px-6 sm:py-3.5 lg:px-8">
                 <div className="min-w-0 lg:hidden">
                   <Link href="/admin" className="inline-flex items-center gap-2">
                     <BrandMark className="h-7 w-7" />
-                    <span className="text-sm font-extrabold tracking-tight">{brand.nameAr}</span>
+                    <span className="truncate text-sm font-extrabold tracking-tight">{brand.nameAr}</span>
                   </Link>
                 </div>
                 <p className="hidden text-sm text-muted lg:block">مرحباً، {user.fullName}</p>
                 <div className="flex shrink-0 items-center gap-2">
                   <Link
                     href="/"
-                    className="hidden rounded-xl border border-border px-3 py-2 text-sm font-semibold transition hover:border-accent hover:text-accent sm:inline-flex"
+                    className="hidden rounded-xl border border-border px-3 py-2 text-sm font-semibold transition hover:border-accent hover:text-accent md:inline-flex"
                   >
                     الموقع
                   </Link>
                   <button
                     type="button"
-                    className="rounded-xl border border-border bg-surface px-3 py-2 text-sm font-semibold lg:hidden"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-surface lg:hidden"
                     aria-expanded={open}
                     aria-controls={menuId}
+                    aria-label={open ? "إغلاق القائمة" : "فتح القائمة"}
                     onClick={() => setOpen(true)}
                   >
-                    القائمة
+                    <span aria-hidden="true" className="relative block h-4 w-5">
+                      <span className="absolute start-0 top-0 block h-0.5 w-5 rounded-full bg-current" />
+                      <span className="absolute start-0 top-1.5 block h-0.5 w-5 rounded-full bg-current" />
+                      <span className="absolute start-0 top-3 block h-0.5 w-5 rounded-full bg-current" />
+                    </span>
                   </button>
                 </div>
               </div>
             </header>
 
-            <main id="main" className="flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+            <main id="main" className="flex-1 px-3 py-5 sm:px-6 sm:py-8 lg:px-8">
               <div className="mx-auto w-full max-w-6xl">{children}</div>
             </main>
           </div>

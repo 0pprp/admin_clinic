@@ -74,9 +74,40 @@ svg {
   top: 1rem;
 }
 
+/* Mobile: tighter gutters; tablet/desktop restore Figma shell width */
 .clinic-shell {
   margin-inline: auto;
-  width: min(100% - 2rem, 72rem);
+  width: min(100% - 1.5rem, 72rem);
+}
+
+@media (min-width: 640px) {
+  .clinic-shell {
+    width: min(100% - 2rem, 72rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .clinic-shell {
+    width: min(100% - 3rem, 72rem);
+  }
+}
+
+/* Full-bleed on mobile, shell-aligned from tablet up (ad carousel) */
+.clinic-shell-bleed {
+  margin-inline: auto;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .clinic-shell-bleed {
+    width: min(100% - 2rem, 72rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .clinic-shell-bleed {
+    width: min(100% - 3rem, 72rem);
+  }
 }
 
 .clinic-card {

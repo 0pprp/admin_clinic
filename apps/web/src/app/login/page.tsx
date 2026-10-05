@@ -21,7 +21,6 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
 
@@ -41,7 +40,7 @@ function LoginForm() {
 
     setPending(true);
     try {
-      await login({ email: email.trim(), password, rememberMe });
+      await login({ email: email.trim(), password, rememberMe: false });
       const from = safeInternalPath(searchParams.get("from"));
       const intent = searchParams.get("intent");
       const destination =
@@ -58,13 +57,14 @@ function LoginForm() {
   }
 
   return (
-    <AuthShell title="تسجيل الدخول" description="أدخل بيانات حسابك للمتابعة.">
+    <AuthShell title="أهلاً بعودتك" description="تابع تعلمك من حيث توقفت.">
       <form onSubmit={onSubmit} noValidate>
         <Field label="البريد الإلكتروني">
           <input
             className={inputClassName}
             type="email"
             autoComplete="email"
+            placeholder="name@example.com"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
           />
@@ -74,37 +74,35 @@ function LoginForm() {
             className={inputClassName}
             type="password"
             autoComplete="current-password"
+            placeholder="********"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
         </Field>
-        <label className="mb-4 flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={rememberMe}
-            onChange={(event) => setRememberMe(event.target.checked)}
-          />
-          تذكرني
-        </label>
         {error ? <p className="mb-4 text-sm text-red-700">{error}</p> : null}
         <button className={buttonClassName} type="submit" disabled={pending}>
           {pending ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
         </button>
       </form>
-      <p className="mt-4 text-sm">
-        <Link className="underline" href="/forgot-password">
-          نسيت كلمة المرور؟
-        </Link>
-      </p>
-      <p className="mt-2 text-sm text-[#6B7280]">
-        ليس لديك حساب؟{" "}
-        <Link
-          className="font-medium text-[#0E141B] underline"
-          href={searchParams.get("from") ? `/register?from=${encodeURIComponent(searchParams.get("from") ?? "")}` : "/register"}
-        >
-          إنشاء حساب
-        </Link>
-      </p>
+      <div className="mt-5 space-y-2 text-start text-sm">
+        <p>
+          <Link className="text-foreground transition hover:text-accent" href="/forgot-password">
+            نسيت كلمة المرور؟
+          </Link>
+        </p>
+        <p>
+          <Link
+            className="font-bold text-foreground transition hover:text-accent"
+            href={
+              searchParams.get("from")
+                ? `/register?from=${encodeURIComponent(searchParams.get("from") ?? "")}`
+                : "/register"
+            }
+          >
+            إنشاء حساب
+          </Link>
+        </p>
+      </div>
     </AuthShell>
   );
 }

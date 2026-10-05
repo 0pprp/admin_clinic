@@ -2,7 +2,7 @@ export const brand = {
   nameAr: "العيادة الإدارية",
   nameEn: "THE MANAGEMENT CLINIC",
   taglineAr: "عالم أصغر... أفق أوسع",
-  sloganAr: "شخّص • عالج • طوّر",
+  sloganAr: "شخّص . عالج . طوّر",
   siteTitle: "العيادة الإدارية",
   siteDescription:
     "استشارات وكورسات عملية تساعدك على فهم تحديات الإدارة وبناء فريق أقوى وخطوات قابلة للتطبيق."
@@ -69,7 +69,7 @@ export const finalCtaCopy = {
 
 export const featuredCoursesCopy = {
   title: "ابدأ من التحدي الذي تواجهه",
-  description: "كورسات مصممة لواقع العمل والبداية اليومية"
+  description: "كورسات مصممة لواقع العمل والإدارة اليومية"
 } as const;
 
 export const navItems = [

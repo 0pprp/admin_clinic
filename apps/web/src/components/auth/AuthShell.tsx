@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
-import { BrandWordmark } from "@/components/ui/clinic";
-import { clinicInputClassName } from "@/components/ui/clinic/Field";
+import { BrandMark } from "@/components/ui/clinic";
 
 export function AuthShell({
   title,
@@ -12,27 +11,31 @@ export function AuthShell({
   children: ReactNode;
 }) {
   return (
-    <main id="main" className="flex min-h-full flex-1 items-center justify-center bg-background px-5 py-12 text-foreground">
-      <div className="w-full max-w-md rounded-[1.5rem] border border-border bg-surface p-7 shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:p-8">
-        <BrandWordmark />
-        <h1 className="mt-8 text-2xl font-extrabold tracking-tight">{title}</h1>
-        {description ? <p className="mt-2 text-sm leading-7 text-muted">{description}</p> : null}
-        <div className="mt-6">{children}</div>
+    <div className="clinic-shell flex flex-col items-center px-5 py-12 sm:py-16">
+      <div className="w-full max-w-md text-center">
+        <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">{title}</h1>
+        {description ? <p className="mt-3 text-sm leading-7 text-muted sm:text-base">{description}</p> : null}
       </div>
-    </main>
+      <div className="mt-8 w-full max-w-md rounded-[1.25rem] border border-border bg-surface p-7 shadow-[0_12px_40px_rgba(15,23,42,0.06)] sm:p-8">
+        <div className="mb-6 flex justify-center">
+          <BrandMark className="h-11 w-11" />
+        </div>
+        {children}
+      </div>
+    </div>
   );
 }
 
 export function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <label className="mb-4 block">
-      <span className="mb-1.5 block text-sm font-medium">{label}</span>
+    <label className="mb-4 block text-start">
+      <span className="mb-1.5 block text-sm font-bold text-foreground">{label}</span>
       {children}
     </label>
   );
 }
 
-export const inputClassName = clinicInputClassName;
+export { clinicInputClassName as inputClassName } from "@/components/ui/clinic/Field";
 
 export const buttonClassName =
-  "w-full rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-accent-soft disabled:opacity-60";
+  "w-full rounded-xl bg-accent px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-accent-soft disabled:opacity-60";

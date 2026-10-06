@@ -60,11 +60,14 @@ public static class DependencyInjection
             configuration.GetSection(MohammedRaouf.Application.Security.VideoOptions.SectionName));
         services.Configure<ActivationCodeOptions>(
             configuration.GetSection(ActivationCodeOptions.SectionName));
+        services.Configure<MohammedRaouf.Application.Security.EmailOptions>(
+            configuration.GetSection(MohammedRaouf.Application.Security.EmailOptions.SectionName));
 
         services
             .AddIdentityCore<ApplicationUser>(options =>
             {
                 options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedEmail = true;
                 options.Password.RequiredLength = 8;
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
@@ -81,6 +84,7 @@ public static class DependencyInjection
         services.AddScoped<IIdentityDataSeeder, IdentityDataSeeder>();
         services.AddScoped<IAccessTokenService, AccessTokenService>();
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+        services.AddScoped<IEmailOtpService, EmailOtpService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPublicCatalogService, PublicCatalogService>();
         services.AddScoped<ICourseAccessService, CourseAccessService>();
@@ -102,7 +106,12 @@ public static class DependencyInjection
         services.AddScoped<IEnrollmentQueryService>(provider => provider.GetRequiredService<StudentLearningService>());
         services.AddScoped<ILessonProgressService, LessonProgressService>();
         var emailProvider = configuration["Email:Provider"] ?? "Logging";
-        if (string.Equals(emailProvider, "Disabled", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(emailProvider, "Smtp", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(emailProvider, "Gmail", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddSingleton<IEmailService, SmtpEmailService>();
+        }
+        else if (string.Equals(emailProvider, "Disabled", StringComparison.OrdinalIgnoreCase))
         {
             services.AddSingleton<IEmailService, DisabledEmailService>();
         }

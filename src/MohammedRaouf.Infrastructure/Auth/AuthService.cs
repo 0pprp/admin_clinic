@@ -1,3 +1,5 @@
+using System.Text;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -6,12 +8,13 @@ using Microsoft.Extensions.Options;
 using MohammedRaouf.Application.Auth;
 using MohammedRaouf.Application.Notifications;
 using MohammedRaouf.Application.Security;
+using EmailOptions = MohammedRaouf.Application.Security.EmailOptions;
 using MohammedRaouf.Contracts.Auth;
 using MohammedRaouf.Contracts.Profile;
+using MohammedRaouf.Domain.Entities;
 using MohammedRaouf.Domain.Enums;
 using MohammedRaouf.Domain.Identity;
 using MohammedRaouf.Infrastructure.Persistence;
-using System.Text;
 
 namespace MohammedRaouf.Infrastructure.Auth;
 
@@ -21,12 +24,14 @@ public sealed class AuthService(
     IAccessTokenService accessTokenService,
     IRefreshTokenService refreshTokenService,
     IEmailService emailService,
+    IEmailOtpService emailOtpService,
     IOptions<JwtOptions> jwtOptions,
+    IOptions<EmailOptions> emailOptions,
     IConfiguration configuration,
     ILogger<AuthService> logger) : IAuthService
 {
     private const string GenericLoginError = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-    private const string ForgotPasswordMessage = "إذا كان البريد مسجلاً لدينا، فسيتم إرسال تعليمات استعادة كلمة المرور.";
+    private const string GoogleLoginProvider = "Google";
 
     public async Task<AuthCommandResult<UserSummaryResponse>> RegisterAsync(
         RegisterRequest request,
@@ -67,8 +72,18 @@ public sealed class AuthService(
         }
 
         await userManager.AddToRoleAsync(user, RoleNames.Student);
-        logger.LogInformation("User registered successfully for {UserId}", user.Id);
 
+        if (ShouldAutoConfirmEmail())
+        {
+            user.EmailConfirmed = true;
+            await userManager.UpdateAsync(user);
+        }
+        else
+        {
+            await IssueAndSendOtpAsync(user, EmailOtpPurposes.EmailVerification, cancellationToken);
+        }
+
+        logger.LogInformation("User registered successfully for {UserId}", user.Id);
         return AuthCommandResult<UserSummaryResponse>.Ok(await ToSummaryAsync(user));
     }
 
@@ -91,6 +106,15 @@ public sealed class AuthService(
             return AuthCommandResult<UserSummaryResponse>.Fail(403, "ممنوع", "لا يمكن تسجيل الدخول لأن الحساب غير نشط.");
         }
 
+        if (!user.EmailConfirmed)
+        {
+            await IssueAndSendOtpAsync(user, EmailOtpPurposes.EmailVerification, cancellationToken);
+            return AuthCommandResult<UserSummaryResponse>.Fail(
+                403,
+                "يتطلب التحقق",
+                "يجب تأكيد البريد الإلكتروني أولاً. أرسلنا رمز تحقق إلى بريدك.");
+        }
+
         user.LastLoginAt = DateTimeOffset.UtcNow;
         user.UpdatedAt = DateTimeOffset.UtcNow;
         await userManager.UpdateAsync(user);
@@ -98,6 +122,103 @@ public sealed class AuthService(
         var cookies = await IssueSessionAsync(user, request.RememberMe, ipAddress, cancellationToken);
         logger.LogInformation("Login succeeded for {UserId}", user.Id);
         return AuthCommandResult<UserSummaryResponse>.Ok(await ToSummaryAsync(user), cookies);
+    }
+
+    public async Task<AuthCommandResult<AuthChallengeResponse>> GoogleLoginAsync(
+        GoogleLoginRequest request,
+        string? ipAddress,
+        CancellationToken cancellationToken = default)
+    {
+        _ = ipAddress;
+        var clientId = emailOptions.Value.Google.ClientId;
+        if (string.IsNullOrWhiteSpace(clientId))
+        {
+            return AuthCommandResult<AuthChallengeResponse>.Fail(
+                503,
+                "غير متاح",
+                "تسجيل الدخول عبر Google غير مُعد بعد.");
+        }
+
+        if (string.IsNullOrWhiteSpace(request.IdToken))
+        {
+            return AuthCommandResult<AuthChallengeResponse>.Fail(400, "طلب غير صالح", "رمز Google مفقود.");
+        }
+
+        GoogleJsonWebSignature.Payload payload;
+        try
+        {
+            payload = await GoogleJsonWebSignature.ValidateAsync(
+                request.IdToken,
+                new GoogleJsonWebSignature.ValidationSettings
+                {
+                    Audience = [clientId]
+                });
+        }
+        catch (InvalidJwtException)
+        {
+            return AuthCommandResult<AuthChallengeResponse>.Fail(401, "غير مصرح", "تعذر التحقق من حساب Google.");
+        }
+
+        if (string.IsNullOrWhiteSpace(payload.Email) || payload.EmailVerified != true)
+        {
+            return AuthCommandResult<AuthChallengeResponse>.Fail(
+                400,
+                "طلب غير صالح",
+                "حساب Google لا يوفّر بريداً إلكترونياً مؤكداً.");
+        }
+
+        var email = NormalizeEmail(payload.Email);
+        var user = await userManager.FindByEmailAsync(email);
+        if (user is null)
+        {
+            var utcNow = DateTimeOffset.UtcNow;
+            user = new ApplicationUser
+            {
+                Id = Guid.NewGuid(),
+                FullName = string.IsNullOrWhiteSpace(payload.Name) ? email.Split('@')[0] : payload.Name.Trim(),
+                UserName = email,
+                Email = email,
+                EmailConfirmed = false,
+                PhoneNumber = null,
+                AccountStatus = AccountStatus.Active,
+                AvatarUrl = payload.Picture,
+                CreatedAt = utcNow,
+                UpdatedAt = utcNow
+            };
+
+            var create = await userManager.CreateAsync(user);
+            if (!create.Succeeded)
+            {
+                var description = create.Errors.FirstOrDefault()?.Description ?? "تعذر إنشاء الحساب عبر Google.";
+                return AuthCommandResult<AuthChallengeResponse>.Fail(400, "طلب غير صالح", description);
+            }
+
+            await userManager.AddToRoleAsync(user, RoleNames.Student);
+        }
+
+        if (user.AccountStatus != AccountStatus.Active)
+        {
+            return AuthCommandResult<AuthChallengeResponse>.Fail(403, "ممنوع", "لا يمكن تسجيل الدخول لأن الحساب غير نشط.");
+        }
+
+        var existingLogin = await userManager.FindByLoginAsync(GoogleLoginProvider, payload.Subject);
+        if (existingLogin is null)
+        {
+            await userManager.AddLoginAsync(
+                user,
+                new UserLoginInfo(GoogleLoginProvider, payload.Subject, GoogleLoginProvider));
+        }
+
+        await IssueAndSendOtpAsync(user, EmailOtpPurposes.GoogleLogin, cancellationToken);
+        logger.LogInformation("Google login challenge issued for {UserId}", user.Id);
+
+        return AuthCommandResult<AuthChallengeResponse>.Ok(new AuthChallengeResponse
+        {
+            RequiresEmailVerification = true,
+            Email = email,
+            Purpose = EmailOtpPurposes.GoogleLogin,
+            Message = "أرسلنا رمز تحقق إلى بريدك على Gmail. أدخله لإكمال تسجيل الدخول."
+        });
     }
 
     public async Task<AuthCommandResult<UserSummaryResponse>> RefreshAsync(
@@ -197,9 +318,20 @@ public sealed class AuthService(
             return;
         }
 
-        var token = await userManager.GeneratePasswordResetTokenAsync(user);
-        var link = BuildAuthLink("/reset-password", user.Email!, token);
-        await emailService.SendPasswordResetAsync(user.Email!, link, cancellationToken);
+        await IssueAndSendOtpAsync(user, EmailOtpPurposes.PasswordReset, cancellationToken);
+
+        // Keep legacy link for inbox clients that prefer one-click reset.
+        try
+        {
+            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+            var link = BuildAuthLink("/reset-password", user.Email!, token);
+            await emailService.SendPasswordResetAsync(user.Email!, link, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Password reset link email skipped after OTP was issued for {UserId}", user.Id);
+        }
+
         logger.LogInformation("Password reset requested for {UserId}", user.Id);
     }
 
@@ -214,11 +346,42 @@ public sealed class AuthService(
             return AuthCommandResult.Fail(400, "طلب غير صالح", "تعذر إعادة تعيين كلمة المرور.");
         }
 
-        var decodedToken = DecodeToken(request.Token);
-        var result = await userManager.ResetPasswordAsync(user, decodedToken, request.NewPassword);
+        var rawToken = (request.Token ?? string.Empty).Trim();
+        IdentityResult result;
+
+        if (LooksLikeOtp(rawToken))
+        {
+            var otpOk = await emailOtpService.VerifyAsync(
+                user,
+                EmailOtpPurposes.PasswordReset,
+                rawToken,
+                cancellationToken);
+            if (!otpOk)
+            {
+                return AuthCommandResult.Fail(400, "طلب غير صالح", "رمز الاستعادة غير صالح أو منتهٍ.");
+            }
+
+            var identityToken = await userManager.GeneratePasswordResetTokenAsync(user);
+            result = await userManager.ResetPasswordAsync(user, identityToken, request.NewPassword);
+            if (!result.Succeeded && result.Errors.Any(error => error.Code == "UserMissingPassword"))
+            {
+                result = await userManager.AddPasswordAsync(user, request.NewPassword);
+            }
+        }
+        else
+        {
+            result = await userManager.ResetPasswordAsync(user, DecodeToken(rawToken), request.NewPassword);
+        }
+
         if (!result.Succeeded)
         {
             return AuthCommandResult.Fail(400, "طلب غير صالح", "رمز الاستعادة غير صالح أو منتهٍ.");
+        }
+
+        if (!user.EmailConfirmed)
+        {
+            user.EmailConfirmed = true;
+            await userManager.UpdateAsync(user);
         }
 
         await refreshTokenService.RevokeAllForUserAsync(user.Id, ipAddress, cancellationToken);
@@ -227,34 +390,71 @@ public sealed class AuthService(
         return AuthCommandResult.Success() with { ClearCookies = true };
     }
 
-    public async Task ResendVerificationAsync(string email, CancellationToken cancellationToken = default)
+    public async Task ResendVerificationAsync(string email, string? purpose = null, CancellationToken cancellationToken = default)
     {
         var user = await userManager.FindByEmailAsync(NormalizeEmail(email));
-        if (user is null || user.EmailConfirmed)
+        if (user is null)
         {
             return;
         }
 
-        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-        var link = BuildAuthLink("/verify-email", user.Email!, token);
-        await emailService.SendEmailConfirmationAsync(user.Email!, link, cancellationToken);
+        var normalizedPurpose = NormalizePurpose(purpose);
+        if (normalizedPurpose is EmailOtpPurposes.EmailVerification && user.EmailConfirmed)
+        {
+            return;
+        }
+
+        await IssueAndSendOtpAsync(user, normalizedPurpose, cancellationToken);
     }
 
-    public async Task<AuthCommandResult> VerifyEmailAsync(VerifyEmailRequest request, CancellationToken cancellationToken = default)
+    public async Task<AuthCommandResult<UserSummaryResponse>> VerifyEmailAsync(
+        VerifyEmailRequest request,
+        string? ipAddress,
+        CancellationToken cancellationToken = default)
     {
         var user = await userManager.FindByEmailAsync(NormalizeEmail(request.Email));
         if (user is null)
         {
-            return AuthCommandResult.Fail(400, "طلب غير صالح", "تعذر تأكيد البريد الإلكتروني.");
+            return AuthCommandResult<UserSummaryResponse>.Fail(400, "طلب غير صالح", "تعذر تأكيد البريد الإلكتروني.");
         }
 
-        var result = await userManager.ConfirmEmailAsync(user, DecodeToken(request.Token));
-        if (!result.Succeeded)
+        var purpose = NormalizePurpose(request.Purpose);
+        var rawToken = (request.Token ?? string.Empty).Trim();
+        var verified = false;
+
+        if (LooksLikeOtp(rawToken))
         {
-            return AuthCommandResult.Fail(400, "طلب غير صالح", "رمز التأكيد غير صالح أو منتهٍ.");
+            verified = await emailOtpService.VerifyAsync(user, purpose, rawToken, cancellationToken);
+        }
+        else if (purpose is EmailOtpPurposes.EmailVerification)
+        {
+            var confirm = await userManager.ConfirmEmailAsync(user, DecodeToken(rawToken));
+            verified = confirm.Succeeded;
         }
 
-        return AuthCommandResult.Success();
+        if (!verified)
+        {
+            return AuthCommandResult<UserSummaryResponse>.Fail(400, "طلب غير صالح", "رمز التأكيد غير صالح أو منتهٍ.");
+        }
+
+        if (!user.EmailConfirmed)
+        {
+            user.EmailConfirmed = true;
+            user.UpdatedAt = DateTimeOffset.UtcNow;
+            await userManager.UpdateAsync(user);
+        }
+
+        IssuedAuthCookies? cookies = null;
+        if (purpose is EmailOtpPurposes.GoogleLogin or EmailOtpPurposes.EmailVerification)
+        {
+            user.LastLoginAt = DateTimeOffset.UtcNow;
+            user.UpdatedAt = DateTimeOffset.UtcNow;
+            await userManager.UpdateAsync(user);
+            cookies = await IssueSessionAsync(user, request.RememberMe, ipAddress, cancellationToken);
+        }
+
+        logger.LogInformation("Email verified for {UserId} purpose={Purpose}", user.Id, purpose);
+        return AuthCommandResult<UserSummaryResponse>.Ok(await ToSummaryAsync(user), cookies);
     }
 
     public async Task<UserSummaryResponse> UpdateProfileAsync(
@@ -300,6 +500,19 @@ public sealed class AuthService(
         return AuthCommandResult.Success() with { ClearCookies = true };
     }
 
+    private async Task IssueAndSendOtpAsync(ApplicationUser user, string purpose, CancellationToken cancellationToken)
+    {
+        var code = await emailOtpService.IssueAsync(user, purpose, cancellationToken);
+        await emailService.SendOtpAsync(user.Email!, code, purpose, cancellationToken);
+    }
+
+    private bool ShouldAutoConfirmEmail()
+    {
+        var provider = emailOptions.Value.Provider;
+        return string.Equals(provider, "Logging", StringComparison.OrdinalIgnoreCase)
+               || string.Equals(provider, "Disabled", StringComparison.OrdinalIgnoreCase);
+    }
+
     private async Task<IssuedAuthCookies> IssueSessionAsync(
         ApplicationUser user,
         bool rememberMe,
@@ -340,7 +553,8 @@ public sealed class AuthService(
             WhatsAppNumber = user.WhatsAppNumber,
             Governorate = user.Governorate,
             Roles = roles.ToArray(),
-            AccountStatus = user.AccountStatus.ToString()
+            AccountStatus = user.AccountStatus.ToString(),
+            EmailConfirmed = user.EmailConfirmed
         };
     }
 
@@ -359,9 +573,21 @@ public sealed class AuthService(
         {
             throw new InvalidOperationException("App:PublicUrl is not configured.");
         }
+
         var encodedToken = EncodeToken(token);
         return $"{origin.TrimEnd('/')}{path}?email={Uri.EscapeDataString(email)}&token={encodedToken}";
     }
+
+    private static bool LooksLikeOtp(string token) =>
+        token.Length is >= 4 and <= 8 && token.All(char.IsDigit);
+
+    private static string NormalizePurpose(string? purpose) =>
+        purpose?.Trim() switch
+        {
+            EmailOtpPurposes.PasswordReset => EmailOtpPurposes.PasswordReset,
+            EmailOtpPurposes.GoogleLogin => EmailOtpPurposes.GoogleLogin,
+            _ => EmailOtpPurposes.EmailVerification
+        };
 
     private static string EncodeToken(string token)
     {

@@ -1,16 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FormEvent, Suspense, useState } from "react";
 import { AuthShell, Field, buttonClassName, inputClassName } from "@/components/auth/AuthShell";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { ClinicSelect } from "@/components/ui/clinic";
 import { ApiRequestError } from "@/lib/api/client";
-import { register } from "@/lib/auth/session";
+import { googleLogin, register } from "@/lib/auth/session";
 import { IRAQ_GOVERNORATES } from "@/lib/data/governorates";
 
 export default function RegisterPage() {
+  return (
+    <Suspense>
+      <RegisterForm />
+    </Suspense>
+  );
+}
+
+function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -63,7 +73,7 @@ export default function RegisterPage() {
 
     setPending(true);
     try {
-      await register({
+      const user = await register({
         fullName: fullName.trim(),
         email: email.trim(),
         phoneNumber: phoneNumber.trim(),
@@ -73,7 +83,12 @@ export default function RegisterPage() {
         passwordConfirmation,
         termsAccepted
       });
-      router.replace("/login");
+
+      if (user.emailConfirmed) {
+        router.replace("/login");
+      } else {
+        router.replace(`/verify-email?email=${encodeURIComponent(user.email)}&purpose=EmailVerification`);
+      }
       router.refresh();
     } catch (caught) {
       setError(caught instanceof ApiRequestError ? caught.message : "تعذر إنشاء الحساب.");
@@ -82,8 +97,35 @@ export default function RegisterPage() {
     }
   }
 
+  async function onGoogle(idToken: string) {
+    setError("");
+    setPending(true);
+    try {
+      const challenge = await googleLogin({ idToken, rememberMe: true });
+      const from = searchParams.get("from");
+      const qs = new URLSearchParams({
+        email: challenge.email,
+        purpose: challenge.purpose || "GoogleLogin"
+      });
+      if (from) qs.set("from", from);
+      router.push(`/verify-email?${qs.toString()}`);
+    } catch (caught) {
+      setError(caught instanceof ApiRequestError ? caught.message : "تعذر المتابعة عبر Google.");
+    } finally {
+      setPending(false);
+    }
+  }
+
   return (
-    <AuthShell title="إنشاء حساب" description="التسجيل متاح الآن بدون تأكيد بريد إلكتروني إلزامي.">
+    <AuthShell title="إنشاء حساب" description="بعد التسجيل سنرسل رمز تحقق إلى بريدك على Gmail.">
+      <GoogleSignInButton onCredential={onGoogle} disabled={pending} />
+
+      <div className="my-5 flex items-center gap-3 text-xs text-muted">
+        <span className="h-px flex-1 bg-border" />
+        أو بالبريد
+        <span className="h-px flex-1 bg-border" />
+      </div>
+
       <form onSubmit={onSubmit} noValidate>
         <Field label="الاسم الكامل">
           <input className={inputClassName} value={fullName} onChange={(event) => setFullName(event.target.value)} />

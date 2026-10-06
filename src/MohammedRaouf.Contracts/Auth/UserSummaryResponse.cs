@@ -17,4 +17,6 @@ public sealed class UserSummaryResponse
     public required IReadOnlyList<string> Roles { get; init; }
 
     public required string AccountStatus { get; init; }
+
+    public bool EmailConfirmed { get; init; }
 }

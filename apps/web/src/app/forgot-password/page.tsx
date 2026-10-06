@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { AuthShell, Field, buttonClassName, inputClassName } from "@/components/auth/AuthShell";
 import { ApiRequestError } from "@/lib/api/client";
 import { forgotPassword } from "@/lib/auth/session";
 
 export default function ForgotPasswordPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -25,6 +27,7 @@ export default function ForgotPasswordPage() {
     setPending(true);
     try {
       setMessage(await forgotPassword(email.trim()));
+      router.push(`/reset-password?email=${encodeURIComponent(email.trim())}`);
     } catch (caught) {
       setError(caught instanceof ApiRequestError ? caught.message : "تعذر إرسال الطلب.");
     } finally {
@@ -33,13 +36,14 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <AuthShell title="استعادة كلمة المرور" description="سنرسل التعليمات إذا كان البريد مسجلاً لدينا.">
+    <AuthShell title="استعادة كلمة المرور" description="سنرسل رمز تحقق إلى بريدك إن كان مسجلاً لدينا.">
       <form onSubmit={onSubmit} noValidate>
         <Field label="البريد الإلكتروني">
           <input
             className={inputClassName}
             type="email"
             autoComplete="email"
+            placeholder="name@gmail.com"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
           />
@@ -47,7 +51,7 @@ export default function ForgotPasswordPage() {
         {error ? <p className="mb-4 text-sm text-red-700">{error}</p> : null}
         {message ? <p className="mb-4 text-sm text-emerald-800">{message}</p> : null}
         <button className={buttonClassName} type="submit" disabled={pending}>
-          {pending ? "جاري الإرسال..." : "إرسال التعليمات"}
+          {pending ? "جاري الإرسال..." : "إرسال رمز الاستعادة"}
         </button>
       </form>
       <p className="mt-4 text-sm">

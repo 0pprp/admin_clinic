@@ -21,6 +21,10 @@ public static class AuthEndpoints
             .RequireRateLimiting(RateLimitingExtensions.LoginPolicy)
             .AllowAnonymous();
 
+        group.MapPost("/google", GoogleLoginAsync)
+            .RequireRateLimiting(RateLimitingExtensions.LoginPolicy)
+            .AllowAnonymous();
+
         group.MapPost("/logout", LogoutAsync)
             .AllowAnonymous();
 
@@ -43,9 +47,11 @@ public static class AuthEndpoints
             .AllowAnonymous();
 
         group.MapPost("/resend-verification", ResendVerificationAsync)
+            .RequireRateLimiting(RateLimitingExtensions.ForgotPasswordPolicy)
             .AllowAnonymous();
 
         group.MapPost("/verify-email", VerifyEmailAsync)
+            .RequireRateLimiting(RateLimitingExtensions.ResetPasswordPolicy)
             .AllowAnonymous();
 
         return endpoints;
@@ -89,6 +95,18 @@ public static class AuthEndpoints
 
         cookies.Write(httpContext.Response, result.Cookies!);
         return Results.Ok(result.Value);
+    }
+
+    private static async Task<IResult> GoogleLoginAsync(
+        GoogleLoginRequest request,
+        IAuthService authService,
+        HttpContext httpContext)
+    {
+        _ = httpContext;
+        var result = await authService.GoogleLoginAsync(request, httpContext.Connection.RemoteIpAddress?.ToString());
+        return result.Succeeded
+            ? Results.Ok(result.Value)
+            : ToProblem(result);
     }
 
     private static async Task<IResult> LogoutAsync(
@@ -162,7 +180,7 @@ public static class AuthEndpoints
         await authService.ForgotPasswordAsync(request.Email);
         return Results.Ok(new MessageResponse
         {
-            Message = "إذا كان البريد مسجلاً لدينا، فسيتم إرسال تعليمات استعادة كلمة المرور."
+            Message = "إذا كان البريد مسجلاً لدينا، فسيتم إرسال رمز استعادة كلمة المرور."
         });
     }
 
@@ -195,21 +213,34 @@ public static class AuthEndpoints
     {
         if (string.IsNullOrWhiteSpace(request.Email))
         {
-            return Results.Ok(new MessageResponse { Message = "إذا كان البريد مسجلاً لدينا، فسيتم إرسال رابط التأكيد." });
+            return Results.Ok(new MessageResponse { Message = "إذا كان البريد مسجلاً لدينا، فسيتم إرسال رمز التأكيد." });
         }
 
-        await authService.ResendVerificationAsync(request.Email);
-        return Results.Ok(new MessageResponse { Message = "إذا كان البريد مسجلاً لدينا، فسيتم إرسال رابط التأكيد." });
+        await authService.ResendVerificationAsync(request.Email, request.Purpose);
+        return Results.Ok(new MessageResponse { Message = "إذا كان البريد مسجلاً لدينا، فسيتم إرسال رمز التأكيد." });
     }
 
     private static async Task<IResult> VerifyEmailAsync(
         VerifyEmailRequest request,
-        IAuthService authService)
+        IAuthService authService,
+        AuthCookieWriter cookies,
+        HttpContext httpContext)
     {
-        var result = await authService.VerifyEmailAsync(request);
-        return result.Succeeded
-            ? Results.Ok(new MessageResponse { Message = "تم تأكيد البريد الإلكتروني." })
-            : ToProblem(result);
+        var result = await authService.VerifyEmailAsync(
+            request,
+            httpContext.Connection.RemoteIpAddress?.ToString());
+
+        if (!result.Succeeded)
+        {
+            return ToProblem(result);
+        }
+
+        if (result.Cookies is not null)
+        {
+            cookies.Write(httpContext.Response, result.Cookies);
+        }
+
+        return Results.Ok(result.Value);
     }
 
     private static IResult ValidationProblem(FluentValidation.Results.ValidationResult validation)

@@ -7,6 +7,7 @@ export type UserSummary = {
   governorate: string | null;
   roles: string[];
   accountStatus: string;
+  emailConfirmed?: boolean;
 };
 
 export type ApiError = {

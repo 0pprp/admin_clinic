@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, Suspense, useState } from "react";
 import { AuthShell, Field, buttonClassName, inputClassName } from "@/components/auth/AuthShell";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { ApiRequestError } from "@/lib/api/client";
-import { login } from "@/lib/auth/session";
+import { googleLogin, login } from "@/lib/auth/session";
 import { safeInternalPath } from "@/lib/safe-path";
 
 export default function LoginPage() {
@@ -24,6 +25,14 @@ function LoginForm() {
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
 
+  function destination() {
+    const from = safeInternalPath(searchParams.get("from"));
+    const intent = searchParams.get("intent");
+    return intent === "enroll" && from.startsWith("/courses/") && !from.includes("/enroll")
+      ? `${from}${from.includes("?") ? "&" : "?"}intent=enroll`
+      : from;
+  }
+
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
@@ -41,30 +50,48 @@ function LoginForm() {
     setPending(true);
     try {
       await login({ email: email.trim(), password, rememberMe: false });
-      const from = safeInternalPath(searchParams.get("from"));
-      const intent = searchParams.get("intent");
-      const destination =
-        intent === "enroll" && from.startsWith("/courses/") && !from.includes("/enroll")
-          ? `${from}${from.includes("?") ? "&" : "?"}intent=enroll`
-          : from;
-      router.replace(destination);
+      router.replace(destination());
       router.refresh();
     } catch (caught) {
-      setError(caught instanceof ApiRequestError ? caught.message : "تعذر تسجيل الدخول.");
+      const message = caught instanceof ApiRequestError ? caught.message : "تعذر تسجيل الدخول.";
+      if (message.includes("تأكيد البريد")) {
+        router.push(`/verify-email?email=${encodeURIComponent(email.trim())}&purpose=EmailVerification`);
+        return;
+      }
+      setError(message);
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function onGoogle(idToken: string) {
+    setError("");
+    setPending(true);
+    try {
+      const challenge = await googleLogin({ idToken, rememberMe: true });
+      const from = searchParams.get("from");
+      const qs = new URLSearchParams({
+        email: challenge.email,
+        purpose: challenge.purpose || "GoogleLogin"
+      });
+      if (from) qs.set("from", from);
+      router.push(`/verify-email?${qs.toString()}`);
+    } catch (caught) {
+      setError(caught instanceof ApiRequestError ? caught.message : "تعذر تسجيل الدخول عبر Google.");
     } finally {
       setPending(false);
     }
   }
 
   return (
-    <AuthShell title="أهلاً بعودتك" description="تابع تعلمك من حيث توقفت.">
+    <AuthShell title="أهلاً بعودتك" description="سجّل دخولك لمتابعة دوراتك واستشاراتك.">
       <form onSubmit={onSubmit} noValidate>
         <Field label="البريد الإلكتروني">
           <input
             className={inputClassName}
             type="email"
             autoComplete="email"
-            placeholder="name@example.com"
+            placeholder="name@gmail.com"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
           />
@@ -84,6 +111,15 @@ function LoginForm() {
           {pending ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
         </button>
       </form>
+
+      <div className="my-5 flex items-center gap-3 text-xs text-muted">
+        <span className="h-px flex-1 bg-border" />
+        أو
+        <span className="h-px flex-1 bg-border" />
+      </div>
+
+      <GoogleSignInButton onCredential={onGoogle} disabled={pending} />
+
       <div className="mt-5 space-y-2 text-start text-sm">
         <p>
           <Link className="text-foreground transition hover:text-accent" href="/forgot-password">

@@ -34,6 +34,7 @@ services:
       dockerfile: apps/web/Dockerfile
       args:
         NEXT_PUBLIC_SITE_URL: https://example.com
+        NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${NEXT_PUBLIC_GOOGLE_CLIENT_ID:-}
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -58,7 +59,17 @@ services:
       Jwt__SigningKey: ${Jwt__SigningKey}
       Jwt__AccessTokenMinutes: "15"
       Jwt__RefreshTokenDays: "14"
-      Email__Provider: Disabled
+      Email__Provider: ${Email__Provider:-Smtp}
+      Email__FromName: العيادة الإدارية
+      Email__FromAddress: ${Email__FromAddress}
+      Email__Smtp__Host: ${Email__Smtp__Host:-smtp.gmail.com}
+      Email__Smtp__Port: ${Email__Smtp__Port:-587}
+      Email__Smtp__UseStartTls: "true"
+      Email__Smtp__Username: ${Email__Smtp__Username}
+      Email__Smtp__Password: ${Email__Smtp__Password}
+      Email__Google__ClientId: ${Email__Google__ClientId}
+      Email__OtpLength: "6"
+      Email__OtpLifetimeMinutes: "10"
       Video__Provider: BunnyStream
       Video__TokenLifetimeMinutes: "10"
       Video__Bunny__LibraryId: ${Video__Bunny__LibraryId}

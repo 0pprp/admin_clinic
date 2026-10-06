@@ -3,11 +3,14 @@
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { AuthShell, Field, buttonClassName, inputClassName } from "@/components/auth/AuthShell";
+import { OtpInput } from "@/components/auth/OtpInput";
 import { ApiRequestError } from "@/lib/api/client";
 import { resetPassword } from "@/lib/auth/session";
 
 export function ResetPasswordForm({ email, token }: { email: string; token: string }) {
   const [currentEmail, setCurrentEmail] = useState(email);
+  const [otp, setOtp] = useState(token && /^\d{4,8}$/.test(token) ? token : "");
+  const [legacyToken] = useState(token && !/^\d{4,8}$/.test(token) ? token : "");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -19,8 +22,9 @@ export function ResetPasswordForm({ email, token }: { email: string; token: stri
     setError("");
     setMessage("");
 
-    if (!currentEmail.trim() || !token.trim()) {
-      setError("رابط الاستعادة غير مكتمل.");
+    const resetToken = legacyToken || otp.trim();
+    if (!currentEmail.trim() || !resetToken) {
+      setError("أدخل البريد ورمز الاستعادة.");
       return;
     }
 
@@ -39,7 +43,7 @@ export function ResetPasswordForm({ email, token }: { email: string; token: stri
       setMessage(
         await resetPassword({
           email: currentEmail.trim(),
-          token: token.trim(),
+          token: resetToken,
           newPassword,
           confirmPassword
         })
@@ -52,7 +56,7 @@ export function ResetPasswordForm({ email, token }: { email: string; token: stri
   }
 
   return (
-    <AuthShell title="تعيين كلمة مرور جديدة">
+    <AuthShell title="تعيين كلمة مرور جديدة" description="أدخل رمز التحقق الذي وصلك ثم اختر كلمة مرور جديدة.">
       <form onSubmit={onSubmit} noValidate>
         <Field label="البريد الإلكتروني">
           <input
@@ -62,6 +66,12 @@ export function ResetPasswordForm({ email, token }: { email: string; token: stri
             onChange={(event) => setCurrentEmail(event.target.value)}
           />
         </Field>
+        {!legacyToken ? (
+          <div className="mb-4">
+            <span className="mb-1.5 block text-sm font-bold text-foreground">رمز الاستعادة</span>
+            <OtpInput value={otp} onChange={setOtp} disabled={pending} />
+          </div>
+        ) : null}
         <Field label="كلمة المرور الجديدة">
           <input
             className={inputClassName}

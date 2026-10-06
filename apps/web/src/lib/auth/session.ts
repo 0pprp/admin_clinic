@@ -1,6 +1,13 @@
 import { apiFetch, parseJson } from "@/lib/api/client";
 import type { UserSummary } from "@/lib/api/types";
 
+export type AuthChallenge = {
+  requiresEmailVerification: boolean;
+  email: string;
+  message: string;
+  purpose: string;
+};
+
 export async function getCurrentUser(): Promise<UserSummary | null> {
   try {
     let response = await apiFetch("/api/auth/me");
@@ -39,6 +46,21 @@ export async function login(input: {
   });
 
   return parseJson<UserSummary>(response, "تعذر تسجيل الدخول.");
+}
+
+export async function googleLogin(input: {
+  idToken: string;
+  rememberMe?: boolean;
+}): Promise<AuthChallenge> {
+  const response = await apiFetch("/api/auth/google", {
+    method: "POST",
+    body: JSON.stringify({
+      idToken: input.idToken,
+      rememberMe: input.rememberMe ?? true
+    })
+  });
+
+  return parseJson<AuthChallenge>(response, "تعذر تسجيل الدخول عبر Google.");
 }
 
 export async function register(input: {
@@ -83,5 +105,33 @@ export async function resetPassword(input: {
     body: JSON.stringify(input)
   });
   const body = await parseJson<{ message: string }>(response, "تعذر تعيين كلمة المرور.");
+  return body.message;
+}
+
+export async function verifyEmail(input: {
+  email: string;
+  token: string;
+  purpose?: string;
+  rememberMe?: boolean;
+}): Promise<UserSummary> {
+  const response = await apiFetch("/api/auth/verify-email", {
+    method: "POST",
+    body: JSON.stringify({
+      email: input.email,
+      token: input.token,
+      purpose: input.purpose ?? "EmailVerification",
+      rememberMe: input.rememberMe ?? true
+    })
+  });
+
+  return parseJson<UserSummary>(response, "تعذر تأكيد الرمز.");
+}
+
+export async function resendVerification(email: string, purpose = "EmailVerification"): Promise<string> {
+  const response = await apiFetch("/api/auth/resend-verification", {
+    method: "POST",
+    body: JSON.stringify({ email, purpose })
+  });
+  const body = await parseJson<{ message: string }>(response, "تعذر إعادة إرسال الرمز.");
   return body.message;
 }

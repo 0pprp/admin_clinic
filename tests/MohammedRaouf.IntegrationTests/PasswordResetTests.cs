@@ -84,6 +84,6 @@ public class PasswordResetTests : IClassFixture<AuthApiFactory>
         var body = await response.Content.ReadFromJsonAsync<MessageResponse>(AuthTestHelpers.JsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.Equal("إذا كان البريد مسجلاً لدينا، فسيتم إرسال تعليمات استعادة كلمة المرور.", body?.Message);
+        Assert.Equal("إذا كان البريد مسجلاً لدينا، فسيتم إرسال رمز استعادة كلمة المرور.", body?.Message);
     }
 }

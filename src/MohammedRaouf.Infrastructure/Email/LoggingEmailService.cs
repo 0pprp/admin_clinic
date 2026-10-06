@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MohammedRaouf.Application.Notifications;
 
@@ -19,6 +18,16 @@ public sealed class LoggingEmailService(ILogger<LoggingEmailService> logger) : I
         _ = email;
         _ = confirmationLink;
         logger.LogInformation("Email confirmation message queued.");
+        return Task.CompletedTask;
+    }
+
+    public Task SendOtpAsync(string email, string code, string purpose, CancellationToken cancellationToken = default)
+    {
+        logger.LogInformation(
+            "OTP email queued for {EmailDomain} purpose={Purpose} code={Code}",
+            email.Contains('@') ? email[(email.IndexOf('@') + 1)..] : "unknown",
+            purpose,
+            code);
         return Task.CompletedTask;
     }
 }

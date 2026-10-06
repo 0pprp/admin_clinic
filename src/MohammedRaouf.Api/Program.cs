@@ -86,6 +86,7 @@ try
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         if (await dbContext.Database.CanConnectAsync())
         {
+            await dbContext.Database.MigrateAsync();
             await dbContext.Database.ExecuteSqlRawAsync(
                 """
                 CREATE TABLE IF NOT EXISTS "VideoTranscodeJobs" (

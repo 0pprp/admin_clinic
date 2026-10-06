@@ -77,7 +77,19 @@ public static class ProductionHostValidator
         var provider = configuration["Email:Provider"];
         if (ProductionConfigurationRules.IsDevelopmentEmailSink(provider))
         {
-            throw new InvalidOperationException("Production cannot use the development email sink. Set Email:Provider to Disabled until SMTP is configured.");
+            throw new InvalidOperationException("Production cannot use the development email sink. Set Email:Provider to Smtp or Disabled.");
+        }
+
+        if (string.Equals(provider, "Smtp", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(provider, "Gmail", StringComparison.OrdinalIgnoreCase))
+        {
+            if (string.IsNullOrWhiteSpace(configuration["Email:Smtp:Host"]) ||
+                string.IsNullOrWhiteSpace(configuration["Email:Smtp:Username"]) ||
+                string.IsNullOrWhiteSpace(configuration["Email:Smtp:Password"]))
+            {
+                throw new InvalidOperationException(
+                    "Email:Provider=Smtp requires Email:Smtp:Host, Email:Smtp:Username, and Email:Smtp:Password.");
+            }
         }
     }
 

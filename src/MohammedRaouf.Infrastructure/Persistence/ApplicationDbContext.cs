@@ -57,6 +57,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
     public DbSet<VideoTranscodeJob> VideoTranscodeJobs => Set<VideoTranscodeJob>();
 
+    public DbSet<EmailOtpCode> EmailOtpCodes => Set<EmailOtpCode>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

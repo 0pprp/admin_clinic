@@ -14,6 +14,11 @@ public interface IAuthService
         string? ipAddress,
         CancellationToken cancellationToken = default);
 
+    Task<AuthCommandResult<AuthChallengeResponse>> GoogleLoginAsync(
+        GoogleLoginRequest request,
+        string? ipAddress,
+        CancellationToken cancellationToken = default);
+
     Task<AuthCommandResult<UserSummaryResponse>> RefreshAsync(
         string? refreshToken,
         string? ipAddress,
@@ -32,9 +37,12 @@ public interface IAuthService
         string? ipAddress,
         CancellationToken cancellationToken = default);
 
-    Task ResendVerificationAsync(string email, CancellationToken cancellationToken = default);
+    Task ResendVerificationAsync(string email, string? purpose = null, CancellationToken cancellationToken = default);
 
-    Task<AuthCommandResult> VerifyEmailAsync(VerifyEmailRequest request, CancellationToken cancellationToken = default);
+    Task<AuthCommandResult<UserSummaryResponse>> VerifyEmailAsync(
+        VerifyEmailRequest request,
+        string? ipAddress,
+        CancellationToken cancellationToken = default);
 
     Task<UserSummaryResponse> UpdateProfileAsync(
         Guid userId,
